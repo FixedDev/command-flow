@@ -14,6 +14,11 @@ public class LimitingPart implements CommandPart {
         name = part.getName() + "-limiting";
         this.limit = limit;
         this.part = part;
+
+        if (limit <= 0) {
+            throw new IllegalArgumentException("The limit must be a positive number that's more than 0!");
+        }
+
     }
 
     @Override
