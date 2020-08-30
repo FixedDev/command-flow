@@ -1,0 +1,39 @@
+package me.fixeddev.commandflow.part;
+
+import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.stack.ArgumentStack;
+import me.fixeddev.commandflow.stack.StackSnapshot;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+public interface ArgumentPart extends CommandPart {
+    default void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+        StackSnapshot snapshot = stack.getSnapshot();
+
+        int oldArgumentsLeft = stack.getArgumentsLeft();
+        List<? extends Object> value = parseValue(stack);
+
+        List<String> rawArgs = new ArrayList<>();
+        int usedArguments = oldArgumentsLeft - stack.getArgumentsLeft();
+
+        if(usedArguments == 0){
+            return;
+        }
+
+        stack.applySnapshot(snapshot);
+
+        for (int i = 0; i < usedArguments; i++) {
+            rawArgs.add(stack.next());
+        }
+
+        context.setValues(this, value);
+        context.setRaw(this, rawArgs);
+    }
+
+    List<? extends Object> parseValue(ArgumentStack stack) throws ArgumentParseException;
+
+    Type getType();
+}
