@@ -9,12 +9,13 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A part that uses all the available {@link String} arguments with the option of
+ * A part that has the option to use all the available {@link String} arguments also with an option of
  * joining all the used String arguments into one with a specified separator between them.
  */
 public class StringPart implements ArgumentPart {
 
     private String name;
+    private boolean consumeAll;
     private boolean joinStrings;
     private String separator;
 
@@ -22,11 +23,13 @@ public class StringPart implements ArgumentPart {
      * Creates a StringPart instance with the given name
      *
      * @param name        The name for this part.
+     * @param consumeAll  If this part should consume all the available arguments.
      * @param joinStrings If the String values should be joined into one string instead of a {@link List} of Strings.
      * @param separator   The separator between the String values.
      */
-    public StringPart(String name, boolean joinStrings, String separator) {
+    public StringPart(String name, boolean consumeAll, boolean joinStrings, String separator) {
         this.name = name;
+        this.consumeAll = consumeAll;
         this.joinStrings = joinStrings;
         this.separator = separator;
     }
@@ -35,14 +38,25 @@ public class StringPart implements ArgumentPart {
      * Creates a StringPart instance with the given name and the default separator(a space).
      *
      * @param name        The name for this part.
+     * @param consumeAll  If this part should consume all the available arguments.
      * @param joinStrings If the String values should be joined into one string instead of a {@link List} of Strings.
      */
-    public StringPart(String name, boolean joinStrings) {
-        this(name, joinStrings, " ");
+    public StringPart(String name, boolean consumeAll, boolean joinStrings) {
+        this(name, consumeAll, joinStrings, " ");
     }
 
     /**
      * Creates a StringPart instance with the given name and the joinStrings parameter as disabled.
+     *
+     * @param name       The name for this part.
+     * @param consumeAll If this part should consume all the available arguments.
+     */
+    public StringPart(String name, boolean consumeAll) {
+        this(name, consumeAll, false);
+    }
+
+    /**
+     * Creates a StringPart instance with the given name and the joinStrings and consumeAll parameters disabled.
      *
      * @param name The name for this part.
      */
@@ -54,12 +68,18 @@ public class StringPart implements ArgumentPart {
     public List<String> parseValue(ArgumentStack stack) throws ArgumentParseException {
         List<String> objects = new ArrayList<>();
 
-        while (stack.hasNext()) {
-            objects.add(stack.next());
-        }
+        if (consumeAll) {
+            while (stack.hasNext()) {
+                objects.add(stack.next());
+            }
 
-        if (joinStrings) {
-            return Collections.singletonList(String.join(separator, objects));
+            if (joinStrings) {
+                return Collections.singletonList(String.join(separator, objects));
+            }
+        } else {
+            if (stack.hasNext()) {
+                objects.add(stack.next());
+            }
         }
 
         return objects;
