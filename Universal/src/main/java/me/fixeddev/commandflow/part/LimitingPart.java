@@ -1,8 +1,11 @@
 package me.fixeddev.commandflow.part;
 
 import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.stack.ArgumentStack;
+
+import java.util.Objects;
 
 public class LimitingPart implements CommandPart {
 
@@ -29,5 +32,13 @@ public class LimitingPart implements CommandPart {
     @Override
     public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         part.parse(context, stack.getSlice(limit));
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CommandPart)) return false;
+        CommandPart that = (CommandPart) o;
+        return that.equals(part);
     }
 }

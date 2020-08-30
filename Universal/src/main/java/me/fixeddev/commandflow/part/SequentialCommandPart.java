@@ -8,6 +8,7 @@ import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SequentialCommandPart implements CommandPart {
 
@@ -50,5 +51,19 @@ public class SequentialCommandPart implements CommandPart {
 
     public List<CommandPart> getParts() {
         return parts;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SequentialCommandPart)) return false;
+        SequentialCommandPart that = (SequentialCommandPart) o;
+        return name.equals(that.name) &&
+                parts.equals(that.parts);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, parts);
     }
 }
