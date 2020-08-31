@@ -5,7 +5,7 @@ Repository:
 <repository>
   <id>unnamed-snapshots</id>
   <url>https://repo.unnamed.team/repository/unnamed-snapshots/</url>
-<\repository>
+</repository>
 ```
 
 Dependency:
@@ -14,4 +14,4 @@ Dependency:
   <groupId>me.fixeddev</groupId>
   <artifactId>commandflow-universal</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-<\dependency>
+</dependency>
