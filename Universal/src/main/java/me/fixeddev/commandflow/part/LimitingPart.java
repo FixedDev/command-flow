@@ -1,11 +1,10 @@
 package me.fixeddev.commandflow.part;
 
 import me.fixeddev.commandflow.CommandContext;
-import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.stack.ArgumentStack;
-
-import java.util.Objects;
+import net.kyori.text.Component;
+import org.jetbrains.annotations.Nullable;
 
 public class LimitingPart implements CommandPart {
 
@@ -27,6 +26,11 @@ public class LimitingPart implements CommandPart {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public @Nullable Component getLineRepresentation() {
+        return part.getLineRepresentation();
     }
 
     @Override
