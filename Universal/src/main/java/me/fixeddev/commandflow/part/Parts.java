@@ -97,4 +97,17 @@ public final class Parts {
     public static CommandPart subCommand(Collection<Command> commands) {
         return new SubCommandPart("subcommand", new ArrayList<>(commands));
     }
+
+    /**
+     * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
+     * after that the control is passed to the {@link me.fixeddev.commandflow.part.SubCommandPart.SubCommandHandler} of the part
+     * <p>
+     * This method sets the name of the part as "subcommand".
+     *
+     * @param commands The subcommands for this part.
+     * @return A {@link CommandPart} that allows the usage of subcommands.
+     */
+    public static CommandPart subCommand(Command... commands) {
+        return new SubCommandPart("subcommand", Arrays.asList(commands));
+    }
 }
