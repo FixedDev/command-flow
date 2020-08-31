@@ -27,7 +27,7 @@ public class SequentialCommandPart implements CommandPart {
 
     @Override
     public @Nullable Component getLineRepresentation() {
-        TextComponent.Builder builder = TextComponent.builder();
+        TextComponent.Builder builder = TextComponent.builder("");
         boolean nonNull = false;
 
         for (CommandPart part : parts) {
