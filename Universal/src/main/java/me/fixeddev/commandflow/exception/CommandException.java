@@ -25,6 +25,12 @@ public class CommandException extends RuntimeException {
     public CommandException(String message) {
         super(message);
 
+        if (message == null) {
+            this.message = null;
+
+            return;
+        }
+
         if (message.startsWith("%translatable:") && message.endsWith("%")) {
             this.message = TranslatableComponent.of(message.substring(14, message.length() - 1));
         } else {
