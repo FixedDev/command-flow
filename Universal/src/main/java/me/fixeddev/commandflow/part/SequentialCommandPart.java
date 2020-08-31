@@ -33,9 +33,13 @@ public class SequentialCommandPart implements CommandPart {
         for (CommandPart part : parts) {
             Component lineRepresentation = part.getLineRepresentation();
             if (lineRepresentation != null) {
+                if (nonNull) {
+                    builder.append(TextComponent.of(" "));
+                }
+                builder.append(lineRepresentation);
+
                 nonNull = true;
 
-                builder.append(lineRepresentation);
             }
         }
 
