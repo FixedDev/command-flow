@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.executor;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.CommandUsage;
 
 public class DefaultExecutor implements Executor{
     @Override
@@ -10,7 +11,8 @@ public class DefaultExecutor implements Executor{
 
         if (toExecute != null) {
             if (!toExecute.getAction().execute(commandContext)) {
-                commandContext.getRootCommand().getPart().getLineRepresentation();
+                // TODO: send the message
+                throw new CommandUsage(commandContext.getRootCommand().getPart().getLineRepresentation());
             }
         } else {
             return false;
