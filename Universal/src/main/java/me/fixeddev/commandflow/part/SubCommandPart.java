@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.stack.ArgumentStack;
+import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,6 +47,13 @@ public class SubCommandPart implements CommandPart {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public @Nullable Component getLineRepresentation() {
+        TextComponent.Builder builder = TextComponent.builder().content("<" + getName() + ">");
+
+        return builder.build();
     }
 
     @Override
