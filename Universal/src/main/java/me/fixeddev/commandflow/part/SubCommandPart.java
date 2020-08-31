@@ -53,7 +53,7 @@ public class SubCommandPart implements CommandPart {
         String label = stack.next();
         Command command = subCommands.get(label);
 
-        handler.handle(this, context, label, command);
+        handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
     }
 
     public Map<String, Command> getSubCommandMap() {
@@ -69,20 +69,84 @@ public class SubCommandPart implements CommandPart {
         return subCommandsSet;
     }
 
+    public interface HandlerContext {
+        /**
+         * The {@link SubCommandPart} that's calling this handler.
+         *
+         * @return The caller {@link SubCommandPart}.
+         */
+        @NotNull SubCommandPart getPart();
+
+        /**
+         * The {@link CommandContext} of the parent command.
+         *
+         * @return The {@link CommandContext} of the parent command.
+         */
+        @NotNull CommandContext getContext();
+
+        /**
+         * The {@link ArgumentStack} of the parent {@link SubCommandPart}.
+         *
+         * @return The {@link ArgumentStack} of the {@link SubCommandPart}.
+         */
+        @NotNull ArgumentStack getStack();
+    }
+
+    private static class DefaultHandlerContext implements HandlerContext {
+
+        private final SubCommandPart part;
+        private final CommandContext context;
+        private final ArgumentStack stack;
+
+        public DefaultHandlerContext(SubCommandPart part, CommandContext context, ArgumentStack stack) {
+            this.part = part;
+            this.context = context;
+            this.stack = stack;
+        }
+
+        @Override
+        public @NotNull SubCommandPart getPart() {
+            return part;
+        }
+
+        @Override
+        public @NotNull CommandContext getContext() {
+            return context;
+        }
+
+        @Override
+        public @NotNull ArgumentStack getStack() {
+            return stack;
+        }
+    }
+
     public interface SubCommandHandler {
-        void handle(@NotNull SubCommandPart part, @NotNull CommandContext commandContext, @NotNull String label, @Nullable Command command) throws ArgumentParseException;
+        /**
+         * Handle the context change from the main command into the sub command and handle the start of the parsing for the {@link CommandPart} of the
+         * subcommand.
+         *
+         * @param context The context for the handler.
+         * @param label   The label of the subcommand.
+         * @param command The subcommand instance if found, otherwise null.
+         * @throws ArgumentParseException If an error with the subcommand is encountered.
+         */
+        void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentParseException;
     }
 
     public static class DefaultSubCommandHandler implements SubCommandHandler {
 
         @Override
-        public void handle(@NotNull SubCommandPart part, @NotNull CommandContext commandContext, @NotNull String label, @Nullable Command command) throws ArgumentParseException {
+        public void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentParseException {
+            CommandContext commandContext = context.getContext();
+            ArgumentStack stack = context.getStack();
+
             if (command == null) {
                 // TODO: Set an actual translatable message
                 throw new ArgumentParseException(TextComponent.of("The subcommand " + label + " doesn't exists!"));
             }
 
             commandContext.setCommand(command, label);
+            command.getPart().parse(commandContext, stack);
         }
     }
 }
