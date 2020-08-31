@@ -12,7 +12,7 @@ public class DefaultExecutor implements Executor{
         if (toExecute != null) {
             if (!toExecute.getAction().execute(commandContext)) {
                 // TODO: send the message
-                throw new CommandUsage(commandContext.getRootCommand().getPart().getLineRepresentation());
+                throw new CommandUsage(toExecute.getPart().getLineRepresentation());
             }
         } else {
             return false;
