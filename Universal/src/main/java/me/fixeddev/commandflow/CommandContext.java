@@ -105,13 +105,26 @@ public interface CommandContext extends Namespace {
     Optional<List<String>> getRaw(CommandPart part);
 
     /**
-     * Gets the converted value of the specified {@link CommandPart}
+     * Gets the converted values of the specified {@link CommandPart}
      *
      * @param part The {@link CommandPart} to search values for.
      * @param <V>  The type of the returned value.
      * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
      */
-    <V> Optional<List<V>> getValue(CommandPart part);
+    <V> Optional<List<V>> getValues(CommandPart part);
+
+    /**
+     * Gets the first converted value of the specified {@link CommandPart}
+     *
+     * @param part The {@link CommandPart} to search values for.
+     * @param <V>  The type of the returned value.
+     * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
+     */
+    default <V> Optional<V> getValue(CommandPart part) {
+        Optional<List<V>> values = getValues(part);
+
+        return values.map(objects -> !objects.isEmpty() ? objects.get(0) : null);
+    }
 
     /**
      * Gets if the specified {@link CommandPart} has a bound value(even if it is null)

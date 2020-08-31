@@ -75,7 +75,7 @@ public class SimpleCommandContext implements CommandContext, Namespace {
     }
 
     @Override
-    public <V> Optional<List<V>> getValue(CommandPart part) {
+    public <V> Optional<List<V>> getValues(CommandPart part) {
         return Optional.ofNullable((List<V>) valueBindings.get(part));
     }
 
