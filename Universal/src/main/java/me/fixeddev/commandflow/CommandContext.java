@@ -113,6 +113,18 @@ public interface CommandContext extends Namespace {
      */
     <V> Optional<List<V>> getValues(CommandPart part);
 
+
+    /**
+     * Gets a {@link CommandPart} with a given name and uses it to get the converted values of the specified {@link CommandPart}
+     *
+     * @param partName The of the {@link CommandPart} to search values for.
+     * @param <V>  The type of the returned value.
+     * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
+     */
+    default <V> Optional<List<V>> getValues(String partName){
+        return getPart(partName).flatMap(this::getValues);
+    }
+
     /**
      * Gets the first converted value of the specified {@link CommandPart}
      *
@@ -124,6 +136,17 @@ public interface CommandContext extends Namespace {
         Optional<List<V>> values = getValues(part);
 
         return values.map(objects -> !objects.isEmpty() ? objects.get(0) : null);
+    }
+
+    /**
+     * Gets a {@link CommandPart} with a given name and uses it to get the converted first value of the specified {@link CommandPart}
+     *
+     * @param partName The of the {@link CommandPart} to search values for.
+     * @param <V>  The type of the returned value.
+     * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
+     */
+    default <V> Optional<V> getValue(String partName) {
+        return getPart(partName).flatMap(this::getValue);
     }
 
     /**
