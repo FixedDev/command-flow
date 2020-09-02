@@ -1,12 +1,15 @@
 package me.fixeddev.commandflow.command;
 
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.SequentialCommandPart;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface Command {
     /**
@@ -67,4 +70,36 @@ public interface Command {
      */
     @NotNull
     Action getAction();
+
+    interface Builder {
+        void aliases(List<String> aliases);
+
+        default void aliases(String... aliases) {
+            aliases(Arrays.asList(aliases));
+        }
+
+        void addAlias(String alias);
+
+        void description(Component component);
+
+        void permission(String permission);
+
+        void permissionMessage(Component permissionMessage);
+
+        void part(CommandPart part);
+
+        void addParts(CommandPart... part);
+
+        void addPart(CommandPart part);
+
+        void action(Action action);
+
+        default void action(Consumer<CommandContext> action) {
+            action((context) -> {
+               action.accept(context);
+
+               return true;
+            });
+        }
+    }
 }
