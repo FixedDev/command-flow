@@ -96,10 +96,16 @@ public interface Command {
 
         default void action(Consumer<CommandContext> action) {
             action((context) -> {
-               action.accept(context);
+                action.accept(context);
 
-               return true;
+                return true;
             });
         }
+
+        Command build();
+    }
+
+    static Builder builder(String name) {
+        return new SimpleCommand.Builder(name);
     }
 }
