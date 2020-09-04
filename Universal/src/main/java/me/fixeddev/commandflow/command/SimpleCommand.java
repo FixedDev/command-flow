@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.command;
 
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.EmptyPart;
+import me.fixeddev.commandflow.part.Parts;
 import me.fixeddev.commandflow.part.SequentialCommandPart;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -72,13 +73,13 @@ public class SimpleCommand implements Command {
         private Component description;
         private String permission;
         private Component permissionMessage;
-        private CommandPart part;
+        private List<CommandPart> parts;
         private Action action;
 
         public Builder(String name) {
             this.name = name;
             aliases = new ArrayList<>();
-            part = new EmptyPart("empty");
+            parts = new ArrayList<>();
             action = Action.NULL_ACTION;
         }
 
@@ -139,7 +140,8 @@ public class SimpleCommand implements Command {
                 throw new IllegalArgumentException("The CommandPart shouldn't be a null!");
             }
 
-            this.part = part;
+            parts.clear();
+            parts.add(part);
 
             return this;
         }
@@ -148,42 +150,20 @@ public class SimpleCommand implements Command {
         public Builder addParts(CommandPart... parts) {
             List<CommandPart> newParts = Arrays.asList(parts);
 
-            if (this.part instanceof SequentialCommandPart) {
-                List<CommandPart> partsList = ((SequentialCommandPart) this.part).getParts();
-
-                partsList.addAll(newParts);
-            } else {
-                CommandPart oldPart = this.part;
-                newParts.add(0, oldPart);
-
-                this.part = new SequentialCommandPart("sequential", newParts);
-            }
-
+            this.parts.addAll(newParts);
             return this;
         }
 
         @Override
         public Builder addPart(CommandPart part) {
-            if (this.part instanceof SequentialCommandPart) {
-                List<CommandPart> partsList = ((SequentialCommandPart) this.part).getParts();
-
-                partsList.add(part);
-            } else {
-                CommandPart oldPart = this.part;
-                List<CommandPart> parts = new ArrayList<>();
-
-                parts.add(oldPart);
-                parts.add(part);
-
-                this.part = new SequentialCommandPart("sequential", parts);
-            }
+            parts.add(part);
 
             return this;
         }
 
         @Override
         public Builder action(Action action) {
-            if(action == null){
+            if (action == null) {
                 throw new IllegalArgumentException("The Action shouldn't be a null!");
             }
 
@@ -194,6 +174,20 @@ public class SimpleCommand implements Command {
 
         @Override
         public Command build() {
+            CommandPart part = new EmptyPart("empty-" + name);
+
+            if (!parts.isEmpty()) {
+                if (parts.size() == 1) {
+                    part = parts.get(0);
+                } else {
+                    part = Parts.sequential("sequential", parts);
+                }
+            }
+
+            if (permission == null) {
+                permission = "";
+            }
+
             return new SimpleCommand(name, aliases, description, permission, permissionMessage, part, action);
         }
     }
