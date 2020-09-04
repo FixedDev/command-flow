@@ -83,57 +83,69 @@ public class SimpleCommand implements Command {
         }
 
         @Override
-        public void aliases(List<String> aliases) {
+        public Builder aliases(List<String> aliases) {
             if (aliases == null) {
                 throw new IllegalArgumentException("The aliases shouldn't be a null list!");
             }
 
             this.aliases = aliases;
+
+            return this;
         }
 
         @Override
-        public void addAlias(String alias) {
+        public Builder addAlias(String alias) {
             if (aliases.contains(alias)) {
-                return;
+                return this;
             }
 
             aliases.add(alias);
+
+            return this;
         }
 
         @Override
-        public void description(Component component) {
+        public Builder description(Component component) {
             if (component == null) {
                 throw new IllegalArgumentException("The description shouldn't be a null!");
             }
 
             this.description = component;
+
+            return this;
         }
 
         @Override
-        public void permission(String permission) {
+        public Builder permission(String permission) {
             this.permission = permission;
+
+            return this;
         }
 
         @Override
-        public void permissionMessage(Component permissionMessage) {
+        public Builder permissionMessage(Component permissionMessage) {
             if (permissionMessage == null) {
                 throw new IllegalArgumentException("The permissionMessage shouldn't be a null!");
             }
 
             this.permissionMessage = permissionMessage;
+
+            return this;
         }
 
         @Override
-        public void part(CommandPart part) {
+        public Builder part(CommandPart part) {
             if (part == null) {
                 throw new IllegalArgumentException("The CommandPart shouldn't be a null!");
             }
 
             this.part = part;
+
+            return this;
         }
 
         @Override
-        public void addParts(CommandPart... parts) {
+        public Builder addParts(CommandPart... parts) {
             List<CommandPart> newParts = Arrays.asList(parts);
 
             if (this.part instanceof SequentialCommandPart) {
@@ -146,10 +158,12 @@ public class SimpleCommand implements Command {
 
                 this.part = new SequentialCommandPart("sequential", newParts);
             }
+
+            return this;
         }
 
         @Override
-        public void addPart(CommandPart part) {
+        public Builder addPart(CommandPart part) {
             if (this.part instanceof SequentialCommandPart) {
                 List<CommandPart> partsList = ((SequentialCommandPart) this.part).getParts();
 
@@ -163,15 +177,19 @@ public class SimpleCommand implements Command {
 
                 this.part = new SequentialCommandPart("sequential", parts);
             }
+
+            return this;
         }
 
         @Override
-        public void action(Action action) {
+        public Builder action(Action action) {
             if(action == null){
                 throw new IllegalArgumentException("The Action shouldn't be a null!");
             }
 
             this.action = action;
+
+            return this;
         }
 
         @Override

@@ -72,30 +72,30 @@ public interface Command {
     Action getAction();
 
     interface Builder {
-        void aliases(List<String> aliases);
+        Builder aliases(List<String> aliases);
 
-        default void aliases(String... aliases) {
-            aliases(Arrays.asList(aliases));
+        default Builder aliases(String... aliases) {
+            return aliases(Arrays.asList(aliases));
         }
 
-        void addAlias(String alias);
+        Builder addAlias(String alias);
 
-        void description(Component component);
+        Builder description(Component component);
 
-        void permission(String permission);
+        Builder permission(String permission);
 
-        void permissionMessage(Component permissionMessage);
+        Builder permissionMessage(Component permissionMessage);
 
-        void part(CommandPart part);
+        Builder part(CommandPart part);
 
-        void addParts(CommandPart... part);
+        Builder addParts(CommandPart... part);
 
-        void addPart(CommandPart part);
+        Builder addPart(CommandPart part);
 
-        void action(Action action);
+        Builder action(Action action);
 
-        default void action(Consumer<CommandContext> action) {
-            action((context) -> {
+        default Builder action(Consumer<CommandContext> action) {
+            return action((context) -> {
                 action.accept(context);
 
                 return true;
