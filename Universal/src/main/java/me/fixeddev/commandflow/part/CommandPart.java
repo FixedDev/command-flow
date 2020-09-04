@@ -25,4 +25,13 @@ public interface CommandPart {
     default List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         return Collections.emptyList();
     }
+
+    /**
+     * If this part should be parsed on another thread
+     *
+     * @return A boolean indicating whether this part should be parsed on another thread.
+     */
+    default boolean isAsync() {
+        return false;
+    }
 }
