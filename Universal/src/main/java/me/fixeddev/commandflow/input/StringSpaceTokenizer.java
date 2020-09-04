@@ -5,6 +5,10 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StringSpaceTokenizer implements InputTokenizer {
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> tokenize(String line) {
         return

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class QuotedSpaceTokenizer implements InputTokenizer {
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<String> tokenize(String line) {
         List<String> inputTokens = new ArrayList<>();
