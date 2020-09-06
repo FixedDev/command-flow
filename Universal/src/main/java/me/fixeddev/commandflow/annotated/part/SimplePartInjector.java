@@ -47,4 +47,11 @@ public class SimplePartInjector implements PartInjector {
             throw new IllegalArgumentException("A factory with the key " + key.toString() + " is already present!");
         }
     }
+
+    @Override
+    public void install(Module module) {
+        module.setInjector(this);
+        module.configure();
+        module.setInjector(null);
+    }
 }

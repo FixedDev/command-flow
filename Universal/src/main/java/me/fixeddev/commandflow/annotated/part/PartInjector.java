@@ -79,6 +79,8 @@ public interface PartInjector {
 
     void bindFactory(Key key, PartFactory factory);
 
+    void install(Module module);
+
     static PartInjector create() {
         return new SimplePartInjector();
     }
