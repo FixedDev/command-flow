@@ -5,11 +5,9 @@ import me.fixeddev.commandflow.annotated.annotation.Required;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilderImpl;
-import me.fixeddev.commandflow.annotated.builder.CommandBuilderNodesImpl;
 import me.fixeddev.commandflow.annotated.builder.CommandPartsNode;
 import me.fixeddev.commandflow.annotated.builder.SubCommandsNode;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
-import me.fixeddev.commandflow.annotated.part.SimplePartInjector;
 import me.fixeddev.commandflow.command.Action;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.SubCommandPart;
@@ -27,8 +25,8 @@ import java.util.List;
 
 public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
 
-    private AnnotatedCommandBuilder builder;
-    private SubCommandInstanceCreator instanceCreator;
+    private final AnnotatedCommandBuilder builder;
+    private final SubCommandInstanceCreator instanceCreator;
 
     public AnnotatedCommandTreeBuilderImpl(AnnotatedCommandBuilder builder, SubCommandInstanceCreator instanceCreator) {
         this.builder = builder;
@@ -191,14 +189,9 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
 
         Class<?>[] parameterTypes = method.getParameterTypes();
 
-        if (parameterTypes[0] != SubCommandPart.HandlerContext.class ||
-                parameterTypes[1] != String.class ||
-                parameterTypes[2] != Command.class) {
-
-            return false;
-        }
-
-        return true;
+        return parameterTypes[0] == SubCommandPart.HandlerContext.class &&
+                parameterTypes[1] == String.class &&
+                parameterTypes[2] == Command.class;
     }
 
     private Component fromString(String component) {
