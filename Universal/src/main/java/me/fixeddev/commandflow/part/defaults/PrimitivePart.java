@@ -1,4 +1,6 @@
-package me.fixeddev.commandflow.part;
+package me.fixeddev.commandflow.part.defaults;
+
+import me.fixeddev.commandflow.part.ArgumentPart;
 
 /**
  * A part that has the option to use all the available primitive arguments

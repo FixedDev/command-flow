@@ -1,8 +1,9 @@
-package me.fixeddev.commandflow.part;
+package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;

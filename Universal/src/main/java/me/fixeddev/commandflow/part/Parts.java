@@ -2,6 +2,15 @@ package me.fixeddev.commandflow.part;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.part.defaults.BooleanPart;
+import me.fixeddev.commandflow.part.defaults.DoublePart;
+import me.fixeddev.commandflow.part.defaults.FloatPart;
+import me.fixeddev.commandflow.part.defaults.IntegerPart;
+import me.fixeddev.commandflow.part.defaults.LimitingPart;
+import me.fixeddev.commandflow.part.defaults.OptionalPart;
+import me.fixeddev.commandflow.part.defaults.SequentialCommandPart;
+import me.fixeddev.commandflow.part.defaults.StringPart;
+import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import java.util.ArrayList;
@@ -104,7 +113,7 @@ public final class Parts {
 
     /**
      * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
-     * after that the control is passed to the {@link me.fixeddev.commandflow.part.SubCommandPart.SubCommandHandler} of the part
+     * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
      *
      * @param name     The name for this part.
      * @param commands The subcommands for this part.
@@ -116,7 +125,7 @@ public final class Parts {
 
     /**
      * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
-     * after that the control is passed to the {@link me.fixeddev.commandflow.part.SubCommandPart.SubCommandHandler} of the part
+     * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
      *
      * @param name     The name for this part.
      * @param commands The subcommands for this part.
@@ -128,7 +137,7 @@ public final class Parts {
 
     /**
      * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
-     * after that the control is passed to the {@link me.fixeddev.commandflow.part.SubCommandPart.SubCommandHandler} of the part
+     * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
      * <p>
      * This method sets the name of the part as "subcommand".
      *
@@ -141,7 +150,7 @@ public final class Parts {
 
     /**
      * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
-     * after that the control is passed to the {@link me.fixeddev.commandflow.part.SubCommandPart.SubCommandHandler} of the part
+     * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
      * <p>
      * This method sets the name of the part as "subcommand".
      *

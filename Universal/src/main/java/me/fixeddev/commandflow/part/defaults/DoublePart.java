@@ -1,4 +1,4 @@
-package me.fixeddev.commandflow.part;
+package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.stack.ArgumentStack;
