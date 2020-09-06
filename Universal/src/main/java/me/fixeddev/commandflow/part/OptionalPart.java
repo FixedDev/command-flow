@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
@@ -35,8 +36,7 @@ public class OptionalPart implements CommandPart {
 
         try {
             part.parse(context, stack);
-
-        } catch (ArgumentParseException e) {
+        } catch (ArgumentParseException | NoMoreArgumentsException e) {
             stack.applySnapshot(snapshot);
 
             if (!defaultValues.isEmpty()) {
@@ -44,7 +44,7 @@ public class OptionalPart implements CommandPart {
                     part.parse(context, new SimpleArgumentStack(defaultValues));
 
                     return;
-                } catch (ArgumentParseException ignored) {}
+                } catch (ArgumentParseException | NoMoreArgumentsException ignored) {}
             }
             if (!stack.hasNext()) {
                 throw e;
