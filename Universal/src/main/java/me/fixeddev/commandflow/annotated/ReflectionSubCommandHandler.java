@@ -2,9 +2,7 @@ package me.fixeddev.commandflow.annotated;
 
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
-import me.fixeddev.commandflow.exception.CommandException;
-import me.fixeddev.commandflow.part.ArgumentPart;
-import me.fixeddev.commandflow.part.SubCommandPart;
+import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

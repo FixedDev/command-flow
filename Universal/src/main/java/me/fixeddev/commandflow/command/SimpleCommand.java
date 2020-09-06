@@ -1,9 +1,8 @@
 package me.fixeddev.commandflow.command;
 
 import me.fixeddev.commandflow.part.CommandPart;
-import me.fixeddev.commandflow.part.EmptyPart;
+import me.fixeddev.commandflow.part.defaults.EmptyPart;
 import me.fixeddev.commandflow.part.Parts;
-import me.fixeddev.commandflow.part.SequentialCommandPart;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
 

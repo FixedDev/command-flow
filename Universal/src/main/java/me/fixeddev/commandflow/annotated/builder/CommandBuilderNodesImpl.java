@@ -13,7 +13,7 @@ import me.fixeddev.commandflow.command.Action;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.Parts;
-import me.fixeddev.commandflow.part.SubCommandPart;
+import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
 
