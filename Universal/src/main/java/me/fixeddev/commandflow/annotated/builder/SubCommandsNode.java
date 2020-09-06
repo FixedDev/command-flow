@@ -11,4 +11,6 @@ public interface SubCommandsNode extends Buildable {
     SubCommandsNode addSubCommand(@NotNull CommandDataNode commandDataNode);
 
     SubCommandsNode setSubCommandHandler(@Nullable SubCommandPart.SubCommandHandler subCommandHandler);
+
+    SubCommandsNode optional();
 }

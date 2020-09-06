@@ -12,6 +12,7 @@ import me.fixeddev.commandflow.annotated.part.PartModifier;
 import me.fixeddev.commandflow.command.Action;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
+import me.fixeddev.commandflow.part.Parts;
 import me.fixeddev.commandflow.part.SubCommandPart;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     private final PartInjector injector;
     private final List<ValueGetter> partGetters;
     private SubCommandPart.SubCommandHandler subCommandHandler;
+    private boolean optional = false;
 
     public CommandBuilderNodesImpl(String name, PartInjector injector) {
         this.builder = Command.builder(name);
@@ -174,14 +176,24 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     }
 
     @Override
+    public SubCommandsNode optional() {
+        optional = true;
+        return this;
+    }
+
+    @Override
     public Command build() {
         if (!subCommands.isEmpty()) {
-            SubCommandPart part;
+            CommandPart part;
 
             if (subCommandHandler != null) {
                 part = new SubCommandPart("subcommand", subCommands, subCommandHandler);
             } else {
                 part = new SubCommandPart("subcommand", subCommands);
+            }
+
+            if (optional) {
+                part = Parts.optional(part);
             }
 
             builder.addPart(part);
