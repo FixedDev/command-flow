@@ -10,9 +10,9 @@ import java.util.Objects;
 
 public class Key {
     private Type type;
-    private Annotation annotation;
+    private Class<? extends Annotation> annotation;
 
-    public Key(@NotNull Type type, @Nullable Annotation annotation) {
+    public Key(@NotNull Type type, @Nullable Class<? extends Annotation> annotation) {
         this.type = type;
         this.annotation = annotation;
     }
@@ -27,7 +27,7 @@ public class Key {
     }
 
     @Nullable
-    public Annotation getAnnotation() {
+    public Class<? extends Annotation> getAnnotation() {
         return annotation;
     }
 
