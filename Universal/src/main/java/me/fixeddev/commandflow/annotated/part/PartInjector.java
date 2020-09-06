@@ -24,7 +24,7 @@ public interface PartInjector {
     /**
      * Gets a {@link PartFactory} for a given {@link Key}.
      *
-     * @param type The type of {@link me.fixeddev.commandflow.part.CommandPart} to generate.
+     * @param key The type of {@link me.fixeddev.commandflow.part.CommandPart} to generate.
      * @return An {@link PartFactory} for a specific {@link Type} of CommandPart.
      */
     @Nullable
@@ -33,7 +33,7 @@ public interface PartInjector {
     /**
      * Gets a {@link PartFactory} for a given {@link Key}.
      *
-     * @param type The type of {@link me.fixeddev.commandflow.part.CommandPart} to generate.
+     * @param annotation The type of {@link me.fixeddev.commandflow.part.CommandPart} to generate.
      * @return An {@link PartFactory} for a specific {@link Type} of CommandPart.
      */
     @Nullable
