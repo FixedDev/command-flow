@@ -7,6 +7,7 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * An utility class to ease the use of {@link CommandPart} and his sub classes.
@@ -109,5 +110,26 @@ public final class Parts {
      */
     public static CommandPart subCommand(Command... commands) {
         return new SubCommandPart("subcommand", Arrays.asList(commands));
+    }
+
+    /**
+     * Creates a part that rewinds the {@link ArgumentStack} when it can't be parsed.
+     *
+     * @param part The {@link CommandPart} to make optional.
+     * @return The given {@link CommandPart} that will rewind the {@link ArgumentStack} when it can't be parsed.
+     */
+    public static CommandPart optional(CommandPart part) {
+        return new OptionalPart(part);
+    }
+
+    /**
+     * Creates a part that rewinds the {@link ArgumentStack} and re-parses with default values when it can't be parsed the first time.
+     *
+     * @param part The {@link CommandPart} to make optional.
+     * @param defaultValues The list default values when the {@link ArgumentStack} can't be parsed
+     * @return The given {@link CommandPart} that will rewind the {@link ArgumentStack} when it can't be parsed.
+     */
+    public static CommandPart optional(CommandPart part, List<String> defaultValues) {
+        return new OptionalPart(part, defaultValues);
     }
 }
