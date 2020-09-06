@@ -35,6 +35,46 @@ public final class Parts {
     }
 
     /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     *
+     * @param name The name for this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Integer} as argument.
+     */
+    public static CommandPart newIntegerPart(String name) {
+        return new IntegerPart(name);
+    }
+
+    /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     *
+     * @param name The name for this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Double} as argument.
+     */
+    public static CommandPart newDoublePart(String name) {
+        return new DoublePart(name);
+    }
+
+    /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     *
+     * @param name The name for this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Boolean} as argument.
+     */
+    public static CommandPart newBooleanPart(String name) {
+        return new BooleanPart(name);
+    }
+
+    /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     *
+     * @param name The name for this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Float} as argument.
+     */
+    public static CommandPart newFloatPart(String name) {
+        return new FloatPart(name);
+    }
+
+    /**
      * A {@link CommandPart} that consist on a sequence of other CommandParts.
      * <p>
      * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
