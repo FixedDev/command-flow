@@ -12,7 +12,7 @@ public interface Module {
 
     PartInjector getInjector();
 
-    default void bindModifier(Annotation annotation, PartModifier partModifier) {
+    default void bindModifier(Class<? extends Annotation> annotation, PartModifier partModifier) {
         if (getInjector() == null) {
             throw new InvalidStateException("The bind methods only can be called when the module is installed on an injector!");
         }

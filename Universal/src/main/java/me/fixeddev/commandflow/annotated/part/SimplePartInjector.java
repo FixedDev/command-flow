@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SimplePartInjector implements PartInjector {
 
     private Map<Key, PartFactory> factoryBindings;
-    private Map<Annotation, PartModifier> modifiers;
+    private Map<Class<? extends Annotation>, PartModifier> modifiers;
 
     public SimplePartInjector() {
         this.factoryBindings = new ConcurrentHashMap<>();
@@ -22,12 +22,12 @@ public class SimplePartInjector implements PartInjector {
     }
 
     @Override
-    public @Nullable PartModifier getModifier(Annotation annotation) {
+    public @Nullable PartModifier getModifier(Class<? extends Annotation> annotation) {
         return modifiers.get(annotation);
     }
 
     @Override
-    public void bindModifier(Annotation annotation, PartModifier partModifier) {
+    public void bindModifier(Class<? extends Annotation> annotation, PartModifier partModifier) {
         PartModifier old = modifiers.put(annotation, partModifier);
 
         if (old != null) {

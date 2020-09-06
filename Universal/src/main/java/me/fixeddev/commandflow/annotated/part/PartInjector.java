@@ -37,7 +37,7 @@ public interface PartInjector {
      * @return An {@link PartFactory} for a specific {@link Type} of CommandPart.
      */
     @Nullable
-    PartModifier getModifier(Annotation annotation);
+    PartModifier getModifier(Class<? extends Annotation> annotation);
 
     /**
      * Gets a {@link DelegatePartModifier} for a given list of {@link Annotation}.
@@ -46,10 +46,10 @@ public interface PartInjector {
      * @return An {@link PartFactory} for a specific {@link Type} of CommandPart.
      */
     @NotNull
-    default PartModifier getModifiers(List<Annotation> annotations) {
+    default PartModifier getModifiers(List<Class<? extends Annotation>> annotations) {
         List<PartModifier> modifiers = new ArrayList<>();
 
-        for (Annotation annotation : annotations) {
+        for (Class<? extends Annotation> annotation : annotations) {
             PartModifier modifier = getModifier(annotation);
 
             if (modifier != null) {
@@ -67,11 +67,11 @@ public interface PartInjector {
      * @return An {@link PartFactory} for a specific {@link Type} of CommandPart.
      */
     @NotNull
-    default PartModifier getModifiers(Annotation... annotations) {
+    default PartModifier getModifiers(Class<? extends Annotation>... annotations) {
         return getModifiers(Arrays.asList(annotations));
     }
 
-    void bindModifier(Annotation annotation, PartModifier partModifier);
+    void bindModifier(Class<? extends Annotation> annotation, PartModifier partModifier);
 
     default void bindFactory(Type type, PartFactory partFactory) {
         bindFactory(new Key(type), partFactory);
