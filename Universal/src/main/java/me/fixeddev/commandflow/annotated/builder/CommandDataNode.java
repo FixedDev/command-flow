@@ -1,6 +1,5 @@
 package me.fixeddev.commandflow.annotated.builder;
 
-import me.fixeddev.commandflow.command.Command;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
 

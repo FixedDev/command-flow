@@ -1,7 +1,6 @@
 package me.fixeddev.commandflow.exception;
 
 import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.part.CommandPart;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
