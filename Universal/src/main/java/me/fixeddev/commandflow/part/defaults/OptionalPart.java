@@ -7,7 +7,11 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
+import net.kyori.text.Component;
+import net.kyori.text.TextComponent;
+import org.jetbrains.annotations.Nullable;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +36,18 @@ public class OptionalPart implements CommandPart {
     }
 
     @Override
+    public @Nullable Component getLineRepresentation() {
+        Component partLineRepresent = part.getLineRepresentation();
+
+        if (partLineRepresent == null) {
+            return null;
+        }
+        return TextComponent.builder("[")
+                .append(partLineRepresent)
+                .append(TextComponent.of("]")).build();
+    }
+
+    @Override
     public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         StackSnapshot snapshot = stack.getSnapshot();
 
@@ -45,7 +61,8 @@ public class OptionalPart implements CommandPart {
                     part.parse(context, new SimpleArgumentStack(defaultValues));
 
                     return;
-                } catch (ArgumentParseException | NoMoreArgumentsException ignored) {}
+                } catch (ArgumentParseException | NoMoreArgumentsException ignored) {
+                }
             }
             if (!stack.hasNext()) {
                 throw e;
