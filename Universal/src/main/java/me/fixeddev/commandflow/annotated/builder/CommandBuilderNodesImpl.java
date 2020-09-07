@@ -98,11 +98,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     }
 
     private PartFactory getFactory(Parameter parameter) {
-        PartFactory factory = injector.getFactory(parameter.getType());
-
-        if (factory != null) {
-            return factory;
-        }
+        PartFactory factory = null;
 
         for (Annotation annotation : parameter.getAnnotations()) {
             factory = injector.getFactory(new Key(parameter.getType(), annotation.annotationType()));
@@ -112,7 +108,11 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             }
         }
 
-        return factory;
+        if (factory != null) {
+            return factory;
+        }
+
+        return injector.getFactory(parameter.getType());
     }
 
     @Override
