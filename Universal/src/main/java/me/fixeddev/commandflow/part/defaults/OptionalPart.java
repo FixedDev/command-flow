@@ -11,7 +11,6 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
