@@ -8,6 +8,7 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,10 +16,19 @@ public class SequentialCommandPart implements CommandPart {
 
     private String name;
     private List<CommandPart> parts;
+    private boolean async;
 
     public SequentialCommandPart(String name, List<CommandPart> parts) {
         this.name = name;
         this.parts = parts;
+
+        for (CommandPart part : parts) {
+            if (part.isAsync()) {
+                this.async = true;
+
+                return;
+            }
+        }
     }
 
     @Override
@@ -52,6 +62,24 @@ public class SequentialCommandPart implements CommandPart {
         for (CommandPart part : parts) {
             part.parse(context, stack);
         }
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandContext context, ArgumentStack stack) {
+        for (CommandPart part : parts) {
+            List<String> suggestions = part.getSuggestions(context, stack);
+
+            if (!suggestions.isEmpty()) {
+                return suggestions;
+            }
+        }
+
+        return Collections.emptyList();
+    }
+
+    @Override
+    public boolean isAsync() {
+        return async;
     }
 
     public List<CommandPart> getParts() {

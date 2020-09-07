@@ -7,6 +7,8 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class LimitingPart implements CommandPart {
 
     private final String name;
@@ -37,6 +39,16 @@ public class LimitingPart implements CommandPart {
     @Override
     public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         part.parse(context, stack.getSlice(limit));
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        return part.getSuggestions(commandContext, stack.getSlice(limit));
+    }
+
+    @Override
+    public boolean isAsync() {
+        return part.isAsync();
     }
 
     @Override

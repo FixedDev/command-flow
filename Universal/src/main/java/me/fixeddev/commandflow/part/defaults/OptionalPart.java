@@ -69,4 +69,14 @@ public class OptionalPart implements CommandPart {
 
         }
     }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        return part.getSuggestions(commandContext, stack);
+    }
+
+    @Override
+    public boolean isAsync() {
+        return part.isAsync();
+    }
 }
