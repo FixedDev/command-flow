@@ -64,10 +64,15 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             }
 
             String name = getName(parameter);
+            List<Class<? extends Annotation>> annotationTypes = new ArrayList<>();
             List<Annotation> annotations = Arrays.asList(parameter.getAnnotations());
 
+            for (Annotation annotation : parameter.getAnnotations()) {
+                annotationTypes.add(annotation.annotationType());
+            }
+
             CommandPart part = factory.createPart(name, annotations);
-            PartModifier modifier = injector.getModifiers(parameter.getAnnotations());
+            PartModifier modifier = injector.getModifiers(annotationTypes.toArray(new Class[0]));
 
             ParentArg arg = parameter.getAnnotation(ParentArg.class);
 
@@ -100,7 +105,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
         }
 
         for (Annotation annotation : parameter.getAnnotations()) {
-            factory = injector.getFactory(new Key(parameter.getType(), annotation));
+            factory = injector.getFactory(new Key(parameter.getType(), annotation.annotationType()));
 
             if (factory != null) {
                 break;
