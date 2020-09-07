@@ -18,7 +18,7 @@ import java.util.*;
  * This class is not threadsafe, we can't ensure that registering/executing commands on more than 1 thread concurrently works correctly
  */
 public class SimpleCommandManager implements CommandManager {
-    private Map<String, Command> commandMap;
+    private final Map<String, Command> commandMap;
 
     private Authorizer authorizer;
     private InputTokenizer tokenizer;
