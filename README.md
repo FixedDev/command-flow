@@ -1,4 +1,4 @@
-# CommandFlow
+# CommandFlow [![Codacy Badge](https://app.codacy.com/project/badge/Grade/be5924e44cae41cca2d39bc074bfd881)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FixedDev/CommandFlow&amp;utm_campaign=Badge_Grade)
 ## Repository
 Repository:
 ```xml
