@@ -65,7 +65,7 @@ public class QuotedSpaceTokenizer implements InputTokenizer {
                 tokenBuilder.append(charAt);
                 tokenizeIn(tokenString, tokenBuilder, tokens, true);
                 if (!isRecursiveCall) {
-                    tokens.add(tokenBuilder.toString());
+                    appendTokenIfValid(tokenBuilder, tokens);
                 }
             }
         }
