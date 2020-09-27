@@ -26,9 +26,7 @@ public class BooleanPart extends PrimitivePart {
                 objects.add(stack.nextBoolean());
             }
         } else {
-            if (stack.hasNext()) {
-                objects.add(stack.nextBoolean());
-            }
+            objects.add(stack.nextBoolean());
         }
 
         return objects;

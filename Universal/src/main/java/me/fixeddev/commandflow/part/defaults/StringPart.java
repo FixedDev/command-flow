@@ -78,9 +78,7 @@ public class StringPart implements ArgumentPart {
                 return Collections.singletonList(String.join(separator, objects));
             }
         } else {
-            if (stack.hasNext()) {
-                objects.add(stack.next());
-            }
+            objects.add(stack.next());
         }
 
         return objects;

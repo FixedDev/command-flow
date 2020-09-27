@@ -26,9 +26,7 @@ public class IntegerPart extends PrimitivePart {
                 objects.add(stack.nextInt());
             }
         } else {
-            if (stack.hasNext()) {
-                objects.add(stack.nextInt());
-            }
+            objects.add(stack.nextInt());
         }
 
         return objects;

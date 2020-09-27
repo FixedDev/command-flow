@@ -26,9 +26,8 @@ public class FloatPart extends PrimitivePart {
                 objects.add(stack.nextFloat());
             }
         } else {
-            if (stack.hasNext()) {
-                objects.add(stack.nextFloat());
-            }
+            objects.add(stack.nextFloat());
+
         }
 
         return objects;

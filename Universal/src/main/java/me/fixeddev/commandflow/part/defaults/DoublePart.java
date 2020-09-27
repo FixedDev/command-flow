@@ -26,9 +26,7 @@ public class DoublePart extends PrimitivePart {
                 objects.add(stack.nextDouble());
             }
         } else {
-            if (stack.hasNext()) {
-                objects.add(stack.nextDouble());
-            }
+            objects.add(stack.nextDouble());
         }
 
         return objects;
