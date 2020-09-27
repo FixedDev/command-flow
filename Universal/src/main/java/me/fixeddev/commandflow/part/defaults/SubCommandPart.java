@@ -149,6 +149,7 @@ public class SubCommandPart implements CommandPart {
          * @param label   The label of the subcommand.
          * @param command The subcommand instance if found, otherwise null.
          * @throws ArgumentException If an error with the subcommand is encountered.
+         * @throws InvalidSubCommandException If the provided label isn't a label for a subcommand of this part.
          */
         void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentException;
     }
