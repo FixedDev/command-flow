@@ -5,9 +5,7 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
-public class ArgumentException extends RuntimeException {
-
-    private Component message;
+public class ArgumentException extends CommandException {
 
     private CommandPart argument;
 
@@ -15,30 +13,15 @@ public class ArgumentException extends RuntimeException {
     }
 
     public ArgumentException(Component message) {
-        this((message instanceof TextComponent) ? ((TextComponent) message).content() :
-                ((message instanceof TranslatableComponent) ? "%translatable: " + ((TranslatableComponent) message).key() + "%" : null));
-
-        this.message = message;
+        super(message);
     }
 
     public ArgumentException(String message) {
         super(message);
-
-        if (message.startsWith("%translatable:") && message.endsWith("%")) {
-            this.message = TranslatableComponent.of(message.substring(14, message.length() - 1));
-        } else {
-            this.message = TextComponent.of(message);
-        }
     }
 
     public ArgumentException(String message, Throwable cause) {
         super(message, cause);
-
-        if (message.startsWith("%translatable:") && message.endsWith("%")) {
-            this.message = TranslatableComponent.of(message.substring(14, message.length() - 1));
-        } else {
-            this.message = TextComponent.of(message);
-        }
     }
 
     public ArgumentException(Throwable cause) {
@@ -51,9 +34,5 @@ public class ArgumentException extends RuntimeException {
 
     public CommandPart getArgument() {
         return argument;
-    }
-
-    public Component getMessageComponent() {
-        return message;
     }
 }
