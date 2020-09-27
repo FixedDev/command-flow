@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow.annotated;
 
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import org.jetbrains.annotations.NotNull;
@@ -28,8 +29,8 @@ public class ReflectionSubCommandHandler implements SubCommandPart.SubCommandHan
             handlerMethod.setAccessible(accessible);
         } catch (IllegalAccessException | InvocationTargetException e) {
             Throwable cause = e.getCause();
-            if (cause instanceof ArgumentParseException) {
-                throw (ArgumentParseException) cause;
+            if (cause instanceof ArgumentException) {
+                throw (ArgumentException) cause;
             }
 
             throw new ArgumentParseException("Internal error.", cause);
