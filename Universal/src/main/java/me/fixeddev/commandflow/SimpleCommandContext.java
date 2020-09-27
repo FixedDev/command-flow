@@ -40,6 +40,13 @@ public class SimpleCommandContext implements CommandContext, Namespace {
     }
 
     @Override
+    public void removeLastCommand() {
+        commandExecutionPath.remove(executedCommand);
+        executedCommand = commandExecutionPath.get(commandExecutionPath.size() - 1);
+        labels.remove(labels.size() - 1);
+    }
+
+    @Override
     public Command getCommand() {
         return executedCommand;
     }
@@ -85,7 +92,7 @@ public class SimpleCommandContext implements CommandContext, Namespace {
         List<CommandPart> parts = allPartsByName
                 .computeIfAbsent(part.getName(), key -> new ArrayList<>());
 
-        if(!parts.contains(part)){
+        if (!parts.contains(part)) {
             parts.add(part);
         }
     }

@@ -17,6 +17,11 @@ public interface CommandContext extends Namespace {
     void setCommand(Command command, String label);
 
     /**
+     * Changes the current context for the {@link Command} and removes the last {@link Command} from the execution path and labels list.
+     */
+    void removeLastCommand();
+
+    /**
      * The {@link Command} to execute
      *
      * @return A nullable {@link Command} instance if a command wasn't added yet.
