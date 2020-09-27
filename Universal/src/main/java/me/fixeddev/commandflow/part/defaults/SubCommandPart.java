@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
@@ -155,7 +156,13 @@ public class SubCommandPart implements CommandPart {
             }
 
             commandContext.setCommand(command, label);
-            command.getPart().parse(commandContext, stack);
+            try {
+                command.getPart().parse(commandContext, stack);
+            } catch (ArgumentException exception) {
+                commandContext.removeLastCommand();
+
+                throw exception;
+            }
         }
     }
 }
