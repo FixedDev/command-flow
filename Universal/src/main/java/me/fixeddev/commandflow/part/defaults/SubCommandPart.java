@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.exception.InvalidSubCommandException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
@@ -63,7 +64,16 @@ public class SubCommandPart implements CommandPart {
         String label = stack.next();
         Command command = subCommands.get(label);
 
-        handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
+
+        try {
+            handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
+        } catch (ArgumentException exception) {
+            if (!(exception instanceof InvalidSubCommandException)){
+                context.removeLastCommand();
+            }
+
+            throw exception;
+        }
     }
 
     public Map<String, Command> getSubCommandMap() {
@@ -138,21 +148,21 @@ public class SubCommandPart implements CommandPart {
          * @param context The context for the handler.
          * @param label   The label of the subcommand.
          * @param command The subcommand instance if found, otherwise null.
-         * @throws ArgumentParseException If an error with the subcommand is encountered.
+         * @throws ArgumentException If an error with the subcommand is encountered.
          */
-        void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentParseException;
+        void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentException;
     }
 
     public static class DefaultSubCommandHandler implements SubCommandHandler {
 
         @Override
-        public void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentParseException {
+        public void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentException {
             CommandContext commandContext = context.getContext();
             ArgumentStack stack = context.getStack();
 
             if (command == null) {
                 // TODO: Set an actual translatable message
-                throw new ArgumentParseException(TextComponent.of("The subcommand " + label + " doesn't exists!"));
+                throw new InvalidSubCommandException(TextComponent.of("The subcommand " + label + " doesn't exists!"));
             }
 
             commandContext.setCommand(command, label);
