@@ -71,7 +71,7 @@ public class SubCommandPart implements CommandPart {
         try {
             handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
         } catch (ArgumentException exception) {
-            if (!(exception instanceof InvalidSubCommandException)){
+            if (!(exception instanceof InvalidSubCommandException)) {
                 context.removeLastCommand();
             }
 
@@ -151,7 +151,7 @@ public class SubCommandPart implements CommandPart {
          * @param context The context for the handler.
          * @param label   The label of the subcommand.
          * @param command The subcommand instance if found, otherwise null.
-         * @throws ArgumentException If an error with the subcommand is encountered.
+         * @throws ArgumentException          If an error with the subcommand is encountered.
          * @throws InvalidSubCommandException If the provided label isn't a label for a subcommand of this part.
          */
         void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentException;
@@ -172,18 +172,12 @@ public class SubCommandPart implements CommandPart {
             // Should be there
             CommandManager manager = commandContext.getObject(CommandManager.class, "commandManager");
 
-            if(!manager.getAuthorizer().isAuthorized(commandContext, command.getPermission())){
+            if (!manager.getAuthorizer().isAuthorized(commandContext, command.getPermission())) {
                 throw new NoPermissionsException(command.getPermissionMessage());
             }
 
             commandContext.setCommand(command, label);
-            try {
-                command.getPart().parse(commandContext, stack);
-            } catch (ArgumentException exception) {
-                commandContext.removeLastCommand();
-
-                throw exception;
-            }
+            command.getPart().parse(commandContext, stack);
         }
     }
 }
