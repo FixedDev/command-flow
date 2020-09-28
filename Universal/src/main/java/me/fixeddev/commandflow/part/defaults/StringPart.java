@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.part.defaults;
 
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
@@ -66,7 +67,7 @@ public class StringPart implements ArgumentPart {
     }
 
     @Override
-    public List<String> parseValue(ArgumentStack stack) throws ArgumentParseException {
+    public List<String> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         List<String> objects = new ArrayList<>();
 
         if (consumeAll) {

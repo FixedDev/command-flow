@@ -22,7 +22,7 @@ public interface ArgumentPart extends CommandPart {
         StackSnapshot snapshot = stack.getSnapshot();
 
         int oldArgumentsLeft = stack.getArgumentsLeft();
-        List<? extends Object> value = parseValue(stack);
+        List<? extends Object> value = parseValue(context, stack);
 
         List<String> rawArgs = new ArrayList<>();
         int usedArguments = oldArgumentsLeft - stack.getArgumentsLeft();
@@ -41,7 +41,7 @@ public interface ArgumentPart extends CommandPart {
         context.setRaw(this, rawArgs);
     }
 
-    List<? extends Object> parseValue(ArgumentStack stack) throws ArgumentParseException;
+    List<? extends Object> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException;
 
     Type getType();
 }

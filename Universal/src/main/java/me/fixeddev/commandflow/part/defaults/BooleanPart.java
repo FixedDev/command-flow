@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.part.defaults;
 
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
@@ -18,7 +19,7 @@ public class BooleanPart extends PrimitivePart {
     }
 
     @Override
-    public List<Boolean> parseValue(ArgumentStack stack) throws ArgumentParseException {
+    public List<Boolean> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         List<Boolean> objects = new ArrayList<>();
 
         if (consumeAll) {

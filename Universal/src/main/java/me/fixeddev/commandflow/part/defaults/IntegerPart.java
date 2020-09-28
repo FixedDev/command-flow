@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.part.defaults;
 
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
@@ -18,7 +19,7 @@ public class IntegerPart extends PrimitivePart {
     }
 
     @Override
-    public List<Integer> parseValue(ArgumentStack stack) throws ArgumentParseException {
+    public List<Integer> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         List<Integer> objects = new ArrayList<>();
 
         if (consumeAll) {
