@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class DefaultMapTranslationProvider implements TranslationProvider{
 
-    private Map<String, String> translations;
+    protected Map<String, String> translations;
 
     public DefaultMapTranslationProvider() {
         translations = new HashMap<>();
