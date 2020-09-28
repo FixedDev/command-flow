@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.input.InputTokenizer;
+import me.fixeddev.commandflow.translator.Translator;
 
 import java.util.List;
 import java.util.Optional;
@@ -108,6 +109,10 @@ public interface CommandManager {
     Executor getExecutor();
 
     void setExecutor(Executor executor);
+
+    Translator getTranslator();
+
+    void setTranslator(Translator translator);
 
     /**
      * Searches a command with the specified name or alias and wraps it in an {@link Optional} instance

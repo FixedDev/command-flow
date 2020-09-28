@@ -10,6 +10,7 @@ import me.fixeddev.commandflow.input.StringSpaceTokenizer;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
+import me.fixeddev.commandflow.translator.Translator;
 
 import java.util.*;
 
@@ -24,6 +25,7 @@ public class SimpleCommandManager implements CommandManager {
     private Authorizer authorizer;
     private InputTokenizer tokenizer;
     private Executor executor;
+    private Translator translator;
 
     public SimpleCommandManager(Authorizer authorizer) {
         this.authorizer = authorizer;
@@ -159,6 +161,16 @@ public class SimpleCommandManager implements CommandManager {
     @Override
     public void setExecutor(Executor executor) {
         this.executor = executor;
+    }
+
+    @Override
+    public Translator getTranslator() {
+        return translator;
+    }
+
+    @Override
+    public void setTranslator(Translator translator) {
+        this.translator = translator;
     }
 
     /**
