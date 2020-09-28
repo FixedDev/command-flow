@@ -129,6 +129,8 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
                     .action(Action.NULL_ACTION);
         }
 
+        subCommandsNode.setModifiers(clazz.getAnnotations());
+
         if(!clazz.isAnnotationPresent(Required.class)) {
             subCommandsNode.optional();
         }

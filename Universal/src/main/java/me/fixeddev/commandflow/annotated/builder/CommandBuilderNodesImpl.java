@@ -23,6 +23,7 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNode, CommandPartsNode, SubCommandsNode {
     private final Command.Builder builder;
@@ -31,6 +32,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     private final List<ValueGetter> partGetters;
     private SubCommandPart.SubCommandHandler subCommandHandler;
     private boolean optional = false;
+    private Function<CommandPart, CommandPart> modifierFunction = Function.identity();
 
     public CommandBuilderNodesImpl(String name, PartInjector injector) {
         this.builder = Command.builder(name);
@@ -181,6 +183,28 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     }
 
     @Override
+    public SubCommandsNode setModifiers(Annotation... modifiers) {
+        List<Class<? extends Annotation>> annotationTypes = new ArrayList<>();
+        List<Annotation> annotations = Arrays.asList(modifiers);
+
+        for (Annotation annotation : modifiers) {
+            annotationTypes.add(annotation.annotationType());
+        }
+
+        PartModifier modifier = injector.getModifiers(annotationTypes);
+
+        if (modifierFunction != Function.<CommandPart>identity()) {
+            Function<CommandPart, CommandPart> oldFunction = modifierFunction;
+
+            modifierFunction = (part) -> modifier.modify(oldFunction.apply(part), annotations);
+        } else{
+            modifierFunction = (part) -> modifier.modify(part, annotations);
+        }
+
+        return this;
+    }
+
+    @Override
     public SubCommandsNode optional() {
         optional = true;
         return this;
@@ -196,6 +220,8 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             } else {
                 part = new SubCommandPart("subcommand", subCommands);
             }
+
+            part = modifierFunction.apply(part);
 
             if (optional) {
                 part = Parts.optional(part);
