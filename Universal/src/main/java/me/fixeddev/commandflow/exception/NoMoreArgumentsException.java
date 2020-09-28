@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow.exception;
 
 import net.kyori.text.Component;
+import net.kyori.text.TranslatableComponent;
 
 public class NoMoreArgumentsException extends ArgumentException {
 
@@ -12,7 +13,7 @@ public class NoMoreArgumentsException extends ArgumentException {
     }
 
     public NoMoreArgumentsException(int size, int position) {
-        super("No more arguments were found, size: " + size + " position: " + position);
+        super(TranslatableComponent.of("argument.no-more", Component.of(size), Component.of(position)));
     }
 
     public NoMoreArgumentsException(Component message) {
