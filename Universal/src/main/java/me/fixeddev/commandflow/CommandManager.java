@@ -105,10 +105,6 @@ public interface CommandManager {
      */
     void setInputTokenizer(InputTokenizer tokenizer);
 
-    /**
-     * 
-     * @return
-     */
     Executor getExecutor();
 
     void setExecutor(Executor executor);
@@ -126,6 +122,7 @@ public interface CommandManager {
      * Parses the command and creates a {@link CommandContext} instance used to execute the command.
      * <p>
      * If the executed {@link Command}'s {@link me.fixeddev.commandflow.command.Action} returns a false value then this method gets the usage for the executed Command
+     * As a side note, the implementation also injects this instance into the {@link Namespace} with the name "commandManager"
      *
      * @param accessor  The {@link Namespace} used to inject things into the Command parsing/execution phase
      * @param arguments A {@link List} of arguments including the command used to parse the actual command used and the parameters of that command
