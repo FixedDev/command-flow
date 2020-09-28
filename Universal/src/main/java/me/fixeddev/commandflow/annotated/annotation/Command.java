@@ -16,6 +16,6 @@ public @interface Command {
 
     String permission() default "";
 
-    String permissionMessage() default "No permission.";
+    String permissionMessage() default "%translatable:command.no-permission%";
 
 }
