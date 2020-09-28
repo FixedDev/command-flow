@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.annotated;
 
+import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;
 import me.fixeddev.commandflow.annotated.annotation.Handler;
 import me.fixeddev.commandflow.annotated.annotation.Required;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
@@ -133,6 +134,10 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
 
         if(!clazz.isAnnotationPresent(Required.class)) {
             subCommandsNode.optional();
+        }
+
+        if(clazz.isAnnotationPresent(ArgOrSub.class)){
+            subCommandsNode.argumentsOrSubCommand();
         }
 
         SubCommandClasses classesAnnotation = clazz.getAnnotation(SubCommandClasses.class);

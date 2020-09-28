@@ -32,6 +32,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     private final List<ValueGetter> partGetters;
     private SubCommandPart.SubCommandHandler subCommandHandler;
     private boolean optional = false;
+    private boolean argumentsOrSubcommand = false;
     private Function<CommandPart, CommandPart> modifierFunction = Function.identity();
 
     public CommandBuilderNodesImpl(String name, PartInjector injector) {
@@ -197,10 +198,16 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             Function<CommandPart, CommandPart> oldFunction = modifierFunction;
 
             modifierFunction = (part) -> modifier.modify(oldFunction.apply(part), annotations);
-        } else{
+        } else {
             modifierFunction = (part) -> modifier.modify(part, annotations);
         }
 
+        return this;
+    }
+
+    @Override
+    public SubCommandsNode argumentsOrSubCommand() {
+        argumentsOrSubcommand = true;
         return this;
     }
 
@@ -227,7 +234,17 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
                 part = Parts.optional(part);
             }
 
-            builder.addPart(part);
+            if (argumentsOrSubcommand) {
+                Command command = builder.build();
+
+                part = Parts.firstMatchingPart(part.getName() + "|" + "arguments", command.getPart(), part);
+
+                builder.part(part);
+            } else {
+                builder.addPart(part);
+            }
+
+
         }
 
 
