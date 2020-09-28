@@ -5,7 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class ReflectionInstanceCreator implements SubCommandInstanceCreator {
     @Override
-    public CommandClass createInstance(Class<?> clazz, CommandClass parent) {
+    public CommandClass createInstance(Class<? extends CommandClass> clazz, CommandClass parent) {
         try {
             Constructor<?> constructor;
             boolean useUpperClass = true;
