@@ -2,7 +2,6 @@ package me.fixeddev.commandflow.bukkit.part;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
-import me.fixeddev.commandflow.bukkit.BukkitCommandWrapper;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
@@ -15,6 +14,7 @@ import org.bukkit.entity.Player;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static me.fixeddev.commandflow.bukkit.part.OfflinePlayerPart.getStrings;
@@ -90,5 +90,20 @@ public class PlayerPart implements ArgumentPart {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PlayerPart)) return false;
+        PlayerPart that = (PlayerPart) o;
+        return exact == that.exact &&
+                orSource == that.orSource &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, exact, orSource);
     }
 }

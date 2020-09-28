@@ -14,6 +14,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class OfflinePlayerPart implements ArgumentPart {
@@ -102,4 +103,17 @@ public class OfflinePlayerPart implements ArgumentPart {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof OfflinePlayerPart)) return false;
+        OfflinePlayerPart that = (OfflinePlayerPart) o;
+        return orSource == that.orSource &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, orSource);
+    }
 }
