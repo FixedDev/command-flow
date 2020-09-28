@@ -7,17 +7,17 @@ import java.util.*;
 
 public class SimpleCommandContext implements CommandContext, Namespace {
 
-    private final Namespace namespace;
+    private Namespace namespace;
 
     private Command executedCommand;
-    private final List<Command> commandExecutionPath;
-    private final List<String> rawArguments;
-    private final List<String> labels;
+    private List<Command> commandExecutionPath;
+    private List<String> rawArguments;
+    private List<String> labels;
 
-    private final Set<CommandPart> allParts;
-    private final Map<String, List<CommandPart>> allPartsByName;
-    private final Map<CommandPart, List<String>> rawBindings;
-    private final Map<CommandPart, List<Object>> valueBindings;
+    private Set<CommandPart> allParts;
+    private Map<String, List<CommandPart>> allPartsByName;
+    private Map<CommandPart, List<String>> rawBindings;
+    private Map<CommandPart, List<Object>> valueBindings;
 
     public SimpleCommandContext(Namespace namespace, List<String> rawArguments) {
         this.namespace = namespace;
@@ -30,6 +30,32 @@ public class SimpleCommandContext implements CommandContext, Namespace {
         commandExecutionPath = new ArrayList<>();
         this.rawArguments = rawArguments;
         labels = new ArrayList<>();
+    }
+
+    @Override
+    public ContextSnapshot getSnapshot() {
+        return new ContextSnapshot(namespace,
+                executedCommand,
+                new ArrayList<>(commandExecutionPath),
+                new ArrayList<>(rawArguments),
+                new ArrayList<>(labels),
+                new HashSet<>(allParts),
+                new HashMap<>(allPartsByName),
+                new HashMap<>(rawBindings),
+                new HashMap<>(valueBindings));
+    }
+
+    @Override
+    public void applySnapshot(ContextSnapshot snapshot) {
+        namespace = snapshot.namespace;
+        executedCommand = snapshot.executedCommand;
+        commandExecutionPath = snapshot.commandExecutionPath;
+        rawArguments = snapshot.rawArguments;
+        labels = snapshot.labels;
+        allParts = snapshot.allParts;
+        allPartsByName = snapshot.allPartsByName;
+        rawBindings = snapshot.rawBindings;
+        valueBindings = snapshot.valueBindings;
     }
 
     @Override

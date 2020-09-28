@@ -2,11 +2,28 @@ package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
+import me.fixeddev.commandflow.stack.StackSnapshot;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface CommandContext extends Namespace {
+
+    /**
+     * Copies this {@link CommandContext} into an immutable instance of {@link ContextSnapshot} copying all properties at the time of
+     * creating the snapshot.
+     *
+     * @return An immutable {@link ContextSnapshot}
+     */
+    ContextSnapshot getSnapshot();
+
+    /**
+     * Applies a pre created {@link ContextSnapshot} into this {@link CommandContext} instance, effectively reverting this
+     * instance into the values of the {@link ContextSnapshot}
+     *
+     * @param snapshot The {@link ContextSnapshot} to apply.
+     */
+    void applySnapshot(ContextSnapshot snapshot);
 
     /**
      * Changes the current context for the {@link Command} and adds the {@link Command} into the execution path and labels list.
@@ -123,10 +140,10 @@ public interface CommandContext extends Namespace {
      * Gets a {@link CommandPart} with a given name and uses it to get the converted values of the specified {@link CommandPart}
      *
      * @param partName The of the {@link CommandPart} to search values for.
-     * @param <V>  The type of the returned value.
+     * @param <V>      The type of the returned value.
      * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
      */
-    default <V> Optional<List<V>> getValues(String partName){
+    default <V> Optional<List<V>> getValues(String partName) {
         return getPart(partName).flatMap(this::getValues);
     }
 
@@ -147,7 +164,7 @@ public interface CommandContext extends Namespace {
      * Gets a {@link CommandPart} with a given name and uses it to get the converted first value of the specified {@link CommandPart}
      *
      * @param partName The of the {@link CommandPart} to search values for.
-     * @param <V>  The type of the returned value.
+     * @param <V>      The type of the returned value.
      * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
      */
     default <V> Optional<V> getValue(String partName) {
