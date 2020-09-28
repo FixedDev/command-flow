@@ -8,13 +8,14 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.TranslatableComponent;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.Objects;
 
-public class CommandSenderPart implements CommandPart {
+public class PlayerSenderPart implements CommandPart {
     private final String name;
 
-    public CommandSenderPart(String name) {
+    public PlayerSenderPart(String name) {
         this.name = name;
     }
 
@@ -28,9 +29,13 @@ public class CommandSenderPart implements CommandPart {
         CommandSender sender = context.getObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE);
 
         if (sender != null) {
-            context.setValue(this, sender);
+            if(sender instanceof Player){
+                context.setValue(this, sender);
 
-            return;
+                return;
+            }
+
+            throw new ArgumentParseException(TranslatableComponent.of("sender.only-player"));
         }
 
         throw new CommandException(TranslatableComponent.of("sender.unknown"));
@@ -39,8 +44,8 @@ public class CommandSenderPart implements CommandPart {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CommandSenderPart)) return false;
-        CommandSenderPart that = (CommandSenderPart) o;
+        if (!(o instanceof PlayerSenderPart)) return false;
+        PlayerSenderPart that = (PlayerSenderPart) o;
         return Objects.equals(name, that.name);
     }
 
