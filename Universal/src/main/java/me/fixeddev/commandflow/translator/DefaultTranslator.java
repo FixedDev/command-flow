@@ -4,22 +4,14 @@ import me.fixeddev.commandflow.Namespace;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
-import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.text.serializer.plain.PlainComponentSerializer;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DefaultTranslator implements Translator {
-    private PlainComponentSerializer plainComponentSerializer;
-    private LegacyComponentSerializer legacyComponentSerializer;
-
     private TranslationProvider provider;
 
-    public DefaultTranslator(PlainComponentSerializer plainComponentSerializer, LegacyComponentSerializer legacyComponentSerializer, TranslationProvider provider) {
-        this.plainComponentSerializer = plainComponentSerializer;
-        this.legacyComponentSerializer = legacyComponentSerializer;
+    public DefaultTranslator(TranslationProvider provider) {
         this.provider = provider;
     }
 
@@ -44,7 +36,7 @@ public class DefaultTranslator implements Translator {
     private void convert(TranslatableComponent component, TextComponent.Builder builder) {
         String trans = provider.getTranslation(component.key()); //translate
 
-        if(trans == null || trans.isEmpty()){
+        if (trans == null || trans.isEmpty()) {
             builder.content(component.key());
             return;
         }
