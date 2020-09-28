@@ -17,4 +17,11 @@ public interface Translator {
      * @return The translated {@link net.kyori.text.TextComponent} or the same instance if it isn't a {@link net.kyori.text.TranslatableComponent}
      */
     Component translate(Component component, Namespace namespace);
+
+    /**
+     * Changes the {@link TranslationProvider} used for this Translator instance.
+     *
+     * @param provider The new {@link TranslationProvider} instance.
+     */
+    void setProvider(TranslationProvider provider);
 }

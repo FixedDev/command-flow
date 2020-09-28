@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.Namespace;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,6 +29,16 @@ public class DefaultTranslator implements Translator {
 
         return componentBuilder.build();
     }
+
+    @Override
+    public void setProvider(TranslationProvider provider) {
+        if (provider == null) {
+            throw new IllegalArgumentException("The provided provider is null!");
+        }
+
+        this.provider = provider;
+    }
+
 
     // Taken from BungeeCord-Chat TranslatableComponent and modified to allow the conversion of a TranslatableComponent into a Text Component
     // instead of it being converted into plain text
