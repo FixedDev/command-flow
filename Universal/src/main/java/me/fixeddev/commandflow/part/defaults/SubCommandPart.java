@@ -1,14 +1,17 @@
 package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
+import net.kyori.text.TranslatableComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -163,7 +166,14 @@ public class SubCommandPart implements CommandPart {
 
             if (command == null) {
                 // TODO: Set an actual translatable message
-                throw new InvalidSubCommandException(TextComponent.of("The subcommand " + label + " doesn't exists!"));
+                throw new InvalidSubCommandException(TranslatableComponent.of("invalid.subcommand", TextComponent.of(label)));
+            }
+
+            // Should be there
+            CommandManager manager = commandContext.getObject(CommandManager.class, "commandManager");
+
+            if(!manager.getAuthorizer().isAuthorized(commandContext, command.getPermission())){
+                throw new NoPermissionsException(command.getPermissionMessage());
             }
 
             commandContext.setCommand(command, label);

@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.executor.DefaultExecutor;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.exception.CommandException;
@@ -191,7 +192,7 @@ public class SimpleCommandManager implements CommandManager {
         Command command = optionalCommand.get();
 
         if (!authorizer.isAuthorized(accessor, command.getPermission())) {
-            return false;
+            throw new NoPermissionsException(command.getPermissionMessage());
         }
 
         CommandContext commandContext = new SimpleCommandContext(accessor, arguments);
