@@ -25,7 +25,7 @@ public class DefaultTranslator implements Translator {
         TranslatableComponent translatableComponent = (TranslatableComponent) component;
 
         TextComponent.Builder componentBuilder = TextComponent.builder("");
-        convert(translatableComponent, componentBuilder);
+        convert(translatableComponent, componentBuilder, namespace);
 
         return componentBuilder.build();
     }
@@ -44,8 +44,8 @@ public class DefaultTranslator implements Translator {
     // instead of it being converted into plain text
     private final Pattern format = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
-    private void convert(TranslatableComponent component, TextComponent.Builder builder) {
-        String trans = provider.getTranslation(component.key()); //translate
+    private void convert(TranslatableComponent component, TextComponent.Builder builder, Namespace namespace) {
+        String trans = provider.getTranslation(namespace, component.key()); //translate
 
         if (trans == null || trans.isEmpty()) {
             builder.content(component.key());
@@ -77,7 +77,7 @@ public class DefaultTranslator implements Translator {
                         Component withComponent = component.args().get(withIndexInt);
 
                         if (withComponent instanceof TranslatableComponent) {
-                            convert(component, builder);
+                            convert(component, builder, namespace);
                         } else {
                             builder.append(withComponent);
                         }

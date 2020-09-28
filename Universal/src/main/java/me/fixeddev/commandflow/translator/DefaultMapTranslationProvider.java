@@ -1,5 +1,7 @@
 package me.fixeddev.commandflow.translator;
 
+import me.fixeddev.commandflow.Namespace;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,8 +16,12 @@ public class DefaultMapTranslationProvider implements TranslationProvider{
         translations.put("argument.no-more","No more arguments were found, size: %s position: %s");
     }
 
-    @Override
     public String getTranslation(String key) {
         return translations.get(key);
+    }
+
+    @Override
+    public String getTranslation(Namespace namespace, String key){
+        return getTranslation(key);
     }
 }
