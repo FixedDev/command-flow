@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
+import me.fixeddev.commandflow.part.defaults.FirstMatchPart;
 import me.fixeddev.commandflow.part.defaults.FloatPart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
 import me.fixeddev.commandflow.part.defaults.LimitingPart;
@@ -81,6 +82,34 @@ public final class Parts {
      */
     public static CommandPart newFloatPart(String name) {
         return new FloatPart(name);
+    }
+
+    /**
+     * A {@link CommandPart} that consist on a sequence of other CommandParts.
+     * <p>
+     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
+     * this {@link FirstMatchPart} will be parsed until some part parses correctly/
+     *
+     * @param name  The name for this part.
+     * @param parts The sequence of {@link CommandPart} instances that this {@link CommandPart} will delegate to.
+     * @return A {@link CommandPart} that consists on a sequence of other CommandParts, using the first one that parsed correctly.
+     */
+    public static CommandPart firstMatchingPart(String name, CommandPart... parts){
+        return new FirstMatchPart(name, Arrays.asList(parts));
+    }
+
+    /**
+     * A {@link CommandPart} that consist on a sequence of other CommandParts.
+     * <p>
+     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
+     * this {@link FirstMatchPart} will be parsed until some part parses correctly/
+     *
+     * @param name  The name for this part.
+     * @param parts The sequence of {@link CommandPart} instances that this {@link CommandPart} will delegate to.
+     * @return A {@link CommandPart} that consists on a sequence of other CommandParts, using the first one that parsed correctly.
+     */
+    public static CommandPart firstMatchingPart(String name, Collection<CommandPart> parts){
+        return new FirstMatchPart(name, new ArrayList<>(parts));
     }
 
     /**
