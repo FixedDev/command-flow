@@ -9,7 +9,7 @@ public class DefaultMapTranslationProvider implements TranslationProvider{
 
     public DefaultMapTranslationProvider() {
         translations = new HashMap<>();
-        translations.put("invalid.subcommand", "The subcommand %s doesn't exists!");
+        translations.put("command.subcommand.invalid", "The subcommand %s doesn't exists!");
         translations.put("command.no-permission", "No permission.");
     }
 

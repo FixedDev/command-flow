@@ -166,7 +166,7 @@ public class SubCommandPart implements CommandPart {
 
             if (command == null) {
                 // TODO: Set an actual translatable message
-                throw new InvalidSubCommandException(TranslatableComponent.of("invalid.subcommand", TextComponent.of(label)));
+                throw new InvalidSubCommandException(TranslatableComponent.of("command.subcommand.invalid", TextComponent.of(label)));
             }
 
             // Should be there
