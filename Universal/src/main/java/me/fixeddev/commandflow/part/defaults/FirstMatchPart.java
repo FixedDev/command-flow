@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.ContextSnapshot;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
@@ -35,6 +36,7 @@ public class FirstMatchPart implements CommandPart {
         ArgumentException last = null;
 
         for (CommandPart part : partList) {
+            ContextSnapshot contextSnapshot = context.getSnapshot();
             StackSnapshot snapshot = stack.getSnapshot();
 
             try {
@@ -43,6 +45,7 @@ public class FirstMatchPart implements CommandPart {
                 return;
             } catch (ArgumentException e) {
                 stack.applySnapshot(snapshot, true);
+                context.applySnapshot(contextSnapshot);
 
                 last = e;
             }

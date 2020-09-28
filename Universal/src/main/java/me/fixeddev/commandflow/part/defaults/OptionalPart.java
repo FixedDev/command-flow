@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.ContextSnapshot;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.part.CommandPart;
@@ -49,11 +50,13 @@ public class OptionalPart implements CommandPart {
     @Override
     public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         StackSnapshot snapshot = stack.getSnapshot();
+        ContextSnapshot contextSnapshot = context.getSnapshot();
 
         try {
             part.parse(context, stack);
         } catch (ArgumentParseException | NoMoreArgumentsException e) {
             stack.applySnapshot(snapshot);
+            context.applySnapshot(contextSnapshot);
 
             if (!defaultValues.isEmpty()) {
                 try {
