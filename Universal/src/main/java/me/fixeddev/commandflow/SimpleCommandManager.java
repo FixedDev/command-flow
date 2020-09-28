@@ -48,9 +48,7 @@ public class SimpleCommandManager implements CommandManager {
 
         commandMap.put(command.getName().toLowerCase(), command);
 
-        command.getAliases().forEach(alias -> {
-            commandMap.putIfAbsent(alias.toLowerCase(), command);
-        });
+        command.getAliases().forEach(alias -> commandMap.putIfAbsent(alias.toLowerCase(), command));
     }
 
     /**
