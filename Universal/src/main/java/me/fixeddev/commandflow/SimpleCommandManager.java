@@ -10,6 +10,8 @@ import me.fixeddev.commandflow.input.StringSpaceTokenizer;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
+import me.fixeddev.commandflow.translator.DefaultMapTranslationProvider;
+import me.fixeddev.commandflow.translator.DefaultTranslator;
 import me.fixeddev.commandflow.translator.Translator;
 
 import java.util.*;
@@ -33,6 +35,7 @@ public class SimpleCommandManager implements CommandManager {
         tokenizer = new StringSpaceTokenizer();
 
         executor = new DefaultExecutor();
+        translator = new DefaultTranslator(new DefaultMapTranslationProvider());
     }
 
     public SimpleCommandManager() {
