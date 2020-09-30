@@ -11,6 +11,7 @@ import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.DefaultMapTranslationProvider;
 import me.fixeddev.commandflow.translator.DefaultTranslator;
 import me.fixeddev.commandflow.translator.Translator;
+import me.fixeddev.commandflow.usage.UsageBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
@@ -143,6 +144,16 @@ public class BukkitCommandManager implements CommandManager {
     @Override
     public void setTranslator(Translator translator) {
         manager.setTranslator(translator);
+    }
+
+    @Override
+    public UsageBuilder getUsageBuilder() {
+        return manager.getUsageBuilder();
+    }
+
+    @Override
+    public void setUsageBuilder(UsageBuilder usageBuilder) {
+        manager.setUsageBuilder(usageBuilder);
     }
 
     @Override
