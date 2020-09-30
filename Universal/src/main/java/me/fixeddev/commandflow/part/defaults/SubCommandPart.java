@@ -17,9 +17,12 @@ import net.kyori.text.TranslatableComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -90,6 +93,26 @@ public class SubCommandPart implements CommandPart {
 
             throw e;
         }
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        String next = stack.hasNext() ? stack.next() : "";
+        Command command = subCommands.get(next);
+
+        if (command != null) {
+            return command.getPart().getSuggestions(commandContext, stack);
+        }
+
+        List<String> suggestions = new ArrayList<>();
+
+        for (String subcommand : subCommands.keySet()) {
+            if (subcommand.startsWith(next)) {
+                suggestions.add(subcommand);
+            }
+        }
+
+        return suggestions;
     }
 
     public Map<String, Command> getSubCommandMap() {
