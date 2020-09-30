@@ -67,16 +67,7 @@ public class SubCommandPart implements CommandPart {
         String label = stack.next();
         Command command = subCommands.get(label);
 
-
-        try {
-            handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
-        } catch (ArgumentException exception) {
-            if (!(exception instanceof InvalidSubCommandException)) {
-                context.removeLastCommand();
-            }
-
-            throw exception;
-        }
+        handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
     }
 
     public Map<String, Command> getSubCommandMap() {
