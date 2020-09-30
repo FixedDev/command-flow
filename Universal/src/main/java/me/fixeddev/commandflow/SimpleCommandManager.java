@@ -1,6 +1,8 @@
 package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.CommandUsage;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.executor.DefaultExecutor;
 import me.fixeddev.commandflow.executor.Executor;
@@ -13,6 +15,8 @@ import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.translator.DefaultMapTranslationProvider;
 import me.fixeddev.commandflow.translator.DefaultTranslator;
 import me.fixeddev.commandflow.translator.Translator;
+import me.fixeddev.commandflow.usage.DefaultUsageBuilder;
+import me.fixeddev.commandflow.usage.UsageBuilder;
 
 import java.util.*;
 
@@ -28,6 +32,7 @@ public class SimpleCommandManager implements CommandManager {
     private InputTokenizer tokenizer;
     private Executor executor;
     private Translator translator;
+    private UsageBuilder usageBuilder;
 
     public SimpleCommandManager(Authorizer authorizer) {
         this.authorizer = authorizer;
@@ -36,6 +41,7 @@ public class SimpleCommandManager implements CommandManager {
 
         executor = new DefaultExecutor();
         translator = new DefaultTranslator(new DefaultMapTranslationProvider());
+        usageBuilder = new DefaultUsageBuilder();
     }
 
     public SimpleCommandManager() {
@@ -163,6 +169,10 @@ public class SimpleCommandManager implements CommandManager {
 
     @Override
     public void setExecutor(Executor executor) {
+        if (executor == null) {
+            throw new IllegalArgumentException("Trying to set a null Executor!");
+        }
+
         this.executor = executor;
     }
 
@@ -173,7 +183,25 @@ public class SimpleCommandManager implements CommandManager {
 
     @Override
     public void setTranslator(Translator translator) {
+        if (translator == null) {
+            throw new IllegalArgumentException("Trying to set a null Translator!");
+        }
+
         this.translator = translator;
+    }
+
+    @Override
+    public UsageBuilder getUsageBuilder() {
+        return usageBuilder;
+    }
+
+    @Override
+    public void setUsageBuilder(UsageBuilder usageBuilder) {
+        if (usageBuilder == null) {
+            throw new IllegalArgumentException("Trying to set a null UsageBuilder!");
+        }
+
+        this.usageBuilder = usageBuilder;
     }
 
     /**
@@ -214,9 +242,16 @@ public class SimpleCommandManager implements CommandManager {
         accessor.setObject(CommandManager.class, "commandManager", this);
 
         CommandPart part = command.getPart();
-        part.parse(commandContext, stack);
+        try {
+            part.parse(commandContext, stack);
+        } catch (NoMoreArgumentsException e) {
+            CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
+            usage.setCommand(commandContext.getCommand());
 
-        return executor.execute(commandContext);
+            throw usage;
+        }
+
+        return executor.execute(commandContext, getUsageBuilder());
     }
 
     /**
