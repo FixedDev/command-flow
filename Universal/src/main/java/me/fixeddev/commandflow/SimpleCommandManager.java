@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.CommandUsage;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
@@ -244,10 +245,11 @@ public class SimpleCommandManager implements CommandManager {
         CommandPart part = command.getPart();
         try {
             part.parse(commandContext, stack);
-        } catch (NoMoreArgumentsException e) {
+        } catch (ArgumentException e) {
             CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
             usage.setCommand(commandContext.getCommand());
 
+            usage.initCause(e);
             throw usage;
         }
 
