@@ -94,7 +94,7 @@ public final class Parts {
      * @param parts The sequence of {@link CommandPart} instances that this {@link CommandPart} will delegate to.
      * @return A {@link CommandPart} that consists on a sequence of other CommandParts, using the first one that parsed correctly.
      */
-    public static CommandPart firstMatchingPart(String name, CommandPart... parts){
+    public static CommandPart firstMatchingPart(String name, CommandPart... parts) {
         return new FirstMatchPart(name, Arrays.asList(parts));
     }
 
@@ -108,7 +108,7 @@ public final class Parts {
      * @param parts The sequence of {@link CommandPart} instances that this {@link CommandPart} will delegate to.
      * @return A {@link CommandPart} that consists on a sequence of other CommandParts, using the first one that parsed correctly.
      */
-    public static CommandPart firstMatchingPart(String name, Collection<CommandPart> parts){
+    public static CommandPart firstMatchingPart(String name, Collection<CommandPart> parts) {
         return new FirstMatchPart(name, new ArrayList<>(parts));
     }
 
@@ -143,6 +143,8 @@ public final class Parts {
     /**
      * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
      * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
+     * <p>
+     * This method sets the optional value as false
      *
      * @param name     The name for this part.
      * @param commands The subcommands for this part.
@@ -155,6 +157,8 @@ public final class Parts {
     /**
      * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
      * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
+     * <p>
+     * This method sets the optional value as false
      *
      * @param name     The name for this part.
      * @param commands The subcommands for this part.
@@ -167,8 +171,23 @@ public final class Parts {
     /**
      * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
      * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
+     *
+     * @param name     The name for this part.
+     * @param commands The subcommands for this part.
+     * @param optional If this subcommand should be Optional
+     * @return A {@link CommandPart} that allows the usage of subcommands.
+     */
+    public static CommandPart subCommand(String name, Collection<Command> commands, boolean optional) {
+        return new SubCommandPart(name, new ArrayList<>(commands), optional);
+    }
+
+
+    /**
+     * A {@link CommandPart} that takes an argument from the {@link ArgumentStack} and searches for a subcommand with that name,
+     * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
      * <p>
      * This method sets the name of the part as "subcommand".
+     * This method sets the optional value as false
      *
      * @param commands The subcommands for this part.
      * @return A {@link CommandPart} that allows the usage of subcommands.
@@ -182,6 +201,7 @@ public final class Parts {
      * after that the control is passed to the {@link SubCommandPart.SubCommandHandler} of the part
      * <p>
      * This method sets the name of the part as "subcommand".
+     * This method sets the optional value as false
      *
      * @param commands The subcommands for this part.
      * @return A {@link CommandPart} that allows the usage of subcommands.
@@ -192,6 +212,9 @@ public final class Parts {
 
     /**
      * Creates a part that rewinds the {@link ArgumentStack} when it can't be parsed.
+     * <p>
+     * Do not use it with a {@link SubCommandPart} as parameter, instead use {@link Parts#subCommand(String, Collection, boolean)},
+     * using this with a {@linkplain SubCommandPart} will cause lots of errors.
      *
      * @param part The {@link CommandPart} to make optional.
      * @return The given {@link CommandPart} that will rewind the {@link ArgumentStack} when it can't be parsed.
@@ -202,8 +225,11 @@ public final class Parts {
 
     /**
      * Creates a part that rewinds the {@link ArgumentStack} and re-parses with default values when it can't be parsed the first time.
+     * <p>
+     * Do not use it with a {@link SubCommandPart} as parameter, instead use {@link Parts#subCommand(String, Collection, boolean)},
+     * using this with a {@linkplain SubCommandPart} will cause lots of errors.
      *
-     * @param part The {@link CommandPart} to make optional.
+     * @param part          The {@link CommandPart} to make optional.
      * @param defaultValues The list default values when the {@link ArgumentStack} can't be parsed
      * @return The given {@link CommandPart} that will rewind the {@link ArgumentStack} when it can't be parsed.
      */

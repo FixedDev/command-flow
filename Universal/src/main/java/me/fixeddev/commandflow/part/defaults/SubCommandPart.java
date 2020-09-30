@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
+import me.fixeddev.commandflow.ContextSnapshot;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
@@ -9,6 +10,7 @@ import me.fixeddev.commandflow.exception.InvalidSubCommandException;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
+import me.fixeddev.commandflow.stack.StackSnapshot;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
@@ -30,8 +32,11 @@ public class SubCommandPart implements CommandPart {
     private final Set<Command> subCommandsSet;
     private final SubCommandHandler handler;
 
-    public SubCommandPart(String name, Collection<Command> subCommands, SubCommandHandler handler) {
+    private boolean optional;
+
+    public SubCommandPart(String name, Collection<Command> subCommands, boolean optional, SubCommandHandler handler) {
         this.name = name;
+        this.optional = optional;
         this.handler = handler;
         this.subCommands = new HashMap<>();
         subCommandsSet = new HashSet<>(subCommands);
@@ -45,10 +50,13 @@ public class SubCommandPart implements CommandPart {
         }
     }
 
-    public SubCommandPart(String name, Collection<Command> subCommands) {
-        this(name, subCommands, DEFAULT_HANDLER);
+    public SubCommandPart(String name, Collection<Command> subCommands, boolean optional) {
+        this(name, subCommands, optional, DEFAULT_HANDLER);
     }
 
+    public SubCommandPart(String name, Collection<Command> subCommands) {
+        this(name, subCommands, false);
+    }
 
     @Override
     public String getName() {
@@ -67,7 +75,21 @@ public class SubCommandPart implements CommandPart {
         String label = stack.next();
         Command command = subCommands.get(label);
 
-        handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
+        StackSnapshot snapshot = stack.getSnapshot();
+        ContextSnapshot contextSnapshot = context.getSnapshot();
+
+        try {
+            handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
+        } catch (ArgumentException e) {
+            if (optional && (e instanceof InvalidSubCommandException)) {
+                stack.applySnapshot(snapshot);
+                context.applySnapshot(contextSnapshot);
+
+                return;
+            }
+
+            throw e;
+        }
     }
 
     public Map<String, Command> getSubCommandMap() {
@@ -81,6 +103,19 @@ public class SubCommandPart implements CommandPart {
      */
     public Collection<Command> getSubCommands() {
         return subCommandsSet;
+    }
+
+    /**
+     * If this {@link SubCommandPart} instance is an optional subcommand(that means that if it doens't exist it doens't throw an error)
+     *
+     * @return If this {@linkplain SubCommandPart} is optional
+     */
+    public boolean isOptional() {
+        return optional;
+    }
+
+    public void setOptional(boolean optional) {
+        this.optional = optional;
     }
 
     public interface HandlerContext {
