@@ -12,7 +12,7 @@ public class BukkitModule extends AbstractModule {
     public void configure() {
         bindFactory(CommandSender.class, new CommandSenderFactory());
         bindFactory(OfflinePlayer.class, new OfflinePlayerPartFactory());
-        bindFactory(Player.class, new PlayerSenderFactory());
+        bindFactory(Player.class, new PlayerPartFactory());
         bindFactory(new Key(Player.class, Sender.class), new PlayerSenderFactory());
     }
 }
