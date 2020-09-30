@@ -8,6 +8,8 @@ import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.exception.CommandUsage;
+import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
@@ -31,9 +33,13 @@ public class BukkitCommandWrapper extends Command {
         super(command.getName());
 
         this.setAliases(command.getAliases());
-        Component translatedDescription = translator.translate(command.getDescription(), new NamespaceImpl());
 
-        this.setDescription(LegacyComponentSerializer.INSTANCE.serialize(translatedDescription));
+        if (command.getDescription() != null) {
+            Component translatedDescription = translator.translate(command.getDescription(), new NamespaceImpl());
+
+            this.setDescription(LegacyComponentSerializer.INSTANCE.serialize(translatedDescription));
+        }
+
         //this.setUsage(UsageBuilder.getUsageForCommand(null, command, "<command>"));
 
         this.setPermission(command.getPermission());
@@ -60,10 +66,12 @@ public class BukkitCommandWrapper extends Command {
             }
         } catch (CommandUsage e) {
             sendMessageToSender(e, commandSender, namespace);
-        } catch (ArgumentParseException e) {
+        } catch (ArgumentParseException | NoMoreArgumentsException e) {
             sendMessageToSender(e, commandSender, namespace);
 
-            throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, e);
+            if (!(e instanceof InvalidSubCommandException)) {
+                throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, e);
+            }
         } catch (CommandException e) {
             sendMessageToSender(e, commandSender, namespace);
             throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, e);
