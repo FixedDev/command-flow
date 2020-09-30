@@ -24,7 +24,7 @@ public class OfflinePlayerPart implements ArgumentPart {
     private final boolean orSource;
 
     public OfflinePlayerPart(String name) {
-       this(name, false);
+        this(name, false);
     }
 
     public OfflinePlayerPart(String name, boolean orSource) {
@@ -80,7 +80,7 @@ public class OfflinePlayerPart implements ArgumentPart {
     static List<String> getStrings(ArgumentStack stack) {
         String last = stack.next();
 
-        if (Bukkit.getPlayer(last) != null) {
+        if (Bukkit.getPlayerExact(last) != null) {
             return Collections.emptyList();
         }
 
