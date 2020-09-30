@@ -20,7 +20,6 @@ public class DefaultExecutor implements Executor {
                 Component partComponents = toExecute.getPart().getLineRepresentation();
 
                 if (partComponents != null) {
-                    labelComponent.mergeStyle(partComponents);
                     labelComponent = labelComponent.append(TextComponent.of(" ")).append(partComponents);
                 }
 
