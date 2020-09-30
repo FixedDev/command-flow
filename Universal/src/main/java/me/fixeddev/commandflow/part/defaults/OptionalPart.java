@@ -66,9 +66,10 @@ public class OptionalPart implements CommandPart {
                 } catch (ArgumentParseException | NoMoreArgumentsException ignored) {
                 }
             }
+            /* If this doesn't has any more arguments, then ignore it
             if (!stack.hasNext()) {
                 throw e;
-            }
+            }*/
 
         }
     }
