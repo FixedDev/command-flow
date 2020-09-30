@@ -35,7 +35,7 @@ public class PlayerPart implements ArgumentPart {
     public List<Player> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         Player player;
 
-        if(!stack.hasNext()){
+        if (!stack.hasNext()) {
             if (orSource && (player = tryGetSender(context)) != null) {
                 return Collections.singletonList(player);
             }
@@ -60,7 +60,10 @@ public class PlayerPart implements ArgumentPart {
                 return Collections.singletonList(player);
             }
 
-            throw new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
+            ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
+            exception.setArgument(this);
+
+            throw exception;
         }
 
         return Collections.singletonList(player);
