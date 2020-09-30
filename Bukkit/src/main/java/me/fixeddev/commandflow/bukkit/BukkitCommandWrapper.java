@@ -65,7 +65,13 @@ public class BukkitCommandWrapper extends Command {
                 return true;
             }
         } catch (CommandUsage e) {
-            sendMessageToSender(e, commandSender, namespace);
+            CommandException exceptionToSend = e;
+            if (e.getCause() instanceof ArgumentParseException) {
+                exceptionToSend = (ArgumentParseException) e.getCause();
+            }
+
+            sendMessageToSender(exceptionToSend, commandSender, namespace);
+
         } catch (ArgumentParseException | NoMoreArgumentsException e) {
             sendMessageToSender(e, commandSender, namespace);
 
