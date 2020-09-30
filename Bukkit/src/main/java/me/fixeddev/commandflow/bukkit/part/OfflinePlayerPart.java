@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.junit.internal.InexactComparisonCriteria;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class OfflinePlayerPart implements ArgumentPart {
     static List<String> getStrings(ArgumentStack stack) {
         String last = stack.next();
 
-        if (stack.hasNext()) {
+        if (Bukkit.getPlayer(last) != null) {
             return Collections.emptyList();
         }
 
