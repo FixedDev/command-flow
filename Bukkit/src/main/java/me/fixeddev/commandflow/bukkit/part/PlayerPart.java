@@ -53,17 +53,19 @@ public class PlayerPart implements ArgumentPart {
             } else {
                 player = Bukkit.getPlayer(name);
             }
+
+            if(player == null){
+                ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
+                exception.setArgument(this);
+
+                throw exception;
+            }
         }
 
         if (player == null) {
             if (orSource && (player = tryGetSender(context)) != null) {
                 return Collections.singletonList(player);
             }
-
-            ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
-            exception.setArgument(this);
-
-            throw exception;
         }
 
         return Collections.singletonList(player);
