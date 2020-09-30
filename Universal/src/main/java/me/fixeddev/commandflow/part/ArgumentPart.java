@@ -27,14 +27,12 @@ public interface ArgumentPart extends CommandPart {
         List<String> rawArgs = new ArrayList<>();
         int usedArguments = oldArgumentsLeft - stack.getArgumentsLeft();
 
-        if(usedArguments == 0){
-            return;
-        }
+        if (usedArguments != 0) {
+            stack.applySnapshot(snapshot);
 
-        stack.applySnapshot(snapshot);
-
-        for (int i = 0; i < usedArguments; i++) {
-            rawArgs.add(stack.next());
+            for (int i = 0; i < usedArguments; i++) {
+                rawArgs.add(stack.next());
+            }
         }
 
         context.setValues(this, value);
