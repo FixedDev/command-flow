@@ -7,6 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * An immutable blackbox containing a copy of a {@link CommandContext} at a specific time, being able to restore the state of
+ * a {@link CommandContext} to this state.
+ *
+ * @see CommandContext#applySnapshot(ContextSnapshot)
+ */
 public class ContextSnapshot {
     final Namespace namespace;
 

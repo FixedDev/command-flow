@@ -1,9 +1,18 @@
 package me.fixeddev.commandflow.stack;
 
+import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.ContextSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * An immutable blackbox containing a copy of a {@link ArgumentStack} at a specific time, being able to restore the state of
+ * a {@link ArgumentStack} to this state.
+ *
+ * @see ArgumentStack#applySnapshot(StackSnapshot)
+ */
 public class StackSnapshot {
 
     List<String> backing;
