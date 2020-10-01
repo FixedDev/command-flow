@@ -10,6 +10,7 @@ import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.exception.CommandUsage;
 import me.fixeddev.commandflow.exception.InvalidSubCommandException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
@@ -72,12 +73,18 @@ public class BukkitCommandWrapper extends Command {
 
             sendMessageToSender(exceptionToSend, commandSender, namespace);
 
+            return true;
         } catch (ArgumentParseException | NoMoreArgumentsException e) {
             sendMessageToSender(e, commandSender, namespace);
 
             if (!(e instanceof InvalidSubCommandException)) {
                 throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, e);
             }
+        } catch (NoPermissionsException e) {
+            sendMessageToSender(e, commandSender, namespace);
+
+            return true;
+
         } catch (CommandException e) {
             sendMessageToSender(e, commandSender, namespace);
             throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, e);
