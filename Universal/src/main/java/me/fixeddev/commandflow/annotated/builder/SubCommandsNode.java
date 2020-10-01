@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 
+// TODO: Add documentation for this class.
 public interface SubCommandsNode extends Buildable {
     SubCommandsNode addSubCommand(@NotNull Command command);
 
