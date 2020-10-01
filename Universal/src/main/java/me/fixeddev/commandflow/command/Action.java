@@ -12,7 +12,7 @@ public interface Action {
     /**
      * The action to execute when the {@link Command} is being called/run by the {@link me.fixeddev.commandflow.CommandManager}.
      *
-     * @param context The {@link CommmandContext} for this executed command.
+     * @param context The {@link CommandContext} for this executed command.
      * @return If the action was executed sucessfully or not, if the value is false, the usage will be send to the source.
      * @throws CommandException If an error occurs while executing the action.
      */
