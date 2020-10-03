@@ -1,8 +1,5 @@
 package me.fixeddev.commandflow.stack;
 
-import me.fixeddev.commandflow.CommandContext;
-import me.fixeddev.commandflow.ContextSnapshot;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -15,8 +12,8 @@ import java.util.Objects;
  */
 public class StackSnapshot {
 
-    List<String> backing;
-    int position;
+    final List<String> backing;
+    final int position;
 
     public StackSnapshot(ArgumentStack stack, int position) {
         this.backing = new ArrayList<>(stack.getBacking());
