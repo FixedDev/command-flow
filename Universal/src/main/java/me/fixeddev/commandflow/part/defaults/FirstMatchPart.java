@@ -4,7 +4,6 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.ContextSnapshot;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
-import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
@@ -16,8 +15,8 @@ import java.util.Objects;
 
 public class FirstMatchPart implements CommandPart {
 
-    private String name;
-    private List<CommandPart> partList;
+    private final String name;
+    private final List<CommandPart> partList;
 
     private Boolean async;
 
