@@ -38,6 +38,6 @@ public class ArgumentStackPart implements ArgumentPart {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 }
