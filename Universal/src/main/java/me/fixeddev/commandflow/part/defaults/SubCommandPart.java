@@ -7,6 +7,7 @@ import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
@@ -75,7 +76,17 @@ public class SubCommandPart implements CommandPart {
 
     @Override
     public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-        String label = stack.next();
+        String label;
+        try {
+            label = stack.next();
+        } catch (NoMoreArgumentsException e) {
+            if(optional){
+                return;
+            }
+
+            throw e;
+        }
+
         Command command = subCommands.get(label);
 
         StackSnapshot snapshot = stack.getSnapshot();
