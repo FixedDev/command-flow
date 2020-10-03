@@ -8,8 +8,6 @@ import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
-import me.fixeddev.commandflow.translator.DefaultMapTranslationProvider;
-import me.fixeddev.commandflow.translator.DefaultTranslator;
 import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.UsageBuilder;
 import org.bukkit.Bukkit;

@@ -3,7 +3,6 @@ package me.fixeddev.commandflow;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.CommandUsage;
-import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.executor.DefaultExecutor;
 import me.fixeddev.commandflow.executor.Executor;

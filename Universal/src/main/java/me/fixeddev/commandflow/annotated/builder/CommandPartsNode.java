@@ -1,7 +1,6 @@
 package me.fixeddev.commandflow.annotated.builder;
 
 import me.fixeddev.commandflow.annotated.CommandClass;
-import me.fixeddev.commandflow.command.Action;
 import me.fixeddev.commandflow.part.CommandPart;
 import org.jetbrains.annotations.NotNull;
 

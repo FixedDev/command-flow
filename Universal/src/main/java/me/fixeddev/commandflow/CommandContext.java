@@ -2,7 +2,6 @@ package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
-import me.fixeddev.commandflow.stack.StackSnapshot;
 
 import java.util.List;
 import java.util.Optional;
