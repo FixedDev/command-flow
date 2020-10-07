@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -92,6 +93,7 @@ public class SubCommandPart implements CommandPart {
         ContextSnapshot contextSnapshot = context.getSnapshot();
 
         try {
+            context.setRaw(this, Collections.singletonList(label));
             handler.handle(new DefaultHandlerContext(this, context, stack), label, command);
         } catch (ArgumentException e) {
             if (optional && (e instanceof InvalidSubCommandException)) {
