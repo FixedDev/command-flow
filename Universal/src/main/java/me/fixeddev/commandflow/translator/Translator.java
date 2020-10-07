@@ -2,6 +2,9 @@ package me.fixeddev.commandflow.translator;
 
 import me.fixeddev.commandflow.Namespace;
 import net.kyori.text.Component;
+import net.kyori.text.TextComponent;
+
+import java.util.function.Function;
 
 /**
  * An interface that allows to convert a {@link net.kyori.text.TranslatableComponent} into a
@@ -24,4 +27,11 @@ public interface Translator {
      * @param provider The new {@link TranslationProvider} instance.
      */
     void setProvider(TranslationProvider provider);
+
+    /**
+     * Changes the Function used by this {@link Translator} to convert an String into a {@link TextComponent}.
+     *
+     * @param stringToComponent The new function used by this {@link Translator} instance.
+     */
+    void setConverterFunction(Function<String, TextComponent> stringToComponent);
 }

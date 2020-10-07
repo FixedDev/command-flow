@@ -2,10 +2,12 @@ package me.fixeddev.commandflow.translator;
 
 import me.fixeddev.commandflow.Namespace;
 import net.kyori.text.Component;
+import net.kyori.text.TextComponent;
 import net.kyori.text.renderer.ComponentRenderer;
 import net.kyori.text.renderer.FriendlyComponentRenderer;
 
 import java.text.MessageFormat;
+import java.util.function.Function;
 
 public class ComponentRendererTranslator implements Translator {
 
@@ -30,5 +32,10 @@ public class ComponentRendererTranslator implements Translator {
     @Override
     public void setProvider(TranslationProvider provider) {
         this.provider = provider;
+    }
+
+    @Override
+    public void setConverterFunction(Function<String, TextComponent> stringToComponent) {
+        // NOP, this translator doesn't allows this
     }
 }

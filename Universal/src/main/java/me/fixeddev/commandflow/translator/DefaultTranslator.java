@@ -48,6 +48,12 @@ public class DefaultTranslator implements Translator {
     }
 
 
+    @Override
+    public void setConverterFunction(Function<String, TextComponent> stringToComponent) {
+        this.stringToComponent = stringToComponent;
+    }
+
+
     // Taken from BungeeCord-Chat TranslatableComponent and modified to allow the conversion of a TranslatableComponent into a Text Component
     // instead of it being converted into plain text
     private final Pattern format = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
