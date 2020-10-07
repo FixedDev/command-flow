@@ -74,20 +74,26 @@ public class BukkitCommandWrapper extends Command {
             sendMessageToSender(exceptionToSend, commandSender, namespace);
 
             return true;
-        } catch (ArgumentParseException | NoMoreArgumentsException e) {
+        } catch (InvalidSubCommandException e) {
             sendMessageToSender(e, commandSender, namespace);
 
-            if (!(e instanceof InvalidSubCommandException)) {
-                throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, e);
-            }
+            throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, e);
+        } catch (ArgumentParseException | NoMoreArgumentsException e) {
+            sendMessageToSender(e, commandSender, namespace);
         } catch (NoPermissionsException e) {
             sendMessageToSender(e, commandSender, namespace);
 
             return true;
-
         } catch (CommandException e) {
-            sendMessageToSender(e, commandSender, namespace);
-            throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, e);
+            CommandException exceptionToSend = e;
+
+            if (e.getCause() instanceof CommandException) {
+                exceptionToSend = (CommandException) e.getCause();
+            }
+
+            sendMessageToSender(exceptionToSend, commandSender, namespace);
+
+            throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, exceptionToSend);
         }
 
         return false;
