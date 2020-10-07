@@ -4,16 +4,24 @@ import me.fixeddev.commandflow.Namespace;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
+import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DefaultTranslator implements Translator {
     private TranslationProvider provider;
+    private Function<String, TextComponent> stringToComponent;
 
     public DefaultTranslator(TranslationProvider provider) {
+        this(provider, TextComponent::of);
+    }
+
+    public DefaultTranslator(TranslationProvider provider, Function<String, TextComponent> stringTextComponentFunction) {
         this.provider = provider;
+        stringToComponent = stringTextComponentFunction;
     }
 
     @Override
@@ -59,7 +67,7 @@ public class DefaultTranslator implements Translator {
             int pos = matcher.start();
             if (pos != position) {
                 builder.mergeStyle(component);
-                builder.append(TextComponent.of(trans.substring(position, pos)));
+                builder.append(stringToComponent.apply(trans.substring(position, pos)));
             }
             position = matcher.end();
 
@@ -83,16 +91,16 @@ public class DefaultTranslator implements Translator {
                         }
 
                     } else {
-                        builder.append(TextComponent.of("%" + formatCode.charAt(0)));
+                        builder.append(stringToComponent.apply("%" + formatCode.charAt(0)));
                     }
                     break;
                 case '%':
-                    builder.append(TextComponent.of("%"));
+                    builder.append(stringToComponent.apply("%"));
                     break;
             }
         }
         if (trans.length() != position) {
-            builder.append(TextComponent.of(trans.substring(position)));
+            builder.append(stringToComponent.apply(trans.substring(position)));
         }
     }
 }
