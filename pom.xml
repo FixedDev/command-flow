@@ -10,6 +10,7 @@
     <modules>
         <module>Universal</module>
         <module>Bukkit</module>
+        <module>Discord</module>
     </modules>
 
     <packaging>pom</packaging>
