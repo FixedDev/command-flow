@@ -3,7 +3,6 @@ package me.fixeddev.commandflow.discord;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.NamespaceImpl;
-import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.discord.utils.MessageUtils;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
@@ -18,10 +17,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kyori.text.Component;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 public class MessageListener extends ListenerAdapter {
 
@@ -47,20 +42,6 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        // removing prefix from the message
-        rawMessage = rawMessage.substring(commandPrefix.length());
-
-        String[] rawMessagePart = rawMessage.split(" ");
-        String commandName = rawMessagePart[0];
-
-        Optional<Command> optionalCommand = commandManager.getCommand(commandName);
-
-        if (!optionalCommand.isPresent()) {
-            return;
-        }
-
-        List<String> argumentLine = Arrays.asList(rawMessagePart);
-
         Namespace namespace = new NamespaceImpl();
 
         namespace.setObject(Message.class, DiscordCommandManager.MESSAGE_NAMESPACE, message);
@@ -68,7 +49,7 @@ public class MessageListener extends ListenerAdapter {
         namespace.setObject(User.class, DiscordCommandManager.USER_NAMESPACE, user);
 
         try {
-            commandManager.execute(namespace, argumentLine);
+            commandManager.execute(namespace, rawMessage.substring(commandPrefix.length()));
         } catch (CommandUsage e) {
             CommandException exceptionToSend = e;
             if (e.getCause() instanceof ArgumentParseException) {
@@ -79,10 +60,13 @@ public class MessageListener extends ListenerAdapter {
         } catch (InvalidSubCommandException e) {
             sendMessage(namespace, e, channel);
 
-            throw new CommandException("An internal parse exception occurred while executing the command " + commandName, e);
-        }
-        catch (ArgumentParseException | NoMoreArgumentsException | NoPermissionsException e) {
+            throw new CommandException("An internal parse exception occurred while executing the command", e);
+        } catch (ArgumentParseException | NoMoreArgumentsException e) {
             sendMessage(namespace, e, channel);
+
+        } catch (NoPermissionsException e) {
+            sendMessage(namespace, e, channel);
+
         } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
@@ -92,7 +76,7 @@ public class MessageListener extends ListenerAdapter {
 
             sendMessage(namespace, exceptionToSend, event.getChannel());
 
-            throw new CommandException("An unexpected exception occurred while executing the command " + commandName, exceptionToSend);
+            throw new CommandException("An unexpected exception occurred while executing the command " + e.getCommand().getName(), exceptionToSend);
         }
 
     }
