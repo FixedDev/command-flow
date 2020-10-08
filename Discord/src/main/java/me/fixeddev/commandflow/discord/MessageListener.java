@@ -70,9 +70,12 @@ public class MessageListener extends ListenerAdapter {
         try {
             commandManager.execute(namespace, argumentLine);
         } catch (CommandUsage e) {
-            String usage = e.getMessage()
-                    .replace("<command>", commandName);
-            event.getChannel().sendMessage(usage).queue();
+            CommandException exceptionToSend = e;
+            if (e.getCause() instanceof ArgumentParseException) {
+                exceptionToSend = (ArgumentParseException) e.getCause();
+            }
+
+            sendMessage(namespace, exceptionToSend, channel);
         } catch (InvalidSubCommandException e) {
             sendMessage(namespace, e, channel);
 
