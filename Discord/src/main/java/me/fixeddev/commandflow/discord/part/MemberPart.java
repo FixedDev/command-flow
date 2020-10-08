@@ -31,7 +31,6 @@ public class MemberPart implements ArgumentPart {
 
     @Override
     public List<? extends Member> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-
         Message message = context.getObject(Message.class, DiscordCommandManager.MESSAGE_NAMESPACE);
         Guild guild = message.getTextChannel().getGuild();
 

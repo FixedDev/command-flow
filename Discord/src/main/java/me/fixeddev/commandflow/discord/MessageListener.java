@@ -14,6 +14,7 @@ import me.fixeddev.commandflow.exception.NoPermissionsException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.kyori.text.Component;
@@ -36,6 +37,7 @@ public class MessageListener extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 
         Member member = event.getMember();
+        User user = event.getAuthor();
         Message message = event.getMessage();
         TextChannel channel = event.getChannel();
 
@@ -63,6 +65,7 @@ public class MessageListener extends ListenerAdapter {
 
         namespace.setObject(Message.class, DiscordCommandManager.MESSAGE_NAMESPACE, message);
         namespace.setObject(Member.class, DiscordCommandManager.MEMBER_NAMESPACE, member);
+        namespace.setObject(User.class, DiscordCommandManager.USER_NAMESPACE, user);
 
         try {
             commandManager.execute(namespace, argumentLine);

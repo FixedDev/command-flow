@@ -20,6 +20,7 @@ public class DiscordCommandManager implements CommandManager {
 
     public static final String MESSAGE_NAMESPACE = "MESSAGE";
     public static final String MEMBER_NAMESPACE = "MEMBER";
+    public static final String USER_NAMESPACE = "USER";
 
     private final CommandManager commandManager;
 
