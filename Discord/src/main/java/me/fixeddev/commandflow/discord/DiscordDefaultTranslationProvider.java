@@ -7,5 +7,6 @@ public class DiscordDefaultTranslationProvider extends DefaultMapTranslationProv
     public DiscordDefaultTranslationProvider() {
         translations.put("unknown.member", "The member is unknown!");
         translations.put("unknown.channel", "The channel is unknown!");
+        translations.put("unknown.user", "The user is unknown!");
     }
 }
