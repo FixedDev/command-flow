@@ -10,7 +10,7 @@ import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.UsageBuilder;
-import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.JDA;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,14 +23,14 @@ public class DiscordCommandManager implements CommandManager {
 
     private final CommandManager commandManager;
 
-    public DiscordCommandManager(JDABuilder client, String commandPrefix) {
+    public DiscordCommandManager(JDA client, String commandPrefix) {
         this(new SimpleCommandManager(), client, commandPrefix);
     }
 
-    public DiscordCommandManager(CommandManager commandManager, JDABuilder client, String commandPrefix) {
+    public DiscordCommandManager(CommandManager commandManager, JDA client, String commandPrefix) {
         this.commandManager = commandManager;
 
-        client.addEventListeners(new MessageListener(commandManager, commandPrefix));
+        client.addEventListener(new MessageListener(commandManager, commandPrefix));
 
         setAuthorizer(new DiscordAuthorizer());
         getTranslator().setProvider(new DiscordDefaultTranslationProvider());
