@@ -61,7 +61,7 @@ public class SimpleArgumentStack implements ArgumentStack {
 
     @Override
     public String remove() {
-        if(position == 0){
+        if (position == 0) {
             throw new IllegalStateException("You must advance the stack at least 1 time before calling remove!");
         }
 
@@ -70,7 +70,7 @@ public class SimpleArgumentStack implements ArgumentStack {
 
         position--;
 
-        if(parent != null){
+        if (parent != null) {
             position--;
         }
 
@@ -148,7 +148,13 @@ public class SimpleArgumentStack implements ArgumentStack {
 
     @Override
     public void markAsConsumed() {
+        int oldPosition = position;
         this.position = originalArguments.size();
+
+        if (parent != null) {
+            int offset = position - oldPosition;
+            parent.position += offset;
+        }
     }
 
     @Override
@@ -167,11 +173,20 @@ public class SimpleArgumentStack implements ArgumentStack {
         if (changeArgs) {
             int index = 0;
 
-            for (String arg : snapshot.backing) {
-                originalArguments.set(index, arg);
+            if (originalArguments.size() < snapshot.backing.size()) {
+                for (String arg : snapshot.backing) {
+                    originalArguments.add(index, arg);
 
-                index++;
+                    index++;
+                }
+            } else {
+                for (String arg : snapshot.backing) {
+                    originalArguments.set(index, arg);
+
+                    index++;
+                }
             }
+
         }
     }
 
