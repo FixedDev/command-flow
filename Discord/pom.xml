@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>commandflow-discord</artifactId>
+    <packaging>jar</packaging>
 
     <repositories>
         <repository>
