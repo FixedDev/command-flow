@@ -11,6 +11,7 @@
         <module>Universal</module>
         <module>Bukkit</module>
         <module>Discord</module>
+        <module>Bungee</module>
     </modules>
 
     <packaging>pom</packaging>
