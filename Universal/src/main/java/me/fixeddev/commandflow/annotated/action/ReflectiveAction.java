@@ -47,8 +47,12 @@ public class ReflectiveAction implements Action {
         } catch (IllegalAccessException | InvocationTargetException e) {
             Throwable throwableToThrow = e;
 
-            if(e.getCause() != null){
+            if (e.getCause() != null) {
                 throwableToThrow = e.getCause();
+            }
+
+            if (throwableToThrow instanceof CommandException) {
+                throw (CommandException) throwableToThrow;
             }
 
             throw new CommandException("Internal error.", throwableToThrow);
