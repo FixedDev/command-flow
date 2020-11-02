@@ -8,12 +8,14 @@ import java.util.List;
 
 public interface CommandDataNode extends Buildable {
     /**
+     * @param aliases
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#aliases(List)
      */
     @NotNull CommandDataNode aliases(@NotNull List<String> aliases);
 
     /**
+     * @param aliases
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#aliases(String...)
      */
@@ -23,24 +25,28 @@ public interface CommandDataNode extends Buildable {
     }
 
     /**
+     * @param alias
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#addAlias(String)
      */
     @NotNull CommandDataNode addAlias(@NotNull String alias);
 
     /**
+     * @param component
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#description(Component)
      */
     @NotNull CommandDataNode description(@NotNull Component component);
 
     /**
+     * @param permission
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#permission(String)
      */
     @NotNull CommandDataNode permission(@NotNull String permission);
 
     /**
+     * @param permissionMessage
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#permissionMessage(Component)
      */

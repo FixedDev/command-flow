@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.annotated.part;
 
+import me.fixeddev.commandflow.part.CommandPart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,13 +72,51 @@ public interface PartInjector {
         return getModifiers(Arrays.asList(annotations));
     }
 
+    /**
+     * Binds a {@link PartModifier} to a specific annotation type.
+     *
+     * @param annotation   The annotation type to bind to.
+     * @param partModifier The {@link PartModifier} that's going to be bound.
+     */
     void bindModifier(Class<? extends Annotation> annotation, PartModifier partModifier);
 
+    /**
+     * Binds a {@link PartFactory} to a specific Type.
+     *
+     * @param type        The type of value returned by the {@link CommandPart} created by the bound factory.
+     * @param partFactory The {@link PartFactory} that's going to be bound.
+     */
     default void bindFactory(Type type, PartFactory partFactory) {
         bindFactory(new Key(type), partFactory);
     }
 
+    /**
+     * Binds a {@link PartFactory} to a specific {@link Key}.
+     *
+     * @param key     The {@link Key} type of value returned by the {@link CommandPart} created by the bound factory.
+     * @param factory The {@link PartFactory} that's going to be bound.
+     */
     void bindFactory(Key key, PartFactory factory);
+
+    /**
+     * Creates a constant binding from a Type to a {@link CommandPart}.
+     *
+     * @param type The {@link Key} type of value returned by the given {@link CommandPart}.
+     * @param part The {@link CommandPart} that's going to be constantly bound to a type.
+     */
+    default void bindPart(Type type, CommandPart part) {
+        bindPart(new Key(type), part);
+    }
+
+    /**
+     * Creates a constant binding from a Type to a {@link CommandPart}.
+     *
+     * @param key  The {@link Key} type of value returned by the given {@link CommandPart}.
+     * @param part The {@link CommandPart} that's going to be constantly bound to a type.
+     */
+    default void bindPart(Key key, CommandPart part) {
+        bindFactory(key, (name, modifiers) -> part);
+    }
 
     void install(Module module);
 

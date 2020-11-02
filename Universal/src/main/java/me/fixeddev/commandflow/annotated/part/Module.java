@@ -1,5 +1,7 @@
 package me.fixeddev.commandflow.annotated.part;
 
+import me.fixeddev.commandflow.part.CommandPart;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 
@@ -32,5 +34,21 @@ public interface Module {
         }
 
         getInjector().bindFactory(key, factory);
+    }
+
+    default void bind(Key key, CommandPart part) {
+        if (getInjector() == null) {
+            throw new IllegalStateException("The bind methods only can be called when the module is installed on an injector!");
+        }
+
+        getInjector().bindPart(key, part);
+    }
+
+    default void bind(Type type, CommandPart part) {
+        if (getInjector() == null) {
+            throw new IllegalStateException("The bind methods only can be called when the module is installed on an injector!");
+        }
+
+        getInjector().bindPart(type, part);
     }
 }
