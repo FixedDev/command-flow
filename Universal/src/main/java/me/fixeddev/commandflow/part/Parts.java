@@ -36,12 +36,12 @@ public final class Parts {
     }
 
     /**
-     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the next format -<shortName>, the value for
+     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the next format -&lt;shortName&gt;, the value for
      * this part will be true if the argument is present at least one time, false if it isn't.
      * <p>
      * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
      *
-     * @param shortName The short name of the {@link FlagPart}, this will be used as the flag name(-<shortName>)
+     * @param shortName The short name of the {@link FlagPart}, this will be used as the flag name(-&lt;shortName&gt;)
      * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
      */
     public static CommandPart flagPart(String shortName) {
@@ -49,13 +49,13 @@ public final class Parts {
     }
 
     /**
-     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the next format -<shortName>, the value for
+     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the next format -&lt;shortName&gt;, the value for
      * this part will be true if the argument is present at least one time, false if it isn't.
      * <p>
      * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
      *
      * @param name      The full internal name of the {@link FlagPart}.
-     * @param shortName The short name of the {@link FlagPart}, this will be used as the flag name(-<shortName>)
+     * @param shortName The short name of the {@link FlagPart}, this will be used as the flag name(-&lt;shortName&gt;)
      * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
      */
     public static CommandPart flagPart(String name, String shortName) {
@@ -63,15 +63,15 @@ public final class Parts {
     }
 
     /**
-     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the format -<shortName> or --<name>, the second one only
+     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the format -&lt;shortName&gt; or --&lt;name&gt;, the second one only
      * being allowed if the allowFullNameUse parameter is true; the value for this part will be true if the argument is present
      * at least one time in any of its formats, false if it isn't.
      * <p>
      * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
      *
-     * @param name             The full name of the {@link FlagPart}, if the parameter allowFullNameUse is true, this will be allowed as flag name(--<name>).
-     * @param shortName        The short name of the {@link FlagPart}, this will be used as the flag name(-<shortName>)
-     * @param allowFullNameUse Whether the format --<name> is allowed or not.
+     * @param name             The full name of the {@link FlagPart}, if the parameter allowFullNameUse is true, this will be allowed as flag name(--&lt;name&gt;).
+     * @param shortName        The short name of the {@link FlagPart}, this will be used as the flag name(-&lt;shortName&gt;)
+     * @param allowFullNameUse Whether the format --&lt;name&gt; is allowed or not.
      * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
      */
     public static CommandPart flagPart(String name, String shortName, boolean allowFullNameUse) {
@@ -132,7 +132,7 @@ public final class Parts {
      * A {@link CommandPart} that consist on a sequence of other CommandParts.
      * <p>
      * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
-     * this {@link FirstMatchPart} will be parsed until some part parses correctly/
+     * this {@link FirstMatchPart} will be parsed until some part parses correctly.
      *
      * @param name  The name for this part.
      * @param parts The sequence of {@link CommandPart} instances that this {@link CommandPart} will delegate to.
