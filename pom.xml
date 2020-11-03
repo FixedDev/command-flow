@@ -39,6 +39,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <version.universal>0.1.1-SNAPSHOT</version.universal>
+        <version.bukkit>0.1.1-SNAPSHOT</version.bukkit>
+        <version.discord>0.1.1-SNAPSHOT</version.discord>
     </properties>
 
     <build>

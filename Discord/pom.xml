@@ -5,10 +5,11 @@
     <parent>
         <artifactId>commandflow</artifactId>
         <groupId>me.fixeddev</groupId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <version>${version.discord}</version>
     <artifactId>commandflow-discord</artifactId>
     <packaging>jar</packaging>
 
