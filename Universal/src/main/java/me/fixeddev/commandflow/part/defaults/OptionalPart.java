@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.ContextSnapshot;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.part.CommandPart;
+import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OptionalPart implements CommandPart {
+public class OptionalPart implements CommandPart, SinglePartWrapper {
     private final CommandPart part;
     private final List<String> defaultValues;
 
@@ -83,6 +84,7 @@ public class OptionalPart implements CommandPart {
         return part.isAsync();
     }
 
+    @Override
     public CommandPart getPart() {
         return part;
     }

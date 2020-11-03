@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.part.defaults;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
+import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
@@ -12,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class SequentialCommandPart implements CommandPart {
+public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
     private String name;
     private List<CommandPart> parts;
@@ -82,6 +83,7 @@ public class SequentialCommandPart implements CommandPart {
         return async;
     }
 
+    @Override
     public List<CommandPart> getParts() {
         return parts;
     }

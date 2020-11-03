@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.ContextSnapshot;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
+import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
 
@@ -13,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class FirstMatchPart implements CommandPart {
+public class FirstMatchPart implements CommandPart, PartsWrapper {
 
     private final String name;
     private final List<CommandPart> partList;
@@ -84,7 +85,8 @@ public class FirstMatchPart implements CommandPart {
         return async;
     }
 
-    public List<CommandPart> getPartList() {
+    @Override
+    public List<CommandPart> getParts() {
         return partList;
     }
 
