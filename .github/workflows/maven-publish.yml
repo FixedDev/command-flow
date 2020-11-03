@@ -4,12 +4,8 @@
 name: Maven Package
 
 on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+  release:
+    types: released
 
 jobs:
   build:
