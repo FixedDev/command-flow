@@ -31,7 +31,8 @@ public class ProxiedPlayerPart implements ArgumentPart {
         ProxiedPlayer proxiedPlayer;
 
         if (!stack.hasNext()) {
-            if (orSource && (proxiedPlayer = tryGetSender(context)) != null) {
+            proxiedPlayer = tryGetSender(context);
+            if (orSource && proxiedPlayer != null) {
                 return Collections.singletonList(proxiedPlayer);
             }
         }
@@ -54,7 +55,8 @@ public class ProxiedPlayerPart implements ArgumentPart {
         }
 
         if (proxiedPlayer == null) {
-            if (orSource && (proxiedPlayer = tryGetSender(context)) != null) {
+            proxiedPlayer = tryGetSender(context);
+            if (orSource && proxiedPlayer != null) {
                 return Collections.singletonList(proxiedPlayer);
             }
         }

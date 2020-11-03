@@ -9,8 +9,6 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public class FlagPart implements CommandPart {
 
     private String name;
