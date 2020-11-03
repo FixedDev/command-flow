@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OptionalPart implements CommandPart {
-
     private final CommandPart part;
     private final List<String> defaultValues;
 
@@ -83,4 +82,13 @@ public class OptionalPart implements CommandPart {
     public boolean isAsync() {
         return part.isAsync();
     }
+
+    public CommandPart getPart() {
+        return part;
+    }
+
+    public List<String> getDefaultValues() {
+        return defaultValues;
+    }
+
 }

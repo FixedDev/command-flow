@@ -17,7 +17,6 @@ public class FirstMatchPart implements CommandPart {
 
     private final String name;
     private final List<CommandPart> partList;
-
     private Boolean async;
 
     public FirstMatchPart(String name, List<CommandPart> partList) {
@@ -83,6 +82,10 @@ public class FirstMatchPart implements CommandPart {
         }
 
         return async;
+    }
+
+    public List<CommandPart> getPartList() {
+        return partList;
     }
 
     @Override

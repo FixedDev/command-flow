@@ -51,6 +51,10 @@ public class LimitingPart implements CommandPart {
         return part.isAsync();
     }
 
+    public CommandPart getPart() {
+        return part;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
