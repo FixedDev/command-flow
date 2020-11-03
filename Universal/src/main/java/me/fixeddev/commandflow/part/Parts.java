@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.FirstMatchPart;
+import me.fixeddev.commandflow.part.defaults.FlagPart;
 import me.fixeddev.commandflow.part.defaults.FloatPart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
 import me.fixeddev.commandflow.part.defaults.LimitingPart;
@@ -32,6 +33,49 @@ public final class Parts {
      */
     public static CommandPart limit(CommandPart part, int limit) {
         return new LimitingPart(part, limit);
+    }
+
+    /**
+     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the next format -<shortName>, the value for
+     * this part will be true if the argument is present at least one time, false if it isn't.
+     * <p>
+     * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
+     *
+     * @param shortName The short name of the {@link FlagPart}, this will be used as the flag name(-<shortName>)
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     */
+    public static CommandPart flagPart(String shortName) {
+        return flagPart(shortName, shortName);
+    }
+
+    /**
+     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the next format -<shortName>, the value for
+     * this part will be true if the argument is present at least one time, false if it isn't.
+     * <p>
+     * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
+     *
+     * @param name      The full internal name of the {@link FlagPart}.
+     * @param shortName The short name of the {@link FlagPart}, this will be used as the flag name(-<shortName>)
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     */
+    public static CommandPart flagPart(String name, String shortName) {
+        return flagPart(name, shortName, false);
+    }
+
+    /**
+     * Creates a new {@link FlagPart} that searches non positional boolean arguments with the format -<shortName> or --<name>, the second one only
+     * being allowed if the allowFullNameUse parameter is true; the value for this part will be true if the argument is present
+     * at least one time in any of its formats, false if it isn't.
+     * <p>
+     * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
+     *
+     * @param name             The full name of the {@link FlagPart}, if the parameter allowFullNameUse is true, this will be allowed as flag name(--<name>).
+     * @param shortName        The short name of the {@link FlagPart}, this will be used as the flag name(-<shortName>)
+     * @param allowFullNameUse Whether the format --<name> is allowed or not.
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     */
+    public static CommandPart flagPart(String name, String shortName, boolean allowFullNameUse) {
+        return new FlagPart(name, shortName, allowFullNameUse);
     }
 
     /**
