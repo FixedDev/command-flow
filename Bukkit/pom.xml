@@ -31,7 +31,7 @@
         <dependency>
             <groupId>me.fixeddev</groupId>
             <artifactId>commandflow-universal</artifactId>
-            <version>0.1.0-SNAPSHOT</version>
+            <version>${version.universal}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
