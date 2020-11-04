@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NamespaceImpl implements Namespace {
-    private Map<Class<?>, Map<String, Object>> backing;
+    private final Map<Class<?>, Map<String, Object>> backing;
 
     public NamespaceImpl() {
         backing = new ConcurrentHashMap<>();

@@ -4,7 +4,6 @@ import me.fixeddev.commandflow.Namespace;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
-import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.List;
 import java.util.function.Function;

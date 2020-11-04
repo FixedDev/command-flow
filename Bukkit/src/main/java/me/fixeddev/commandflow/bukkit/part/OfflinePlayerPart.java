@@ -36,7 +36,8 @@ public class OfflinePlayerPart implements ArgumentPart {
         OfflinePlayer player;
 
         if (!stack.hasNext()) {
-            if (orSource && (player = tryGetSender(context)) != null) {
+            player = tryGetSender(context);
+            if (orSource && player != null) {
                 return Collections.singletonList(player);
             }
         }
@@ -52,7 +53,8 @@ public class OfflinePlayerPart implements ArgumentPart {
         }
 
         if (player == null) {
-            if (orSource && (player = tryGetSender(context)) != null) {
+            player = tryGetSender(context);
+            if (orSource && player != null) {
                 return Collections.singletonList(player);
             }
         }

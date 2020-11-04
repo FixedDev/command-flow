@@ -36,7 +36,8 @@ public class PlayerPart implements ArgumentPart {
         Player player;
 
         if (!stack.hasNext()) {
-            if (orSource && (player = tryGetSender(context)) != null) {
+            player = tryGetSender(context);
+            if (orSource && player != null) {
                 return Collections.singletonList(player);
             }
         }
@@ -63,7 +64,8 @@ public class PlayerPart implements ArgumentPart {
         }
 
         if (player == null) {
-            if (orSource && (player = tryGetSender(context)) != null) {
+            player = tryGetSender(context);
+            if (orSource && player != null) {
                 return Collections.singletonList(player);
             }
         }
