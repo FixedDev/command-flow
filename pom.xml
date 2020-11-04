@@ -44,6 +44,7 @@
         <version.universal>0.1.1-SNAPSHOT</version.universal>
         <version.bukkit>0.1.1-SNAPSHOT</version.bukkit>
         <version.discord>0.1.1-SNAPSHOT</version.discord>
+        <version.bungee>0.1.1-SNAPSHOT</version.bungee>
     </properties>
 
     <build>
