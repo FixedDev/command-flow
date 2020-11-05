@@ -9,6 +9,9 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.List;
+
 public class FlagPart implements CommandPart {
 
     private String name;
@@ -78,5 +81,32 @@ public class FlagPart implements CommandPart {
         }
 
         stack.applySnapshot(snapshot, false);
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        StackSnapshot snapshot = stack.getSnapshot();
+
+        while (stack.hasNext()) {
+            String arg = stack.next();
+
+            if (!arg.startsWith("-")) {
+                continue;
+            }
+
+            if (arg.equals("--" + name) && allowFullName) {
+                stack.remove();
+                break;
+            }
+
+            if (arg.equals("-" + shortName)) {
+                stack.remove();
+                break;
+            }
+        }
+
+        stack.applySnapshot(snapshot, false);
+
+        return Collections.emptyList();
     }
 }

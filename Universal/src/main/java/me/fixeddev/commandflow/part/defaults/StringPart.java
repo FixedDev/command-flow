@@ -94,4 +94,17 @@ public class StringPart implements ArgumentPart {
     public String getName() {
         return name;
     }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        stack.next();
+
+        if (consumeAll) {
+            while (stack.hasNext()) {
+                stack.next(); // ignored, not needed
+            }
+        }
+
+        return Collections.emptyList();
+    }
 }

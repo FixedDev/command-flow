@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public interface ArgumentPart extends CommandPart {
@@ -37,6 +38,13 @@ public interface ArgumentPart extends CommandPart {
 
         context.setValues(this, value);
         context.setRaw(this, rawArgs);
+    }
+
+    @Override
+    default List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        stack.next();
+
+        return Collections.emptyList();
     }
 
     List<? extends Object> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException;

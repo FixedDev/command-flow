@@ -1,6 +1,11 @@
 package me.fixeddev.commandflow.part.defaults;
 
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.part.ArgumentPart;
+import me.fixeddev.commandflow.stack.ArgumentStack;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A part that has the option to use all the available primitive arguments
@@ -35,6 +40,19 @@ public abstract class PrimitivePart implements ArgumentPart {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        stack.next();
+
+        if (consumeAll) {
+            while (stack.hasNext()) {
+                stack.next(); // ignored, not needed
+            }
+        }
+
+        return Collections.emptyList();
     }
 
 }

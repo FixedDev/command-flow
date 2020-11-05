@@ -6,6 +6,8 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class BooleanPart extends PrimitivePart {
@@ -38,4 +40,26 @@ public class BooleanPart extends PrimitivePart {
         return boolean.class;
     }
 
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        String prefix = stack.next();
+
+        if(consumeAll){
+            while (stack.hasNext()){
+                stack.next(); // ignored
+            }
+
+            prefix = stack.current();
+        }
+
+        if (prefix.startsWith("t")) {
+            return Collections.singletonList("true");
+        }
+
+        if (prefix.startsWith("f")) {
+            return Collections.singletonList("false");
+        }
+
+        return Collections.emptyList();
+    }
 }
