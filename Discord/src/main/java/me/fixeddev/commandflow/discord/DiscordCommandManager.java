@@ -22,7 +22,7 @@ public class DiscordCommandManager implements CommandManager {
     public static final String MEMBER_NAMESPACE = "MEMBER";
     public static final String USER_NAMESPACE = "USER";
 
-    private final CommandManager commandManager;
+    protected final CommandManager commandManager;
 
     public DiscordCommandManager(JDA client, String commandPrefix) {
         this(new SimpleCommandManager(), client, commandPrefix);

@@ -25,11 +25,11 @@ import java.util.logging.Level;
 public class BukkitCommandManager implements CommandManager {
     public static final String SENDER_NAMESPACE = "SENDER";
 
-    private CommandManager manager;
-    private CommandMap bukkitCommandMap;
-    private final String fallbackPrefix;
+    protected CommandManager manager;
+    protected CommandMap bukkitCommandMap;
+    protected final String fallbackPrefix;
 
-    private final Map<String, BukkitCommandWrapper> wrapperMap;
+    protected final Map<String, BukkitCommandWrapper> wrapperMap;
 
     public BukkitCommandManager(CommandManager delegate, String fallbackPrefix) {
         this.manager = delegate;

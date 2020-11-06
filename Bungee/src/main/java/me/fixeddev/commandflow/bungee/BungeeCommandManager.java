@@ -23,10 +23,10 @@ public class BungeeCommandManager implements CommandManager {
 
     public static final String SENDER_NAMESPACE = "SENDER";
 
-    private final CommandManager commandManager;
-    private final Plugin plugin;
+    protected final CommandManager commandManager;
+    protected final Plugin plugin;
 
-    private final Map<String, BungeeCommandWrapper> wrapperMap;
+    protected final Map<String, BungeeCommandWrapper> wrapperMap;
 
     public BungeeCommandManager(Plugin plugin) {
         this(new SimpleCommandManager(), plugin);
