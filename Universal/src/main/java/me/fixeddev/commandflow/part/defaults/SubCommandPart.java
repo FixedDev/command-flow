@@ -80,7 +80,7 @@ public class SubCommandPart implements CommandPart {
         try {
             label = stack.next();
         } catch (NoMoreArgumentsException e) {
-            if(optional){
+            if (optional) {
                 return;
             }
 
@@ -238,6 +238,9 @@ public class SubCommandPart implements CommandPart {
             CommandManager manager = commandContext.getObject(CommandManager.class, "commandManager");
 
             if (!manager.getAuthorizer().isAuthorized(commandContext, command.getPermission())) {
+                NoPermissionsException exception = new NoPermissionsException(command.getPermissionMessage());
+                exception.setCommand(command);
+
                 throw new NoPermissionsException(command.getPermissionMessage());
             }
 

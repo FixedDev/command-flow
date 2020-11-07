@@ -233,7 +233,10 @@ public class SimpleCommandManager implements CommandManager {
         Command command = optionalCommand.get();
 
         if (!authorizer.isAuthorized(accessor, command.getPermission())) {
-            throw new NoPermissionsException(command.getPermissionMessage());
+            NoPermissionsException exception = new NoPermissionsException(command.getPermissionMessage());
+            exception.setCommand(command);
+
+            throw exception;
         }
 
         CommandContext commandContext = new SimpleCommandContext(accessor, arguments);
