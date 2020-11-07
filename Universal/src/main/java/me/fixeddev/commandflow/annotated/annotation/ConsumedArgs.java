@@ -7,7 +7,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)
-@MetaAnnotation(creator = "me.fixeddev.commandflow.annotated.annotation.Annotations#getConsumedArgs")
 public @interface ConsumedArgs {
     int value();
 }
