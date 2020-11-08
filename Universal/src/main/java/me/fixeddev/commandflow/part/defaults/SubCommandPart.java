@@ -240,7 +240,7 @@ public class SubCommandPart implements CommandPart {
                 NoPermissionsException exception = new NoPermissionsException(command.getPermissionMessage());
                 exception.setCommand(command);
 
-                throw new NoPermissionsException(command.getPermissionMessage());
+                throw exception;
             }
 
             commandContext.setCommand(command, label);
