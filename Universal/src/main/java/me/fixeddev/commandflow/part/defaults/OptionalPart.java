@@ -14,6 +14,7 @@ import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class OptionalPart implements CommandPart, SinglePartWrapper {
@@ -76,7 +77,7 @@ public class OptionalPart implements CommandPart, SinglePartWrapper {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        return part.getSuggestions(commandContext, stack);
+        return Collections.emptyList();
     }
 
     @Override
