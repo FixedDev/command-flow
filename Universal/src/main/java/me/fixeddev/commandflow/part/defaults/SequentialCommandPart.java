@@ -10,6 +10,7 @@ import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -67,10 +68,15 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
     @Override
     public List<String> getSuggestions(CommandContext context, ArgumentStack stack) {
-        for (CommandPart part : parts) {
+
+        Iterator<CommandPart> partIterator = parts.iterator();
+
+        while (partIterator.hasNext()){
+            CommandPart part = partIterator.next();
+
             List<String> suggestions = part.getSuggestions(context, stack);
 
-            if (!suggestions.isEmpty()) {
+            if (!suggestions.isEmpty() && !stack.hasNext()) {
                 return suggestions;
             }
         }

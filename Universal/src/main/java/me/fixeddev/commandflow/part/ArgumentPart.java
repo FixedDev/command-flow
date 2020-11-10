@@ -42,7 +42,9 @@ public interface ArgumentPart extends CommandPart {
 
     @Override
     default List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        stack.next();
+        if (stack.hasNext()) {
+            stack.next();
+        }
 
         return Collections.emptyList();
     }

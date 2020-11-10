@@ -44,7 +44,9 @@ public abstract class PrimitivePart implements ArgumentPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        stack.next();
+        if(stack.hasNext()){
+            stack.next();
+        }
 
         if (consumeAll) {
             while (stack.hasNext()) {

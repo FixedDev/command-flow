@@ -9,6 +9,7 @@ import org.bukkit.World;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WorldPart implements ArgumentPart {
@@ -28,23 +29,42 @@ public class WorldPart implements ArgumentPart {
     @Override
     public List<World> parseValue(CommandContext context,
                                   ArgumentStack stack)
-        throws ArgumentParseException {
+            throws ArgumentParseException {
         List<World> worlds = new ArrayList<>();
         if (consumeAll) {
             while (stack.hasNext()) {
                 worlds.add(
-                    checkedWorld(stack));
+                        checkedWorld(stack));
             }
         } else {
             worlds.add(
-                checkedWorld(stack));
+                    checkedWorld(stack));
         }
         return worlds;
     }
 
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        String prefix = stack.hasNext() ? stack.next() : "";
+
+        List<String> suggestions = new ArrayList<>();
+
+        for (World world : Bukkit.getWorlds()) {
+            if (world.getName().startsWith(prefix)) {
+                suggestions.add(world.getName());
+            }
+        }
+
+        if (suggestions.size() == 1 && Bukkit.getWorld(suggestions.get(0)) != null) {
+            return Collections.emptyList();
+        }
+
+        return suggestions;
+    }
+
     private World checkedWorld(ArgumentStack stack) {
         World world = Bukkit.getWorld(
-            stack.next());
+                stack.next());
         if (world == null) {
             throw new ArgumentParseException("World not exist!");
         }
