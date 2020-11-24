@@ -230,7 +230,7 @@ public class SubCommandPart implements CommandPart {
                 commandException.setArgument(context.getPart());
                 commandException.setCommand(commandContext.getCommand());
 
-                throw new InvalidSubCommandException(TranslatableComponent.of("command.subcommand.invalid", TextComponent.of(label)));
+                throw commandException;
             }
 
             // Should be there
