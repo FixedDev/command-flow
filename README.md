@@ -33,4 +33,4 @@ Those are created using the `Command.builder(String)` method, which returns an `
 
 ## Known bugs or misbehaviours
 The next list are the known bugs that must be resolved at some point:
-- When using the FirstMatchPart in an ArgOrSub way(try to parse the arguments of the main command, if it fails try to parse the subcommand) with a main command with one  argument(or more) and a subcommand that is optional, called with an unexistent subcommand, the main command will be called with no arguments, making it fail.
+- When using the FirstMatchPart in an ArgOrSub way(try to parse the arguments of the main command, if it fails try to parse the subcommand) with a main command with one  argument(or more) and a subcommand that is optional, called with an unexistent subcommand, the main command will be called with no arguments, making it fail. The actual solution is to set the command as optional with a default value
