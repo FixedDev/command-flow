@@ -1,10 +1,6 @@
 # CommandFlow [![Codacy Badge](https://app.codacy.com/project/badge/Grade/be5924e44cae41cca2d39bc074bfd881)](https://www.codacy.com?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=FixedDev/CommandFlow&amp;utm_campaign=Badge_Grade)
 A flexible command framework which removes lots of boilerplate code used in commands.
 
-## Known bugs or misbehaviours
-The next list are the known bugs that must be resolved at some point:
-- When using the FirstMatchPart in an ArgOrSub way(try to parse the arguments of the main command, if it fails try to parse the subcommand) with a main command with one  argument(or more) and a subcommand that is optional, called with an unexistent subcommand, the main command will be called with no arguments, making it fail.
-
 ## Usage
 The command framework is divided into two parts. One is the actual command framework and the other one is the API to allow creation of a complete command tree based on annotations.
 ### Components of the Command Framework
@@ -33,3 +29,7 @@ Those are created using the `Command.builder(String)` method, which returns an `
   <artifactId>commandflow-universal</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 </dependency>
+
+## Known bugs or misbehaviours
+The next list are the known bugs that must be resolved at some point:
+- When using the FirstMatchPart in an ArgOrSub way(try to parse the arguments of the main command, if it fails try to parse the subcommand) with a main command with one  argument(or more) and a subcommand that is optional, called with an unexistent subcommand, the main command will be called with no arguments, making it fail.
