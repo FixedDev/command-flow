@@ -8,9 +8,11 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
+import net.kyori.text.Component;
+import net.kyori.text.TextComponent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -20,15 +22,45 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
     private final String name;
     private final List<CommandPart> partList;
     private Boolean async;
+    private final boolean considerNoChangesAsFail;
 
-    public FirstMatchPart(String name, List<CommandPart> partList) {
+    public FirstMatchPart(String name, List<CommandPart> partList, boolean considerNoChangesAsFail) {
         this.name = name;
         this.partList = partList;
+        this.considerNoChangesAsFail = considerNoChangesAsFail;
+    }
+
+    public FirstMatchPart(String name, List<CommandPart> partList) {
+        this(name, partList, true);
     }
 
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public @Nullable Component getLineRepresentation() {
+        TextComponent component = TextComponent.of("<");
+
+        boolean first = true;
+        for (CommandPart part : partList) {
+            Component partComponent = part.getLineRepresentation();
+
+            if (partComponent != null) {
+                if (first) {
+                    first = false;
+                } else {
+                    component = component.append(TextComponent.of("|"));
+                }
+
+                component = component.append(partComponent);
+
+            }
+        }
+        component = component.append(TextComponent.of(">"));
+
+        return component;
     }
 
     @Override
@@ -45,6 +77,27 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
 
             try {
                 part.parse(context, stack);
+
+                // make it a toggleable behaviour, since it can be kinda buggy
+                if (!considerNoChangesAsFail) {
+                    return;
+                }
+
+                ContextSnapshot newState = context.getSnapshot();
+                StackSnapshot newStackState = stack.getSnapshot();
+
+                // Check if there was any change to the context or the stack
+                if (newState.equals(contextSnapshot) &&
+                        newStackState.equals(snapshot) &&
+                        !partIterator.hasNext()) {
+
+                    // The part actually failed but the exception was swallowed at some point of the stack.
+                    if (last == null) {
+                        last = new ArgumentParseException("");
+                    }
+
+                    throw last;
+                }
 
                 return;
             } catch (ArgumentException e) {
@@ -67,7 +120,6 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
 
         for (CommandPart part : partList) {
             suggestions.addAll(part.getSuggestions(context, stack));
-
         }
 
         return suggestions;
