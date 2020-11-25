@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NamespaceImpl implements Namespace {
@@ -21,5 +22,18 @@ public class NamespaceImpl implements Namespace {
         Map<String, Object> map = backing.computeIfAbsent(clazz, key -> new ConcurrentHashMap<>());
 
         map.put(name, object);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NamespaceImpl)) return false;
+        NamespaceImpl namespace = (NamespaceImpl) o;
+        return Objects.equals(backing, namespace.backing);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(backing);
     }
 }

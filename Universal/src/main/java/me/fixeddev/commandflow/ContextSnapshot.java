@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.part.CommandPart;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -44,5 +45,26 @@ public class ContextSnapshot {
         this.allPartsByName = allPartsByName;
         this.rawBindings = rawBindings;
         this.valueBindings = valueBindings;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ContextSnapshot)) return false;
+        ContextSnapshot that = (ContextSnapshot) o;
+        return Objects.equals(namespace, that.namespace) &&
+                Objects.equals(executedCommand, that.executedCommand) &&
+                Objects.equals(commandExecutionPath, that.commandExecutionPath) &&
+                Objects.equals(rawArguments, that.rawArguments) &&
+                Objects.equals(labels, that.labels) &&
+                Objects.equals(allParts, that.allParts) &&
+                Objects.equals(allPartsByName, that.allPartsByName) &&
+                Objects.equals(rawBindings, that.rawBindings) &&
+                Objects.equals(valueBindings, that.valueBindings);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(namespace, executedCommand, commandExecutionPath, rawArguments, labels, allParts, allPartsByName, rawBindings, valueBindings);
     }
 }
