@@ -29,6 +29,7 @@ Those are created using the `Command.builder(String)` method, which returns an `
   <artifactId>commandflow-universal</artifactId>
   <version>0.1.0-SNAPSHOT</version>
 </dependency>
+```
 
 ## Known bugs or misbehaviours
 The next list are the known bugs that must be resolved at some point:
