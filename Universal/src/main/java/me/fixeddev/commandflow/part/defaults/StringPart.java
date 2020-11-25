@@ -70,6 +70,9 @@ public class StringPart implements ArgumentPart {
     public List<String> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         List<String> objects = new ArrayList<>();
 
+        String next = stack.next();
+        objects.add(next);
+
         if (consumeAll) {
             while (stack.hasNext()) {
                 objects.add(stack.next());
@@ -78,8 +81,6 @@ public class StringPart implements ArgumentPart {
             if (joinStrings) {
                 return Collections.singletonList(String.join(separator, objects));
             }
-        } else {
-            objects.add(stack.next());
         }
 
         return objects;
