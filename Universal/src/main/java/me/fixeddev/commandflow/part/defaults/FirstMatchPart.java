@@ -11,6 +11,7 @@ import me.fixeddev.commandflow.stack.StackSnapshot;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +35,11 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
     public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         ArgumentException last = null;
 
-        for (CommandPart part : partList) {
+        Iterator<CommandPart> partIterator = partList.iterator();
+
+        while (partIterator.hasNext()) {
+            CommandPart part = partIterator.next();
+
             ContextSnapshot contextSnapshot = context.getSnapshot();
             StackSnapshot snapshot = stack.getSnapshot();
 
@@ -43,14 +48,15 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
 
                 return;
             } catch (ArgumentException e) {
-                stack.applySnapshot(snapshot, true);
-                context.applySnapshot(contextSnapshot);
+                if (partIterator.hasNext()) {
+                    stack.applySnapshot(snapshot, true);
+                    context.applySnapshot(contextSnapshot);
+                }
 
                 last = e;
             }
         }
-
-        if(last != null) {
+        if (last != null) {
             throw last;
         }
     }
@@ -62,12 +68,9 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
         for (CommandPart part : partList) {
             suggestions.addAll(part.getSuggestions(context, stack));
 
-            if (!suggestions.isEmpty()) {
-                return suggestions;
-            }
         }
 
-        return Collections.emptyList();
+        return suggestions;
     }
 
     @Override
