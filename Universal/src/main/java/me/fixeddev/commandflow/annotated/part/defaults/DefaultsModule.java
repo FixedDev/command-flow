@@ -18,21 +18,38 @@ import me.fixeddev.commandflow.annotated.part.defaults.factory.StringPartFactory
 import me.fixeddev.commandflow.annotated.part.defaults.factory.StringTextPartFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.modifier.LimitModifier;
 import me.fixeddev.commandflow.annotated.part.defaults.modifier.OptionalModifier;
+import me.fixeddev.commandflow.part.defaults.BooleanPart;
+import me.fixeddev.commandflow.part.defaults.FloatPart;
+import me.fixeddev.commandflow.part.defaults.IntegerPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 public class DefaultsModule extends AbstractModule {
     @Override
     public void configure() {
-        bindFactory(boolean.class, new BooleanPartFactory());
-        bindFactory(double.class, new DoublePartFactory());
-        bindFactory(float.class, new FloatPartFactory());
-        bindFactory(int.class, new IntegerPartFactory());
-        bindFactory(String.class, new StringPartFactory());
+        BooleanPartFactory booleanPartFactory = new BooleanPartFactory();
+        bindFactory(boolean.class, booleanPartFactory);
+        bindFactory(Boolean.class, booleanPartFactory);
+
+        DoublePartFactory doublePartFactory = new DoublePartFactory();
+        bindFactory(double.class, doublePartFactory);
+        bindFactory(Double.class, doublePartFactory);
+
+        FloatPartFactory floatPartFactory = new FloatPartFactory();
+        bindFactory(Float.class, floatPartFactory);
+        bindFactory(float.class, floatPartFactory);
+
+        IntegerPartFactory partFactory = new IntegerPartFactory();
+        bindFactory(int.class, partFactory);
+        bindFactory(Integer.class, partFactory);
+
         bindFactory(new Key(String.class, Text.class), new StringTextPartFactory());
         bindFactory(CommandContext.class, new ContextFactory());
         bindFactory(ArgumentStack.class, new ArgumentStackPartFactory());
 
-        bindFactory(new Key(boolean.class, Flag.class), new FlagPartFactory());
+        FlagPartFactory flagPartFactory = new FlagPartFactory();
+
+        bindFactory(new Key(boolean.class, Flag.class), flagPartFactory);
+        bindFactory(new Key(Boolean.class, Flag.class), flagPartFactory);
 
         bindModifier(ConsumedArgs.class, new LimitModifier());
         bindModifier(OptArg.class, new OptionalModifier());
