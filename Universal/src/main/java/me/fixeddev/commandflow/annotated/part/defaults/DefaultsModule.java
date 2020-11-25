@@ -42,6 +42,8 @@ public class DefaultsModule extends AbstractModule {
         bindFactory(int.class, partFactory);
         bindFactory(Integer.class, partFactory);
 
+        bindFactory(String.class, new StringPartFactory());
+
         bindFactory(new Key(String.class, Text.class), new StringTextPartFactory());
         bindFactory(CommandContext.class, new ContextFactory());
         bindFactory(ArgumentStack.class, new ArgumentStackPartFactory());
