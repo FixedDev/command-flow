@@ -37,6 +37,10 @@ public class GameModePart implements ArgumentPart {
         }
     }
 
+    public static void addAlias(String alias, GameMode gameMode) {
+        GAMEMODE_ALIASES.put(alias.toLowerCase(), gameMode);
+    }
+
     private final String name;
 
     public GameModePart(String name) {
