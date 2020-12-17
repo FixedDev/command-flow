@@ -24,9 +24,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class BukkitCommandWrapper extends Command {
-    private final CommandManager commandManager;
-    private final Component permissionMessage;
-    private final Translator translator;
+    protected final CommandManager commandManager;
+    protected final Component permissionMessage;
+    protected final Translator translator;
 
     public BukkitCommandWrapper(me.fixeddev.commandflow.command.Command command,
                                 CommandManager dispatcher,

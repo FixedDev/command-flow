@@ -22,11 +22,11 @@ import java.util.List;
 
 public class BungeeCommandWrapper extends Command implements TabExecutor {
 
-    private final CommandManager commandManager;
-    private final Translator translator;
+    protected final CommandManager commandManager;
+    protected final Translator translator;
 
-    private final String[] aliases;
-    private final String permission;
+    protected final String[] aliases;
+    protected final String permission;
 
     public BungeeCommandWrapper(me.fixeddev.commandflow.command.Command command, CommandManager commandManager,
                                 Translator translator) {
