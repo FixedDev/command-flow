@@ -12,6 +12,7 @@
         <module>Bukkit</module>
         <module>Discord</module>
         <module>Bungee</module>
+        <module>Brigadier</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -45,6 +46,7 @@
         <version.bukkit>0.1.1-SNAPSHOT</version.bukkit>
         <version.discord>0.1.1-SNAPSHOT</version.discord>
         <version.bungee>0.1.1-SNAPSHOT</version.bungee>
+        <version.brigadier>0.1.0-SNAPSHOT</version.brigadier>
     </properties>
 
     <build>
