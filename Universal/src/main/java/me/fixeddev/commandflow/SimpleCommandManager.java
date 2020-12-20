@@ -216,44 +216,48 @@ public class SimpleCommandManager implements CommandManager {
      * {@inheritDoc}
      */
     @Override
+    public boolean execute(CommandContext commandContext) throws CommandException {
+        if (commandContext == null) {
+            throw new IllegalArgumentException("The CommandContext can't be null!");
+        }
+
+        return executor.execute(commandContext, getUsageBuilder());
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean execute(Namespace accessor, List<String> arguments) throws CommandException {
-        if (arguments == null || arguments.isEmpty()) {
+        ParseResult result = parse(accessor, arguments);
+
+        Optional<CommandException> optionalException = result.getException();
+        Optional<CommandContext> optionalContext = result.getContext();
+
+        if (optionalException.isPresent()) {
+            CommandException exception = optionalException.get();
+
+            if (exception instanceof ArgumentException) {
+                // The context is there if the exception is an ArgumentException, ignore the warning
+                CommandContext commandContext = optionalContext.get();
+                ArgumentException e = (ArgumentException) exception;
+
+                CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
+                usage.setCommand(commandContext.getCommand());
+
+                usage.initCause(e);
+                throw usage;
+            } else {
+                // rethrow, we can't handle this exception
+                throw exception;
+            }
+        }
+
+        if (!optionalContext.isPresent()) {
             return false;
         }
 
-        Optional<Command> optionalCommand = getCommand(arguments.get(0));
-
-        if (!optionalCommand.isPresent()) {
-            return false;
-        }
-
-        ArgumentStack stack = new SimpleArgumentStack(arguments);
-
-        String label = stack.next();
-        Command command = optionalCommand.get();
-
-        if (!authorizer.isAuthorized(accessor, command.getPermission())) {
-            NoPermissionsException exception = new NoPermissionsException(command.getPermissionMessage());
-            exception.setCommand(command);
-
-            throw exception;
-        }
-
-        CommandContext commandContext = new SimpleCommandContext(accessor, arguments);
-        commandContext.setCommand(command, label);
-
-        accessor.setObject(CommandManager.class, "commandManager", this);
-
-        CommandPart part = command.getPart();
-        try {
-            part.parse(commandContext, stack);
-        } catch (ArgumentException e) {
-            CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
-            usage.setCommand(commandContext.getCommand());
-
-            usage.initCause(e);
-            throw usage;
-        }
+        CommandContext commandContext = optionalContext.get();
 
         return executor.execute(commandContext, getUsageBuilder());
     }
@@ -307,4 +311,107 @@ public class SimpleCommandManager implements CommandManager {
         return getSuggestions(accessor, tokenizer.tokenize(line));
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParseResult parse(Namespace accessor, String line) {
+        return parse(accessor, tokenizer.tokenize(line));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ParseResult parse(Namespace accessor, List<String> arguments) {
+        if (arguments == null || arguments.isEmpty()) {
+            return empty();
+        }
+
+        Optional<Command> optionalCommand = getCommand(arguments.get(0));
+
+        if (!optionalCommand.isPresent()) {
+            return empty();
+        }
+
+        ArgumentStack stack = new SimpleArgumentStack(arguments);
+
+        String label = stack.next();
+        Command command = optionalCommand.get();
+
+        if (!authorizer.isAuthorized(accessor, command.getPermission())) {
+            NoPermissionsException exception = new NoPermissionsException(command.getPermissionMessage());
+            exception.setCommand(command);
+
+            return ofError(exception);
+        }
+
+        CommandContext commandContext = new SimpleCommandContext(accessor, arguments);
+        commandContext.setCommand(command, label);
+
+        accessor.setObject(CommandManager.class, "commandManager", this);
+
+        CommandPart part = command.getPart();
+
+        try {
+            part.parse(commandContext, stack);
+        } catch (ArgumentException e) {
+            CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
+            usage.setCommand(commandContext.getCommand());
+
+            usage.initCause(e);
+
+            return ofError(commandContext, e);
+        }
+
+        return ofSuccess(commandContext);
+    }
+
+    private ParseResult empty() {
+        return new ParseResultImpl();
+    }
+
+    private ParseResult ofSuccess(CommandContext commandContext) {
+        return new ParseResultImpl(commandContext);
+    }
+
+    private ParseResult ofError(CommandException exception) {
+        return new ParseResultImpl(exception);
+    }
+
+    private ParseResult ofError(CommandContext commandContext, CommandException exception) {
+        return new ParseResultImpl(commandContext, exception);
+    }
+
+    protected static class ParseResultImpl implements ParseResult {
+
+        private CommandContext commandContext;
+        private CommandException exception;
+
+        public ParseResultImpl(CommandContext commandContext, CommandException exception) {
+            this.commandContext = commandContext;
+            this.exception = exception;
+        }
+
+        public ParseResultImpl(CommandContext commandContext) {
+            this.commandContext = commandContext;
+        }
+
+        public ParseResultImpl(CommandException exception) {
+            this.exception = exception;
+        }
+
+        public ParseResultImpl() {
+        }
+
+        @Override
+        public Optional<CommandContext> getContext() {
+            return Optional.ofNullable(commandContext);
+        }
+
+        @Override
+        public Optional<CommandException> getException() {
+            return Optional.ofNullable(exception);
+        }
+    }
 }

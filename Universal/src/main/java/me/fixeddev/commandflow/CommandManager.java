@@ -15,7 +15,6 @@ import java.util.Set;
  * Manages the command register and command execution.
  * In that way is a CommandRegistry and a CommandDispatcher at the same time, it also manages the parsing phase of the execution of the command
  * And manages the suggestions for the commands, used on Tab Completing on things like CLI applications or Bukkit
- *
  */
 public interface CommandManager {
 
@@ -30,30 +29,31 @@ public interface CommandManager {
 
     /**
      * Registers the specified {@link List} of {@link Command} into the internal command map doing a for loop and calling {@link CommandManager#registerCommand(Command)} for every command
-     * @see CommandManager#registerCommand(Command)  
-     * 
+     *
      * @param commandList The commands to register
      * @throws IllegalArgumentException If the main name of any command is already registered
+     * @see CommandManager#registerCommand(Command)
      */
     void registerCommands(List<Command> commandList);
 
     /**
-     * Unregisters the specified {@link Command} from the internal command map including all of it's aliases 
-     * 
+     * Unregisters the specified {@link Command} from the internal command map including all of it's aliases
+     *
      * @param command The {@linkplain Command} to unregister
      */
     void unregisterCommand(Command command);
 
     /**
      * Unregisters the specified {@link List} of {@link Command} from the internal command map doing a for loop and calling {@link CommandManager#unregisterCommand(Command)} for every command
-     * @see CommandManager#unregisterCommand(Command) 
-     * 
+     *
      * @param commands The {@linkplain Command} to unregister
+     * @see CommandManager#unregisterCommand(Command)
      */
     void unregisterCommands(List<Command> commands);
 
     /**
      * Unregisters all the registered commands on this command manager
+     *
      * @see CommandManager#unregisterCommand(Command)
      */
     void unregisterAll();
@@ -88,7 +88,7 @@ public interface CommandManager {
      * @throws IllegalArgumentException If the specified authorizer is null
      */
     void setAuthorizer(Authorizer authorizer);
-    
+
     /**
      * The {@link InputTokenizer} used by this instance on the methods:
      * {@link CommandManager#execute(Namespace, String)}
@@ -129,17 +129,38 @@ public interface CommandManager {
     Optional<Command> getCommand(String commandName);
 
     /**
-     * Parses the command and creates a {@link CommandContext} instance used to execute the command.
+     * Executes a command based on the provided {@link CommandContext}.
      * <p>
      * If the executed {@link Command}'s {@link me.fixeddev.commandflow.command.Action} returns a false value then this method gets the usage for the executed Command
-     * As a side note, the implementation also injects this instance into the {@link Namespace} with the name "commandManager"
+     *
+     * @param commandContext The {@link CommandContext} used to execute the command.
+     * @return A boolean indicating if a command was executed or not
+     * @throws CommandException If the execution phase of the command fails for any reason
+     */
+    boolean execute(CommandContext commandContext) throws CommandException;
+
+    /**
+     * Calls {@link CommandManager#parse(Namespace, List)} and executes the command with the {@link CommandContext} returned by the method.
+     * <p>
+     * If the executed {@link Command}'s {@link me.fixeddev.commandflow.command.Action} returns a false value then this method gets the usage for the executed Command
      *
      * @param accessor  The {@link Namespace} used to inject things into the Command parsing/execution phase
      * @param arguments A {@link List} of arguments including the command used to parse the actual command used and the parameters of that command
      * @return A boolean indicating if a command was executed or not
-     * @throws CommandException      If the execution phase of the command fails for any reason
+     * @throws CommandException If the execution phase of the command fails for any reason
      */
     boolean execute(Namespace accessor, List<String> arguments) throws CommandException;
+
+    /**
+     * Parses the specified list of arguments with the specified {@link Namespace} into a CommandContext.
+     * As a side note, the implementation also injects this instance into the {@link Namespace} with the name "commandManager"
+     *
+     * @param accessor  The {@link Namespace} used to inject things into the Command parsing/execution phase
+     * @param arguments A {@link List} of arguments including the command used to parse the actual command used and the parameters of that command
+     * @return An Optional CommandContext instance, absent if the arguments are not present or the command doesn't exists
+     * @throws CommandException If the parsing fails for any reason, included but not limited to not having permissions.
+     */
+    ParseResult parse(Namespace accessor, List<String> arguments) throws CommandException;
 
     /**
      * Partially parses the specified {@link List} of arguments and gets the suggestion for the last argument
@@ -157,7 +178,7 @@ public interface CommandManager {
      * @param accessor The {@link Namespace} used to inject things into the Command parsing/execution phase
      * @param line     A String representing the command line to tokenize
      * @return A boolean indicating if a command was executed or not
-     * @throws CommandException      If the execution phase of the command fails for any reason
+     * @throws CommandException If the execution phase of the command fails for any reason
      * @see CommandManager#execute(Namespace, List)
      */
     boolean execute(Namespace accessor, String line) throws CommandException;
@@ -172,5 +193,20 @@ public interface CommandManager {
      * @see CommandManager#getSuggestions(Namespace, List)
      */
     List<String> getSuggestions(Namespace accessor, String line);
+
+    /**
+     * Converts the specified line into a {@link List} of Strings using the {@link InputTokenizer} returned by {@link CommandManager#getInputTokenizer()}
+     * and executes the {@linkplain CommandManager#parse(Namespace, List)} method.
+     * <p>
+     * Parses the specified list of arguments with the specified {@link Namespace} into a CommandContext.
+     * As a side note, the implementation also injects this instance into the {@link Namespace} with the name "commandManager"
+     *
+     * @param accessor  The {@link Namespace} used to inject things into the Command parsing/execution phase
+     * @param line     A String representing the command line to tokenize
+     * @return An Optional CommandContext instance, absent if the arguments are not present or the command doesn't exists
+     * @throws CommandException If the parsing fails for any reason, included but not limited to not having permissions.
+     * @see CommandManager#parse(Namespace, List)
+     */
+    ParseResult parse(Namespace accessor, String line) throws CommandException;
 
 }
