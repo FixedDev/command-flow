@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.annotated.annotation.ConsumedArgs;
 import me.fixeddev.commandflow.annotated.annotation.Flag;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import me.fixeddev.commandflow.annotated.annotation.Switch;
 import me.fixeddev.commandflow.annotated.annotation.Text;
 import me.fixeddev.commandflow.annotated.part.AbstractModule;
 import me.fixeddev.commandflow.annotated.part.Key;
@@ -18,9 +19,11 @@ import me.fixeddev.commandflow.annotated.part.defaults.factory.StringPartFactory
 import me.fixeddev.commandflow.annotated.part.defaults.factory.StringTextPartFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.modifier.LimitModifier;
 import me.fixeddev.commandflow.annotated.part.defaults.modifier.OptionalModifier;
+import me.fixeddev.commandflow.annotated.part.defaults.modifier.ValueFlagModifier;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.FloatPart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
+import me.fixeddev.commandflow.part.defaults.ValueFlagPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 public class DefaultsModule extends AbstractModule {
@@ -50,10 +53,11 @@ public class DefaultsModule extends AbstractModule {
 
         FlagPartFactory flagPartFactory = new FlagPartFactory();
 
-        bindFactory(new Key(boolean.class, Flag.class), flagPartFactory);
-        bindFactory(new Key(Boolean.class, Flag.class), flagPartFactory);
+        bindFactory(new Key(boolean.class, Switch.class), flagPartFactory);
+        bindFactory(new Key(Boolean.class, Switch.class), flagPartFactory);
 
         bindModifier(ConsumedArgs.class, new LimitModifier());
         bindModifier(OptArg.class, new OptionalModifier());
+        bindModifier(Flag.class, new ValueFlagModifier());
     }
 }

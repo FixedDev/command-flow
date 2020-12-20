@@ -13,6 +13,7 @@ import me.fixeddev.commandflow.part.defaults.OptionalPart;
 import me.fixeddev.commandflow.part.defaults.SequentialCommandPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
+import me.fixeddev.commandflow.part.defaults.ValueFlagPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import java.util.ArrayList;
@@ -76,6 +77,39 @@ public final class Parts {
      */
     public static CommandPart flagPart(String name, String shortName, boolean allowFullNameUse) {
         return new FlagPart(name, shortName, allowFullNameUse);
+    }
+
+    /**
+     * Creates a new {@link ValueFlagPart} that searches non positional arguments with the format -&lt;shortName&gt; the value for this part will be the value returned by the provided {@link CommandPart}.
+     * <p>
+     * After the argument being found it will be deleted from the {@link ArgumentStack} and in that position of the stack the provided {@link CommandPart} will
+     * start the parsing, if the parse fails the whole process is reverted. The parsed arguments are removed also.
+     *
+     * @param part             The {@link CommandPart} that will parse the arguments.
+     * @param shortName        The short name of the {@link FlagPart}, this will be used as the flag name(-&lt;shortName&gt;)
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     * @see Parts#flagPart(String, String, boolean)
+     */
+    public static CommandPart valueFlagPart(CommandPart part, String shortName) {
+        return valueFlagPart(part,shortName,false);
+    }
+
+
+    /**
+     * Creates a new {@link ValueFlagPart} that searches non positional arguments with the format -&lt;shortName&gt; or --&lt;name&gt;(name being the name of the provided part), the second one only
+     * being allowed if the allowFullNameUse parameter is true; the value for this part will be the value returned by the provided {@link CommandPart}.
+     * <p>
+     * After the argument being found it will be deleted from the {@link ArgumentStack} and in that position of the stack the provided {@link CommandPart} will
+     * start the parsing, if the parse fails the whole process is reverted. The parsed arguments are removed also.
+     *
+     * @param part             The {@link CommandPart} that will parse the arguments.
+     * @param shortName        The short name of the {@link FlagPart}, this will be used as the flag name(-&lt;shortName&gt;)
+     * @param allowFullNameUse Whether the format --&lt;name&gt; is allowed or not.
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     * @see Parts#flagPart(String, String, boolean)
+     */
+    public static CommandPart valueFlagPart(CommandPart part, String shortName, boolean allowFullNameUse) {
+        return new ValueFlagPart(shortName, allowFullNameUse, part);
     }
 
     /**
