@@ -12,15 +12,7 @@ import java.util.List;
 public class OptionalModifier implements PartModifier {
     @Override
     public CommandPart modify(CommandPart original, List<? extends Annotation> modifiers) {
-        OptArg optional = null;
-
-        for (Annotation modifier : modifiers) {
-            if (modifier instanceof OptArg) {
-                optional = (OptArg) modifier;
-
-                break;
-            }
-        }
+        OptArg optional = getModifier(modifiers, OptArg.class);
 
         if (optional == null) {
             return original;

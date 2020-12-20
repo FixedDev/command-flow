@@ -12,15 +12,7 @@ public class LimitModifier implements PartModifier {
     @Override
     public CommandPart modify(CommandPart original, List<? extends Annotation> modifiers) {
 
-        ConsumedArgs limit = null;
-
-        for (Annotation modifier : modifiers) {
-            if (modifier instanceof ConsumedArgs) {
-                limit = (ConsumedArgs) modifier;
-
-                break;
-            }
-        }
+        ConsumedArgs limit = getModifier(modifiers, ConsumedArgs.class);
 
         if (limit == null) {
             return original;
