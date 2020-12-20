@@ -20,9 +20,12 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNode, CommandPartsNode, SubCommandsNode {
@@ -79,12 +82,31 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
 
             ParentArg arg = parameter.getAnnotation(ParentArg.class);
 
-            if (arg != null) {
-                partGetters.add(ValueGetter.forPart(part, arg.value()));
+            // I don't like this :/
+            if (getRawType(parameter) == List.class) {
+                if (arg != null) {
+                    partGetters.add(ValueGetter.forPartValues(part, arg.value()));
 
-                continue;
+                    continue;
+                } else {
+                    partGetters.add(ValueGetter.forPartValues(part));
+                }
+            } else if (getRawType(parameter) == Optional.class) {
+                if (arg != null) {
+                    partGetters.add(ValueGetter.forOptionalPart(part, arg.value()));
+
+                    continue;
+                } else {
+                    partGetters.add(ValueGetter.forOptionalPart(part));
+                }
             } else {
-                partGetters.add(ValueGetter.forPart(part));
+                if (arg != null) {
+                    partGetters.add(ValueGetter.forPart(part, arg.value()));
+
+                    continue;
+                } else {
+                    partGetters.add(ValueGetter.forPart(part));
+                }
             }
 
             part = modifier.modify(part, annotations);
@@ -92,6 +114,14 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
         }
 
         return this;
+    }
+
+    private Type getRawType(Parameter parameter) {
+        if (parameter.getParameterizedType() instanceof ParameterizedType) {
+            return ((ParameterizedType) parameter.getParameterizedType()).getRawType();
+        }
+
+        return parameter.getType();
     }
 
     private String getName(Parameter parameter) {
@@ -103,8 +133,18 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     private PartFactory getFactory(Parameter parameter) {
         PartFactory factory = null;
 
+        Class<?> type = parameter.getType();
+
+        if (parameter.getParameterizedType() instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) parameter.getParameterizedType();
+
+            if (parameterizedType.getRawType() == List.class || parameterizedType.getRawType() == Optional.class) {
+                type = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+            }
+        }
+
         for (Annotation annotation : parameter.getAnnotations()) {
-            factory = injector.getFactory(new Key(parameter.getType(), annotation.annotationType()));
+            factory = injector.getFactory(new Key(type, annotation.annotationType()));
 
             if (factory != null) {
                 break;
@@ -115,7 +155,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             return factory;
         }
 
-        return injector.getFactory(parameter.getType());
+        return injector.getFactory(type);
     }
 
     @Override
