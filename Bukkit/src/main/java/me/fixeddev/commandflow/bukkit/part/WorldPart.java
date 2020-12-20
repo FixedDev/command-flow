@@ -14,33 +14,14 @@ import java.util.List;
 
 public class WorldPart implements ArgumentPart {
     private final String name;
-    private final boolean consumeAll;
-
 
     public WorldPart(String name) {
-        this(name, false);
-    }
-
-    public WorldPart(String name, boolean consumeAll) {
         this.name = name;
-        this.consumeAll = consumeAll;
     }
 
     @Override
-    public List<World> parseValue(CommandContext context,
-                                  ArgumentStack stack)
-            throws ArgumentParseException {
-        List<World> worlds = new ArrayList<>();
-        if (consumeAll) {
-            while (stack.hasNext()) {
-                worlds.add(
-                        checkedWorld(stack));
-            }
-        } else {
-            worlds.add(
-                    checkedWorld(stack));
-        }
-        return worlds;
+    public List<World> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+        return Collections.singletonList(checkedWorld(stack));
     }
 
     @Override
@@ -63,8 +44,7 @@ public class WorldPart implements ArgumentPart {
     }
 
     private World checkedWorld(ArgumentStack stack) {
-        World world = Bukkit.getWorld(
-                stack.next());
+        World world = Bukkit.getWorld(stack.next());
         if (world == null) {
             throw new ArgumentParseException("World not exist!");
         }

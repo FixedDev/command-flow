@@ -13,27 +13,13 @@ import java.util.List;
 
 public class BooleanPart extends PrimitivePart {
 
-    public BooleanPart(String name, boolean consumeAll) {
-        super(name, consumeAll);
-    }
-
     public BooleanPart(String name) {
         super(name);
     }
 
     @Override
     public List<Boolean> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-        List<Boolean> objects = new ArrayList<>();
-
-        if (consumeAll) {
-            while (stack.hasNext()) {
-                objects.add(stack.nextBoolean());
-            }
-        } else {
-            objects.add(stack.nextBoolean());
-        }
-
-        return objects;
+        return Collections.singletonList(stack.nextBoolean());
     }
 
     @Override
@@ -44,14 +30,6 @@ public class BooleanPart extends PrimitivePart {
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         String prefix = stack.hasNext() ? stack.next() : "";
-
-        if (consumeAll) {
-            while (stack.hasNext()) {
-                stack.next(); // ignored
-            }
-
-            prefix = stack.current();
-        }
 
         if (prefix.isEmpty()) {
             return Arrays.asList("true", "false");

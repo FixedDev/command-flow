@@ -17,6 +17,7 @@ import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.help.HelpTopic;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -39,6 +40,13 @@ public class BukkitCommandWrapper extends Command {
             Component translatedDescription = translator.translate(command.getDescription(), new NamespaceImpl());
 
             this.setDescription(LegacyComponentSerializer.INSTANCE.serialize(translatedDescription));
+
+            HelpTopic topic = new HelpTopic() {
+                @Override
+                public boolean canSee(CommandSender player) {
+                    return false;
+                }
+            };
         }
 
         //this.setUsage(UsageBuilder.getUsageForCommand(null, command, "<command>"));

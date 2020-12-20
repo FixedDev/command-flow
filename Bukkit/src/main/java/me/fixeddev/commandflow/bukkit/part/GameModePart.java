@@ -9,6 +9,7 @@ import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
 import org.bukkit.GameMode;
+import sun.plugin2.applet.context.InitialJNLPExecutionContext;
 
 import java.lang.reflect.Type;
 import java.util.*;
@@ -62,11 +63,9 @@ public class GameModePart implements ArgumentPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        if (!stack.hasNext()) {
-            return Collections.emptyList();
-        }
+        String next = stack.hasNext() ? stack.next() : "";
 
-        String possibleGameModeName = stack.next().toUpperCase();
+        String possibleGameModeName = next.toUpperCase();
 
         return Arrays.stream(GameMode.values())
                 .map(gameMode -> gameMode.name().toLowerCase())

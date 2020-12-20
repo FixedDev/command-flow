@@ -6,13 +6,11 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class FloatPart extends PrimitivePart {
 
-    public FloatPart(String name, boolean consumeAll) {
-        super(name, consumeAll);
-    }
 
     public FloatPart(String name) {
         super(name);
@@ -20,18 +18,7 @@ public class FloatPart extends PrimitivePart {
 
     @Override
     public List<Float> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-        List<Float> objects = new ArrayList<>();
-
-        if (consumeAll) {
-            while (stack.hasNext()) {
-                objects.add(stack.nextFloat());
-            }
-        } else {
-            objects.add(stack.nextFloat());
-
-        }
-
-        return objects;
+        return Collections.singletonList(stack.nextFloat());
     }
 
     @Override

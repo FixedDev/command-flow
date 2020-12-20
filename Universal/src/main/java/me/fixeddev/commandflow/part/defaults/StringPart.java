@@ -2,7 +2,6 @@ package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
-import me.fixeddev.commandflow.part.ArgumentPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import java.lang.reflect.Type;
@@ -14,12 +13,11 @@ import java.util.List;
  * A part that has the option to use all the available {@link String} arguments also with an option of
  * joining all the used String arguments into one with a specified separator between them.
  */
-public class StringPart implements ArgumentPart {
+public class StringPart extends PrimitivePart {
 
-    private String name;
-    private boolean consumeAll;
-    private boolean joinStrings;
-    private String separator;
+    private final boolean consumeAll;
+    private final boolean joinStrings;
+    private final String separator;
 
     /**
      * Creates a StringPart instance with the given name
@@ -30,7 +28,7 @@ public class StringPart implements ArgumentPart {
      * @param separator   The separator between the String values.
      */
     public StringPart(String name, boolean consumeAll, boolean joinStrings, String separator) {
-        this.name = name;
+        super(name);
         this.consumeAll = consumeAll;
         this.joinStrings = joinStrings;
         this.separator = separator;
@@ -89,11 +87,6 @@ public class StringPart implements ArgumentPart {
     @Override
     public Type getType() {
         return String.class;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override

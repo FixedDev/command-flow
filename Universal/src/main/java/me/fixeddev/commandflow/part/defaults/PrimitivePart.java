@@ -9,32 +9,19 @@ import java.util.List;
 
 /**
  * A part that has the option to use all the available primitive arguments
- * like {@linkplain Integer}, {@linkplain Double}, {@linkplain Float}, {@linkplain Boolean}.
+ * like {@linkplain Integer}, {@linkplain Double}, {@linkplain Float}, {@linkplain Boolean}, {@linkplain String}.
  */
 public abstract class PrimitivePart implements ArgumentPart {
 
-    private String name;
-    protected boolean consumeAll;
+    private final String name;
 
     /**
-     * Creates a PrimitivePart instance with the given name and boolean that represents if
-     * the arguments will be consumed.
-     *
-     * @param name       The name for this part.
-     * @param consumeAll If this part should consume all the available arguments.
-     */
-    public PrimitivePart(String name, boolean consumeAll) {
-        this.name = name;
-        this.consumeAll = consumeAll;
-    }
-
-    /**
-     * Creates a PrimitivePart instance with the given name and consumeAll parameter as disabled.
+     * Creates a PrimitivePart instance with the given name.
      *
      * @param name The name for this part.
      */
     public PrimitivePart(String name) {
-        this(name, false);
+        this.name = name;
     }
 
     @Override
@@ -44,14 +31,8 @@ public abstract class PrimitivePart implements ArgumentPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        if(stack.hasNext()){
+        if (stack.hasNext()) {
             stack.next();
-        }
-
-        if (consumeAll) {
-            while (stack.hasNext()) {
-                stack.next(); // ignored, not needed
-            }
         }
 
         return Collections.emptyList();
