@@ -1,8 +1,10 @@
 package me.fixeddev.commandflow.bukkit;
 
 import me.fixeddev.commandflow.Authorizer;
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
+import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.CommandException;
@@ -181,4 +183,18 @@ public class BukkitCommandManager implements CommandManager {
         return manager.getSuggestions(accessor, line);
     }
 
+    @Override
+    public boolean execute(CommandContext commandContext) throws CommandException {
+        return manager.execute(commandContext);
+    }
+
+    @Override
+    public ParseResult parse(Namespace accessor, List<String> arguments) throws CommandException {
+        return manager.parse(accessor, arguments);
+    }
+
+    @Override
+    public ParseResult parse(Namespace accessor, String line) throws CommandException {
+        return manager.parse(accessor, line);
+    }
 }

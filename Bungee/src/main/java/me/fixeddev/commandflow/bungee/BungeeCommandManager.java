@@ -1,8 +1,10 @@
 package me.fixeddev.commandflow.bungee;
 
 import me.fixeddev.commandflow.Authorizer;
+import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
+import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.CommandException;
@@ -163,5 +165,20 @@ public class BungeeCommandManager implements CommandManager {
     @Override
     public List<String> getSuggestions(Namespace accessor, String line) {
         return commandManager.getSuggestions(accessor, line);
+    }
+
+    @Override
+    public boolean execute(CommandContext commandContext) throws CommandException {
+        return commandManager.execute(commandContext);
+    }
+
+    @Override
+    public ParseResult parse(Namespace accessor, List<String> arguments) throws CommandException {
+        return commandManager.parse(accessor, arguments);
+    }
+
+    @Override
+    public ParseResult parse(Namespace accessor, String line) throws CommandException {
+        return commandManager.parse(accessor, line);
     }
 }
