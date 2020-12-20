@@ -17,6 +17,28 @@ public interface ValueGetter {
                         .flatMap(commandContext::getValue).orElse(null);
     }
 
+    static ValueGetter forOptionalPart(CommandPart part) {
+        return commandContext ->
+                commandContext.getValue(part);
+    }
+
+    static ValueGetter forOptionalPart(CommandPart part, int index) {
+        return commandContext ->
+                commandContext.getPart(part.getName(), index)
+                        .flatMap(commandContext::getValue);
+    }
+
+    static ValueGetter forPartValues(CommandPart part) {
+        return commandContext ->
+                commandContext.getValues(part).orElse(null);
+    }
+
+    static ValueGetter forPartValues(CommandPart part, int index) {
+        return commandContext ->
+                commandContext.getPart(part.getName(), index)
+                        .flatMap(commandContext::getValues).orElse(null);
+    }
+
     static ValueGetter forPartRaw(CommandPart part) {
         return commandContext ->
                 commandContext.getRaw(part);
