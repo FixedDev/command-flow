@@ -14,9 +14,9 @@ import java.util.List;
 
 public class FlagPart implements CommandPart {
 
-    private String name;
-    private String shortName;
-    private boolean allowFullName;
+    private final String name;
+    private final String shortName;
+    private final boolean allowFullName;
 
     public FlagPart(String name, String shortName, boolean allowFullName) {
         this.name = name;
