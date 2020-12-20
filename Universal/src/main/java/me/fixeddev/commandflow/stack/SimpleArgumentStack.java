@@ -175,18 +175,16 @@ public class SimpleArgumentStack implements ArgumentStack {
 
             if (originalArguments.size() < snapshot.backing.size()) {
                 for (String arg : snapshot.backing) {
-                    originalArguments.add(index, arg);
 
-                    index++;
-                }
-            } else {
-                for (String arg : snapshot.backing) {
-                    originalArguments.set(index, arg);
+                    if(originalArguments.size() > index){
+                        originalArguments.set(index, arg);
+                    } else {
+                        originalArguments.add(index, arg);
+                    }
 
                     index++;
                 }
             }
-
         }
     }
 
