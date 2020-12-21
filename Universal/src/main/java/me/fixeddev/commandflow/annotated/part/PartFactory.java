@@ -14,4 +14,18 @@ public interface PartFactory {
      * @return A new {@link CommandPart} with the given name and using the specified modifiers
      */
     CommandPart createPart(String name, List<? extends Annotation> modifiers);
+
+    default <T extends Annotation> T getAnnotation(List<? extends Annotation> modifiers, Class<? extends T> type) {
+        T finalModifier = null;
+
+        for (Annotation modifier : modifiers) {
+            if (modifier.annotationType() == type) {
+                finalModifier = (T) modifier;
+
+                break;
+            }
+        }
+
+        return finalModifier;
+    }
 }
