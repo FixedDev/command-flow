@@ -3,22 +3,35 @@ package me.fixeddev.commandflow.annotated.part;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
+import java.util.Deque;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SimplePartInjector implements PartInjector {
 
-    private Map<Key, PartFactory> factoryBindings;
+    private final Deque<PartFactoryProvider> providers;
+    private final DirectPartFactoryProvider directProvider;
     private Map<Class<? extends Annotation>, PartModifier> modifiers;
 
     public SimplePartInjector() {
-        this.factoryBindings = new ConcurrentHashMap<>();
+        this.providers = new LinkedList<>();
+        this.directProvider = new DirectPartFactoryProvider();
         this.modifiers = new ConcurrentHashMap<>();
+
+        this.providers.add(directProvider);
+        this.providers.add(new EnumPartFactoryProvider());
     }
 
     @Override
     public @Nullable PartFactory getFactory(Key key) {
-        return factoryBindings.get(key);
+        for (PartFactoryProvider provider : providers) {
+            PartFactory factory = provider.getFactory(key);
+            if (factory != null) {
+                return factory;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -35,9 +48,17 @@ public class SimplePartInjector implements PartInjector {
 
     @Override
     public void bindFactory(Key key, PartFactory factory) {
-        if (factoryBindings.putIfAbsent(key, factory) != null) {
-            throw new IllegalArgumentException("A factory with the key " + key.toString() + " is already present!");
-        }
+        directProvider.bindFactory(key, factory);
+    }
+
+    @Override
+    public void addProviderToHead(PartFactoryProvider factoryProvider) {
+        providers.addFirst(factoryProvider);
+    }
+
+    @Override
+    public void addProviderToTail(PartFactoryProvider factoryProvider) {
+        providers.addLast(factoryProvider);
     }
 
     @Override

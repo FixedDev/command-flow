@@ -98,6 +98,12 @@ public interface PartInjector {
      */
     void bindFactory(Key key, PartFactory factory);
 
+    /** Adds a {@link PartFactoryProvider} as the new tail of the providers list (checked last) */
+    void addProviderToTail(PartFactoryProvider factoryProvider);
+
+    /** Adds a {@link PartFactoryProvider} as the new head of the providers list (checked first) */
+    void addProviderToHead(PartFactoryProvider factoryProvider);
+
     /**
      * Creates a constant binding from a Type to a {@link CommandPart}.
      *
