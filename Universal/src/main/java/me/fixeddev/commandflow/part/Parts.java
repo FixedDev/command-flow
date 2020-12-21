@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
+import me.fixeddev.commandflow.part.defaults.EnumPart;
 import me.fixeddev.commandflow.part.defaults.FirstMatchPart;
 import me.fixeddev.commandflow.part.defaults.FlagPart;
 import me.fixeddev.commandflow.part.defaults.FloatPart;
@@ -85,15 +86,14 @@ public final class Parts {
      * After the argument being found it will be deleted from the {@link ArgumentStack} and in that position of the stack the provided {@link CommandPart} will
      * start the parsing, if the parse fails the whole process is reverted. The parsed arguments are removed also.
      *
-     * @param part             The {@link CommandPart} that will parse the arguments.
-     * @param shortName        The short name of the {@link FlagPart}, this will be used as the flag name(-&lt;shortName&gt;)
+     * @param part      The {@link CommandPart} that will parse the arguments.
+     * @param shortName The short name of the {@link FlagPart}, this will be used as the flag name(-&lt;shortName&gt;)
      * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
      * @see Parts#flagPart(String, String, boolean)
      */
     public static CommandPart valueFlagPart(CommandPart part, String shortName) {
-        return valueFlagPart(part,shortName,false);
+        return valueFlagPart(part, shortName, false);
     }
-
 
     /**
      * Creates a new {@link ValueFlagPart} that searches non positional arguments with the format -&lt;shortName&gt; or --&lt;name&gt;(name being the name of the provided part), the second one only
@@ -111,6 +111,20 @@ public final class Parts {
     public static CommandPart valueFlagPart(CommandPart part, String shortName, boolean allowFullNameUse) {
         return new ValueFlagPart(shortName, allowFullNameUse, part);
     }
+
+
+    /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack} and converts it into an Enum
+     * value.
+     *
+     * @param name     The name for this part.
+     * @param enumType The type of the enum for this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Enum} as argument.
+     */
+    public static CommandPart enumPart(String name, Class<? extends Enum<?>> enumType) {
+        return new EnumPart(name, enumType);
+    }
+
 
     /**
      * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
