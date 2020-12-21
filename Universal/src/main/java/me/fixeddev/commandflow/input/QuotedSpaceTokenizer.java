@@ -69,6 +69,9 @@ public class QuotedSpaceTokenizer implements InputTokenizer {
                 }
             }
         }
+
+        // append the reminder
+        appendTokenIfValid(tokenBuilder, tokens);
     }
 
     private void appendTokenIfValid(StringBuilder tokenBuilder, List<String> tokenList) {
