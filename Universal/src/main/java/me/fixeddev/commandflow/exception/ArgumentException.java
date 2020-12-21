@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.exception;
 
+import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
 import net.kyori.text.Component;
 
@@ -26,8 +27,16 @@ public class ArgumentException extends CommandException {
         super(cause);
     }
 
-    public void setArgument(CommandPart argument) {
+    @Override
+    public ArgumentException setCommand(Command argument) {
+        // Yes it is
+        return (ArgumentException) super.setCommand(argument);
+    }
+
+    public ArgumentException setArgument(CommandPart argument) {
         this.argument = argument;
+
+        return this;
     }
 
     public CommandPart getArgument() {
