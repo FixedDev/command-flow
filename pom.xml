@@ -13,6 +13,7 @@
         <module>Discord</module>
         <module>Bungee</module>
         <module>Brigadier</module>
+        <module>Examples</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -43,6 +44,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <version.universal>0.2.1-SNAPSHOT</version.universal>
+        <version.examples>0.2.0-SNAPSHOT</version.examples>
         <version.bukkit>0.2.0-SNAPSHOT</version.bukkit>
         <version.discord>0.2.0-SNAPSHOT</version.discord>
         <version.bungee>0.2.0-SNAPSHOT</version.bungee>
