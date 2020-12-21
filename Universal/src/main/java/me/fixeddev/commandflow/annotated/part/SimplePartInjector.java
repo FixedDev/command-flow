@@ -12,7 +12,7 @@ public class SimplePartInjector implements PartInjector {
 
     private final Deque<PartFactoryProvider> providers;
     private final DirectPartFactoryProvider directProvider;
-    private Map<Class<? extends Annotation>, PartModifier> modifiers;
+    private final Map<Class<? extends Annotation>, PartModifier> modifiers;
 
     public SimplePartInjector() {
         this.providers = new LinkedList<>();
