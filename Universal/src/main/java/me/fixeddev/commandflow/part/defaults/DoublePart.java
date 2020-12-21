@@ -11,13 +11,36 @@ import java.util.List;
 
 public class DoublePart extends PrimitivePart {
 
+    private final double max;
+    private final double min;
+
+    private final boolean ranged;
+
     public DoublePart(String name) {
+        this(name, 0, 0, false);
+    }
+
+    public DoublePart(String name, double min, double max) {
+        this(name, min, max, true);
+    }
+
+    private DoublePart(String name, double min, double max, boolean ranged) {
         super(name);
+
+        this.max = max;
+        this.min = min;
+
+        this.ranged = ranged;
     }
 
     @Override
     public List<Double> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-        return Collections.singletonList(stack.nextDouble());
+        double next = stack.nextFloat();
+        if (ranged && (next > max || next < min)) {
+            throw new ArgumentParseException();
+        }
+
+        return Collections.singletonList(next);
     }
 
     @Override

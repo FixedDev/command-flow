@@ -150,6 +150,18 @@ public final class Parts {
      * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
      *
      * @param name The name for this part.
+     * @param max  The maximum number allowed by this part.
+     * @param min  The minimum number allowed by this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Integer} as argument.
+     */
+    public static CommandPart newIntegerPart(String name, int min, int max) {
+        return new IntegerPart(name);
+    }
+
+    /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     *
+     * @param name The name for this part.
      * @return A {@link CommandPart} with the given name that takes a {@link Double} as argument.
      */
     public static CommandPart newDoublePart(String name) {
@@ -160,10 +172,12 @@ public final class Parts {
      * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
      *
      * @param name The name for this part.
-     * @return A {@link CommandPart} with the given name that takes a {@link Boolean} as argument.
+     * @param max  The maximum number allowed by this part.
+     * @param min  The minimum number allowed by this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Double} as argument.
      */
-    public static CommandPart newBooleanPart(String name) {
-        return new BooleanPart(name);
+    public static CommandPart newDoublePart(String name, double min, double max) {
+        return new DoublePart(name, min, max);
     }
 
     /**
@@ -174,6 +188,30 @@ public final class Parts {
      */
     public static CommandPart newFloatPart(String name) {
         return new FloatPart(name);
+    }
+
+
+    /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     *
+     * @param name The name for this part.
+     * @param max  The maximum number allowed by this part.
+     * @param min  The minimum number allowed by this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Float} as argument.
+     */
+    public static CommandPart newFloatPart(String name, float min, float max) {
+        return new FloatPart(name, min, max);
+    }
+
+
+    /**
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     *
+     * @param name The name for this part.
+     * @return A {@link CommandPart} with the given name that takes a {@link Boolean} as argument.
+     */
+    public static CommandPart newBooleanPart(String name) {
+        return new BooleanPart(name);
     }
 
     /**
