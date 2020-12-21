@@ -15,7 +15,7 @@ public class DirectPartFactoryProvider implements PartFactoryProvider {
 
     @Override
     public @Nullable PartFactory getFactory(Key key) {
-        return null;
+        return factoryBindings.get(key);
     }
 
     public void bindFactory(Key key, PartFactory factory) {
