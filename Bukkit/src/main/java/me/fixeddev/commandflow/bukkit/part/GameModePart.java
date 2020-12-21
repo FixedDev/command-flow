@@ -9,7 +9,6 @@ import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
 import org.bukkit.GameMode;
-import sun.plugin2.applet.context.InitialJNLPExecutionContext;
 
 import java.lang.reflect.Type;
 import java.util.*;
