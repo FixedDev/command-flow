@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
 import me.fixeddev.commandflow.annotated.CommandClass;
 import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
+import me.fixeddev.commandflow.exception.CommandException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -15,7 +16,11 @@ public class EnumPartProvideTest {
         CommandManager commandManager = new SimpleCommandManager();
 
         commandManager.registerCommands(builder.fromClass(new TestCommandClass()));
-        commandManager.execute(Namespace.create(), "test foo bar baz");
+        try {
+            commandManager.execute(Namespace.create(), "test foo bar baz");
+        } catch (CommandException e) {
+            Assertions.fail("Failed to execute the command", e);
+        }
     }
 
     public static class TestCommandClass implements CommandClass {
