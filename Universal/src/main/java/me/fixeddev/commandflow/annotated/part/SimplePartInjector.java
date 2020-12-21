@@ -28,22 +28,14 @@ public class SimplePartInjector implements PartInjector {
 
     @Override
     public void bindModifier(Class<? extends Annotation> annotation, PartModifier partModifier) {
-        PartModifier old = modifiers.put(annotation, partModifier);
-
-        if (old != null) {
-            modifiers.put(annotation, old);
-
+        if (modifiers.putIfAbsent(annotation, partModifier) != null) {
             throw new IllegalArgumentException("A modifier with the key " + annotation.toString() + " is already present!");
         }
     }
 
     @Override
     public void bindFactory(Key key, PartFactory factory) {
-        PartFactory old = factoryBindings.put(key, factory);
-
-        if (old != null) {
-            factoryBindings.put(key, old);
-
+        if (factoryBindings.putIfAbsent(key, factory) != null) {
             throw new IllegalArgumentException("A factory with the key " + key.toString() + " is already present!");
         }
     }
