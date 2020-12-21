@@ -25,7 +25,7 @@ public class EnumPart extends PrimitivePart {
         this.enumConstants = new HashMap<>();
         for (Object enumConstant : enumClass.getEnumConstants()) {
             Enum<?> enumValue = (Enum<?>) enumConstant;
-            enumConstants.put(enumValue.name(), enumValue);
+            enumConstants.put(enumValue.name().toLowerCase(), enumValue);
         }
         // we can cache this because the enum constants never change (they are constants XD)
         this.joinedEnumConstants = String.join(joinDelimiter, enumConstants.keySet());
