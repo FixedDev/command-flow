@@ -51,8 +51,9 @@ public class CommandException extends RuntimeException {
         super(cause);
     }
 
-    public void setCommand(Command argument) {
+    public CommandException setCommand(Command argument) {
         this.command = argument;
+        return this;
     }
 
     public Command getCommand() {
