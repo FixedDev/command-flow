@@ -114,6 +114,8 @@ public class ValueFlagPart implements SinglePartWrapper {
 
         if (usedArguments != 0) {
             stack.applySnapshot(beforeParseStack);
+            // Otherwise it deletes the old cursor(element to remove - 1)
+            stack.next();
 
             for (int i = 0; i < usedArguments; i++) {
                 stack.remove();
