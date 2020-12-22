@@ -1,6 +1,6 @@
 package me.fixeddev.commandflow.annotated.part.defaults.factory;
 
-import me.fixeddev.commandflow.annotated.annotation.Flag;
+import me.fixeddev.commandflow.annotated.annotation.Switch;
 import me.fixeddev.commandflow.annotated.part.PartFactory;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.defaults.FlagPart;
@@ -12,13 +12,7 @@ public class FlagPartFactory implements PartFactory {
 
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
-        Flag flag = null;
-
-        for (Annotation modifier : modifiers) {
-            if (modifier instanceof Flag) {
-                flag = (Flag) modifier;
-            }
-        }
+        Switch flag = getAnnotation(modifiers, Switch.class);
 
         String shortName = flag != null ? flag.value() + "" : name;
 
