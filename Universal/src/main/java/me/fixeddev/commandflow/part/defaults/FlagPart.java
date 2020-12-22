@@ -38,7 +38,7 @@ public class FlagPart implements CommandPart {
     @Override
     public @Nullable Component getLineRepresentation() {
         TextComponent.Builder builder = TextComponent.builder("[");
-        builder.append("-" + name);
+        builder.append("-" + shortName);
         builder.append("]");
 
         return builder.build();
