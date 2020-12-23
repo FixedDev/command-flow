@@ -1,6 +1,5 @@
 package me.fixeddev.commandflow.examples.basic;
 
-import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.SimpleCommandManager;
@@ -48,10 +47,10 @@ public class CommandWithArgumentsRegistration {
         // string representation of your argument into a valid object.
 
         // Here we create a StringPart(String argument) with the name "name"
-        CommandPart name = newStringPart("name");
+        CommandPart name = string("name");
 
         // Here we create a BooleanPart(boolean argument) with the name "goodBye"
-        CommandPart goodByePart = newBooleanPart("goodBye");
+        CommandPart goodByePart = booleanPart("goodBye");
 
         Command testUserCommand = Command
                 .builder("test")

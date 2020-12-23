@@ -12,19 +12,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-public class FlagPart implements CommandPart {
+public class SwitchPart implements CommandPart {
 
     private final String name;
     private final String shortName;
     private final boolean allowFullName;
 
-    public FlagPart(String name, String shortName, boolean allowFullName) {
+    public SwitchPart(String name, String shortName, boolean allowFullName) {
         this.name = name;
         this.shortName = shortName;
         this.allowFullName = allowFullName;
     }
 
-    public FlagPart(String shortName) {
+    public SwitchPart(String shortName) {
         this.name = shortName;
         this.shortName = shortName;
         this.allowFullName = false;

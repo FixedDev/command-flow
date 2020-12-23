@@ -1,6 +1,6 @@
 package me.fixeddev.commandflow.annotated.part.defaults.modifier;
 
-import me.fixeddev.commandflow.annotated.annotation.ConsumedArgs;
+import me.fixeddev.commandflow.annotated.annotation.Limit;
 import me.fixeddev.commandflow.annotated.part.PartModifier;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.Parts;
@@ -12,7 +12,7 @@ public class LimitModifier implements PartModifier {
     @Override
     public CommandPart modify(CommandPart original, List<? extends Annotation> modifiers) {
 
-        ConsumedArgs limit = getModifier(modifiers, ConsumedArgs.class);
+        Limit limit = getModifier(modifiers, Limit.class);
 
         if (limit == null) {
             return original;

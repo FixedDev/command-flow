@@ -273,7 +273,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             if (argumentsOrSubcommand) {
                 Command command = builder.build();
 
-                part = Parts.firstMatchingPart(part.getName() + "|" + "arguments", command.getPart(), part);
+                part = Parts.firstMatch(part.getName() + "|" + "arguments", command.getPart(), part);
 
                 builder.part(part);
             } else {
