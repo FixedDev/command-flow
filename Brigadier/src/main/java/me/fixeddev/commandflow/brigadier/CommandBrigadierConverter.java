@@ -19,6 +19,7 @@ import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
+import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.MinecraftArgumentTypes;
@@ -80,6 +81,14 @@ public class CommandBrigadierConverter {
         } else if (part instanceof DoublePart) {
             return RequiredArgumentBuilder.argument(part.getName(), DoubleArgumentType.doubleArg());
         } else {
+            if (part instanceof StringPart) {
+                StringPart stringPart = (StringPart) part;
+
+                if (stringPart.isConsumeAll()) {
+                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.greedyString());
+                }
+            }
+
             return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.string());
         }
     }
