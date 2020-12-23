@@ -101,4 +101,8 @@ public class StringPart extends PrimitivePart {
 
         return Collections.emptyList();
     }
+
+    public boolean isConsumeAll() {
+        return consumeAll;
+    }
 }
