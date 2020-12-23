@@ -30,7 +30,7 @@ public class EnumPart extends PrimitivePart {
         for (Object enumConstant : enumClass.getEnumConstants()) {
             Enum<?> enumValue = (Enum<?>) enumConstant;
 
-            enumConstants.put(enumValue.name(), enumValue);
+            enumConstants.put(enumValue.name().toLowerCase(), enumValue);
         }
 
         this.joinedEnumConstants = String.join(joinDelimiter, enumConstants.keySet());
