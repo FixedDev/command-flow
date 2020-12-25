@@ -112,16 +112,16 @@ public class SubCommandPart implements CommandPart {
         String next = stack.hasNext() ? stack.next() : "";
         Command command = subCommands.get(next);
 
-        if (command != null) {
-            return command.getPart().getSuggestions(commandContext, stack);
-        }
-
         List<String> suggestions = new ArrayList<>();
 
         for (String subcommand : subCommands.keySet()) {
             if (subcommand.startsWith(next)) {
                 suggestions.add(subcommand);
             }
+        }
+
+        if (command != null && suggestions.size() == 1) {
+            return command.getPart().getSuggestions(commandContext, stack);
         }
 
         return suggestions;
