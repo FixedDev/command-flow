@@ -45,7 +45,7 @@
 
         <version.universal>0.3.1-SNAPSHOT</version.universal>
         <version.examples>0.3.0-SNAPSHOT</version.examples>
-        <version.bukkit>0.3.0-SNAPSHOT</version.bukkit>
+        <version.bukkit>0.3.1-SNAPSHOT</version.bukkit>
         <version.discord>0.3.0-SNAPSHOT</version.discord>
         <version.bungee>0.3.0-SNAPSHOT</version.bungee>
         <version.brigadier>0.3.1-SNAPSHOT</version.brigadier>
