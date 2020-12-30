@@ -50,9 +50,9 @@ public class PlayerPart implements ArgumentPart {
             player = Bukkit.getPlayer(uuid);
         } catch (IllegalArgumentException ex) {
             if (exact) {
-                player = Bukkit.getPlayerExact(name);
+                player = Bukkit.getPlayerExact(target);
             } else {
-                player = Bukkit.getPlayer(name);
+                player = Bukkit.getPlayer(target);
             }
 
             if (player == null) {
