@@ -1,20 +1,17 @@
 package me.fixeddev.commandflow.brigadier;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.fixeddev.commandflow.Authorizer;
-import me.fixeddev.commandflow.CommandContext;
-import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.SimpleCommandContext;
-import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.bukkit.part.OfflinePlayerPart;
 import me.fixeddev.commandflow.bukkit.part.PlayerPart;
 import me.fixeddev.commandflow.command.Command;
@@ -27,12 +24,10 @@ import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
-import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.MinecraftArgumentTypes;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -41,6 +36,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -55,7 +51,10 @@ public class CommandBrigadierConverter {
     }
 
     public void registerCommand(Command command, Plugin plugin, BrigadierCommandWrapper bukkitCommand) {
-        getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer()).forEach(commodore::register);
+        List<LiteralCommandNode<Object>> commandNodes = getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer());
+
+        //commodore.register(bukkitCommand, commandNodes.get(0));
+        commandNodes.forEach(commodore::register);
 
         Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
     }
@@ -71,7 +70,9 @@ public class CommandBrigadierConverter {
             argumentBuilder.executes(context -> 1);
         }
 
-        toArgumentBuilder(command.getPart(), argumentBuilder, authorizer);
+        for (CommandNode<Object> objectCommandNode : convertToNode(flattenParts(command.getPart()), authorizer)) {
+            argumentBuilder.then(objectCommandNode);
+        }
 
         List<LiteralCommandNode<Object>> argumentBuilders = new ArrayList<>();
         LiteralCommandNode<Object> mainNode = argumentBuilder.build();
@@ -94,8 +95,150 @@ public class CommandBrigadierConverter {
         return argumentBuilders;
     }
 
+    private Object flattenParts(CommandPart part) {
+        if (part instanceof PartsWrapper) {
+            return flattenWrapper((PartsWrapper) part);
+        }
+
+        if (part instanceof SinglePartWrapper) {
+            return flattenParts(unwrap((SinglePartWrapper) part));
+        }
+
+        if (part instanceof SubCommandPart) {
+            return flattenSubCommands((SubCommandPart) part);
+        }
+
+        return part;
+    }
+
+    private Table<String, String, Object> flattenSubCommands(SubCommandPart part) {
+        Table<String, String, Object> parts = HashBasedTable.create();
+
+        part.getSubCommandMap().forEach((s, command) -> parts.put(s, command.getPermission(), flattenParts(command.getPart())));
+
+        return parts;
+    }
+
+    private List<Object> flattenWrapper(PartsWrapper wrapper) {
+        List<Object> parts = new ArrayList<>();
+
+        List<CommandPart> wrapperParts = wrapper.getParts();
+
+        for (int i = wrapperParts.size() - 1; i >= 0; i--) {
+            CommandPart childPart = wrapperParts.get(i);
+
+            parts.add(flattenParts(childPart));
+        }
+
+        return parts;
+    }
+
+    private CommandPart unwrap(SinglePartWrapper wrapper) {
+        return wrapper.getPart();
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CommandNode<Object>> convertToNode(Object flattened, Authorizer authorizer) {
+        if (flattened instanceof Table) {
+            Table<String, String, Object> literals = (Table<String, String, Object>) flattened;
+
+            return convertToNode(literals, authorizer);
+        }
+
+        if (flattened instanceof List) {
+            List<Object> parts = (List<Object>) flattened;
+
+            return convertToNode(parts, authorizer);
+        }
+
+        // We know for sure that it isn't any type of wrapper/subcommand since it would be unwind already
+        if (flattened instanceof ArgumentPart) {
+            ArgumentPart part = (ArgumentPart) flattened;
+
+            return Collections.singletonList(convertToNode(part));
+        }
+
+        // only an unwinded or not usable part could return this
+        return null;
+    }
+
+    private List<CommandNode<Object>> convertToNode(List<Object> flattened, Authorizer authorizer) {
+        List<CommandNode<Object>> lastNodes = null;
+
+        for (Object part : flattened) {
+            List<CommandNode<Object>> nodes = convertToNode(part, authorizer);
+
+            if (nodes == null || nodes.isEmpty()) {
+                continue;
+            }
+
+            if (lastNodes != null) {
+                for (CommandNode<Object> node : nodes) {
+                    for (CommandNode<Object> lastNode : lastNodes) {
+                        node.addChild(lastNode);
+                    }
+                }
+            }
+            lastNodes = nodes;
+        }
+
+        return lastNodes;
+    }
+
+    private List<CommandNode<Object>> convertToNode(Table<String, String, Object> literals, Authorizer authorizer) {
+        List<CommandNode<Object>> nodes = new ArrayList<>();
+
+        for (Table.Cell<String, String, Object> entry : literals.cellSet()) {
+            LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(entry.getRowKey())
+                    .requires(new PermissionRequirement(entry.getColumnKey(), authorizer, commodore));
+
+            List<CommandNode<Object>> subCommandNodes = convertToNode(entry.getValue(), authorizer);
+
+            if (subCommandNodes != null) {
+                for (CommandNode<Object> objectCommandNode : convertToNode(entry.getValue(), authorizer)) {
+                    argumentBuilder.then(objectCommandNode);
+                }
+            }
+
+            nodes.add(argumentBuilder.build());
+        }
+
+        return nodes;
+    }
+
+    private CommandNode<Object> convertToNode(ArgumentPart part) {
+        if (part instanceof PlayerPart || part instanceof OfflinePlayerPart) {
+            return RequiredArgumentBuilder.argument(part.getName(),
+                    constructMinecraftArgumentType(NamespacedKey.minecraft("entity"),
+                            new Class[]{boolean.class, boolean.class}, true, true)
+            ).build();
+        } else if (part instanceof BooleanPart) {
+            return RequiredArgumentBuilder.argument(part.getName(), BoolArgumentType.bool()).build();
+        } else if (part instanceof IntegerPart) {
+            return RequiredArgumentBuilder.argument(part.getName(), IntegerArgumentType.integer()).build();
+        } else if (part instanceof DoublePart) {
+            return RequiredArgumentBuilder.argument(part.getName(), DoubleArgumentType.doubleArg()).build();
+        } else {
+            if (part instanceof StringPart) {
+                StringPart stringPart = (StringPart) part;
+
+                if (stringPart.isConsumeAll()) {
+                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.greedyString()).build();
+                } else {
+                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word()).build();
+                }
+            }
+
+            return RequiredArgumentBuilder
+                    .argument(part.getName(), StringArgumentType.word())
+                    .suggests(new BrigadierSuggestionProvider(commodore, part))
+                    .build();
+        }
+    }
+
+
     // Taken from https://github.com/lucko/commodore/blob/master/src/main/java/me/lucko/commodore/file/MinecraftArgumentTypeParser.java#L117
-    private static ArgumentType<?> constructMinecraftArgumentType(NamespacedKey key, Class<?>[] argTypes, Object... args) {
+    private ArgumentType<?> constructMinecraftArgumentType(NamespacedKey key, Class<?>[] argTypes, Object... args) {
         try {
             final Constructor<? extends ArgumentType<?>> constructor = MinecraftArgumentTypes.getClassByKey(key).getDeclaredConstructor(argTypes);
             constructor.setAccessible(true);
@@ -103,120 +246,6 @@ public class CommandBrigadierConverter {
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    private ArgumentBuilder<Object, ?> toArgumentBuilder(ArgumentPart part, Authorizer authorizer) {
-        if (part instanceof PlayerPart || part instanceof OfflinePlayerPart) {
-            return RequiredArgumentBuilder.argument(part.getName(),
-                    constructMinecraftArgumentType(NamespacedKey.minecraft("entity"), new Class[]{boolean.class, boolean.class}, true, true));
-        } else if (part instanceof BooleanPart) {
-            return RequiredArgumentBuilder.argument(part.getName(), BoolArgumentType.bool());
-        } else if (part instanceof IntegerPart) {
-            return RequiredArgumentBuilder.argument(part.getName(), IntegerArgumentType.integer());
-        } else if (part instanceof DoublePart) {
-            return RequiredArgumentBuilder.argument(part.getName(), DoubleArgumentType.doubleArg());
-        } else {
-            if (part instanceof StringPart) {
-                StringPart stringPart = (StringPart) part;
-
-                if (stringPart.isConsumeAll()) {
-                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.greedyString());
-                } else {
-                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word());
-                }
-            }
-
-            return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word())
-                    .suggests((context, builder) -> {
-                        CommandSender sender = commodore.getBukkitSender(context.getSource());
-
-                        Namespace namespace = Namespace.create();
-                        namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, sender);
-
-                        CommandContext commandContext = new SimpleCommandContext(namespace, new ArrayList<>());
-
-                        for (String suggestion : part.getSuggestions(commandContext, new SimpleArgumentStack(new ArrayList<>()))) {
-                            builder.suggest(suggestion);
-                        }
-
-                        return builder.buildFuture();
-                    });
-        }
-    }
-
-    private ArgumentBuilder<Object, ?> toArgumentBuilder(CommandPart part, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
-        if (part instanceof PartsWrapper) {
-
-            return addArgumentsFromWrapper((PartsWrapper) part, parent, authorizer);
-        } else if (part instanceof SinglePartWrapper) {
-
-            return addSingleWrapper((SinglePartWrapper) part, parent, authorizer);
-        } else if (part instanceof SubCommandPart) {
-
-            return addSubCommands((SubCommandPart) part, parent, authorizer); // same as parent
-        } else {
-            // Don't try to parse the parts that are not arguments as arguments
-            if (!(part instanceof ArgumentPart)) {
-                return null;
-            }
-
-            ArgumentBuilder<Object, ?> childBuilder = toArgumentBuilder((ArgumentPart) part, authorizer);
-
-            parent.then(childBuilder);
-
-            return childBuilder;
-        }
-    }
-
-    private ArgumentBuilder<Object, ?> addArgumentsFromWrapper(PartsWrapper wrapper, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
-        ArgumentBuilder<Object, ?> current = parent;
-        List<ArgumentBuilder<Object, ?>> builders = new ArrayList<>();
-
-        for (CommandPart part : wrapper.getParts()) {
-            ArgumentBuilder<Object, ?> childBuilder = toArgumentBuilder(part, current, authorizer);
-
-            // ignore null builders and same builders
-            if (childBuilder == null || childBuilder == current) {
-                continue;
-            }
-
-            builders.add(childBuilder);
-
-            current = childBuilder;
-        }
-
-        ArgumentBuilder<Object, ?> last = null;
-
-        for (int i = builders.size() - 1; i >= 0; i--) {
-            ArgumentBuilder<Object, ?> child = builders.get(i);
-
-            if (last != null) {
-                child.then(last);
-            }
-
-            last = child;
-        }
-
-        if (last != null) {
-            parent.then(last);
-        }
-
-        return current;
-    }
-
-
-    private ArgumentBuilder<Object, ?> addSingleWrapper(SinglePartWrapper wrapper, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
-        return toArgumentBuilder(wrapper.getPart(), parent, authorizer);
-    }
-
-    private ArgumentBuilder<Object, ?> addSubCommands(SubCommandPart subCommandPart, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
-        for (Command subcommand : subCommandPart.getSubCommands()) {
-            for (CommandNode<Object> subCommandNode : getCommodoreCommand(subcommand, true, authorizer)) {
-                parent.then(subCommandNode);
-            }
-        }
-
-        return parent;
     }
 
     /**
