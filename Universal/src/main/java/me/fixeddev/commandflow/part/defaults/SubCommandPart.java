@@ -69,7 +69,13 @@ public class SubCommandPart implements CommandPart {
 
     @Override
     public @Nullable Component getLineRepresentation() {
-        TextComponent.Builder builder = TextComponent.builder().content("<" + getName() + ">");
+        TextComponent.Builder builder;
+
+        if (isOptional()) {
+            builder = TextComponent.builder().content("[" + getName() + "]");
+        } else {
+            builder = TextComponent.builder().content("<" + getName() + ">");
+        }
 
         return builder.build();
     }
