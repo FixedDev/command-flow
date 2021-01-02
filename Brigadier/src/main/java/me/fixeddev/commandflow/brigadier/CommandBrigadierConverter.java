@@ -121,6 +121,8 @@ public class CommandBrigadierConverter {
 
                 if (stringPart.isConsumeAll()) {
                     return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.greedyString());
+                } else {
+                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word());
                 }
             }
 
