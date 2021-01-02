@@ -22,6 +22,7 @@ import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
+import me.fixeddev.commandflow.part.defaults.OptionalPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import me.lucko.commodore.Commodore;
@@ -36,9 +37,11 @@ import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -53,7 +56,7 @@ public class CommandBrigadierConverter {
     public void registerCommand(Command command, Plugin plugin, BrigadierCommandWrapper bukkitCommand) {
         List<LiteralCommandNode<Object>> commandNodes = getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer());
 
-        //commodore.register(bukkitCommand, commandNodes.get(0));
+        // osd
         commandNodes.forEach(commodore::register);
 
         Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
@@ -70,7 +73,7 @@ public class CommandBrigadierConverter {
             argumentBuilder.executes(context -> 1);
         }
 
-        for (CommandNode<Object> objectCommandNode : convertToNode(flattenParts(command.getPart()), authorizer)) {
+        for (CommandNode<Object> objectCommandNode : convertToNode(shallowFlattening(command.getPart()), authorizer)) {
             argumentBuilder.then(objectCommandNode);
         }
 
@@ -95,31 +98,31 @@ public class CommandBrigadierConverter {
         return argumentBuilders;
     }
 
-    private Object flattenParts(CommandPart part) {
+    private Object shallowFlattening(CommandPart part) {
         if (part instanceof PartsWrapper) {
-            return flattenWrapper((PartsWrapper) part);
+            return shallowWrapperFlattening((PartsWrapper) part);
         }
 
         if (part instanceof SinglePartWrapper) {
-            return flattenParts(unwrap((SinglePartWrapper) part));
+            return part;
         }
 
         if (part instanceof SubCommandPart) {
-            return flattenSubCommands((SubCommandPart) part);
+            return shallowSubCommandFlattening((SubCommandPart) part);
         }
 
         return part;
     }
 
-    private Table<String, String, Object> flattenSubCommands(SubCommandPart part) {
+    private Table<String, String, Object> shallowSubCommandFlattening(SubCommandPart part) {
         Table<String, String, Object> parts = HashBasedTable.create();
 
-        part.getSubCommandMap().forEach((s, command) -> parts.put(s, command.getPermission(), flattenParts(command.getPart())));
+        part.getSubCommandMap().forEach((s, command) -> parts.put(s, command.getPermission(), command.getPart()));
 
         return parts;
     }
 
-    private List<Object> flattenWrapper(PartsWrapper wrapper) {
+    private List<Object> shallowWrapperFlattening(PartsWrapper wrapper) {
         List<Object> parts = new ArrayList<>();
 
         List<CommandPart> wrapperParts = wrapper.getParts();
@@ -127,11 +130,12 @@ public class CommandBrigadierConverter {
         for (int i = wrapperParts.size() - 1; i >= 0; i--) {
             CommandPart childPart = wrapperParts.get(i);
 
-            parts.add(flattenParts(childPart));
+            parts.add(childPart);
         }
 
         return parts;
     }
+
 
     private CommandPart unwrap(SinglePartWrapper wrapper) {
         return wrapper.getPart();
@@ -155,29 +159,68 @@ public class CommandBrigadierConverter {
         if (flattened instanceof ArgumentPart) {
             ArgumentPart part = (ArgumentPart) flattened;
 
-            return Collections.singletonList(convertToNode(part));
+            // Using this since we can't use set on a singleton list iterator
+            return new ArrayList<>(Arrays.asList(convertToNode(part)));
         }
 
-        // only an unwinded or not usable part could return this
+        if (flattened instanceof SinglePartWrapper) {
+            return convertToNode(shallowFlattening(unwrap((SinglePartWrapper) flattened)), authorizer);
+        }
+
+        if (flattened instanceof PartsWrapper) {
+            return convertToNode(shallowWrapperFlattening((PartsWrapper) flattened), authorizer);
+        }
+
+        if (flattened instanceof SubCommandPart) {
+            return convertToNode(shallowSubCommandFlattening((SubCommandPart) flattened), authorizer);
+        }
+
+        // only a not usable part could return this
         return null;
     }
 
     private List<CommandNode<Object>> convertToNode(List<Object> flattened, Authorizer authorizer) {
         List<CommandNode<Object>> lastNodes = null;
 
+        boolean setAsOptional = false;
         for (Object part : flattened) {
-            List<CommandNode<Object>> nodes = convertToNode(part, authorizer);
+            Object flattenedPart = part;
+
+            if (part instanceof SinglePartWrapper) {
+                flattenedPart = shallowFlattening(unwrap((SinglePartWrapper) part));
+            }
+
+            List<CommandNode<Object>> nodes = convertToNode(flattenedPart, authorizer);
 
             if (nodes == null || nodes.isEmpty()) {
                 continue;
             }
 
             if (lastNodes != null) {
-                for (CommandNode<Object> node : nodes) {
+
+                ListIterator<CommandNode<Object>> nodeIterator = nodes.listIterator();
+
+                while (nodeIterator.hasNext()){
+                    CommandNode<Object> node = nodeIterator.next();
+                    CommandNode<Object> commandNode = node;
+
+                    if (setAsOptional) {
+                        commandNode = node.createBuilder()
+                                .executes(context -> 1)
+                                .build();
+
+                        nodeIterator.set(commandNode);
+                        setAsOptional = false;
+                    }
+
                     for (CommandNode<Object> lastNode : lastNodes) {
-                        node.addChild(lastNode);
+                        commandNode.addChild(lastNode);
                     }
                 }
+            }
+
+            if (part instanceof OptionalPart) {
+                setAsOptional = true;
             }
             lastNodes = nodes;
         }
@@ -192,10 +235,17 @@ public class CommandBrigadierConverter {
             LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(entry.getRowKey())
                     .requires(new PermissionRequirement(entry.getColumnKey(), authorizer, commodore));
 
-            List<CommandNode<Object>> subCommandNodes = convertToNode(entry.getValue(), authorizer);
+            Object part = entry.getValue();
+            Object flattenedPart = part;
+
+            if(!(part instanceof ArgumentPart) || !(part instanceof List) || !(part instanceof Table)){
+                flattenedPart = shallowFlattening((CommandPart) part);
+            }
+
+            List<CommandNode<Object>> subCommandNodes = convertToNode(flattenedPart, authorizer);
 
             if (subCommandNodes != null) {
-                for (CommandNode<Object> objectCommandNode : convertToNode(entry.getValue(), authorizer)) {
+                for (CommandNode<Object> objectCommandNode : subCommandNodes) {
                     argumentBuilder.then(objectCommandNode);
                 }
             }
