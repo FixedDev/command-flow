@@ -11,9 +11,12 @@ public class BrigadierCommandManager extends BukkitCommandManager {
 
     private Commodore commodore;
     private CommandBrigadierConverter commandBrigadierConverter;
+    private final Plugin plugin;
 
     public BrigadierCommandManager(CommandManager commandManager, Plugin plugin) {
         super(commandManager, plugin.getName());
+
+        this.plugin = plugin;
 
         if (isCommodoreSupported()) {
             commodore = CommodoreProvider.getCommodore(plugin);
@@ -24,6 +27,8 @@ public class BrigadierCommandManager extends BukkitCommandManager {
 
     public BrigadierCommandManager(Plugin plugin) {
         super(plugin.getName());
+
+        this.plugin = plugin;
 
         if (isCommodoreSupported()) {
             commodore = CommodoreProvider.getCommodore(plugin);
@@ -46,9 +51,8 @@ public class BrigadierCommandManager extends BukkitCommandManager {
         wrapperMap.put(command.getName(), bukkitCommand);
         bukkitCommandMap.register(fallbackPrefix, bukkitCommand);
 
-
         if (isCommodoreSupported()) {
-            commandBrigadierConverter.registerCommand(command, bukkitCommand);
+            commandBrigadierConverter.registerCommand(command, plugin, bukkitCommand);
         }
     }
 }

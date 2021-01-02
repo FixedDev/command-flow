@@ -9,6 +9,12 @@ import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import me.fixeddev.commandflow.Authorizer;
+import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.Namespace;
+import me.fixeddev.commandflow.SimpleCommandContext;
+import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
+import me.fixeddev.commandflow.bukkit.BukkitCommandWrapper;
+import me.fixeddev.commandflow.bukkit.part.CommandSenderPart;
 import me.fixeddev.commandflow.bukkit.part.OfflinePlayerPart;
 import me.fixeddev.commandflow.bukkit.part.PlayerPart;
 import me.fixeddev.commandflow.command.Command;
@@ -21,13 +27,25 @@ import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
+import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.MinecraftArgumentTypes;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandSendEvent;
+import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class CommandBrigadierConverter {
     private final Commodore commodore;
@@ -36,15 +54,23 @@ public class CommandBrigadierConverter {
         this.commodore = commodore;
     }
 
-    public void registerCommand(Command command, BrigadierCommandWrapper bukkitCommand) {
-        LiteralArgumentBuilder<Object> main = getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer()).get(0);
+    public void registerCommand(Command command, Plugin plugin, BrigadierCommandWrapper bukkitCommand) {
+        getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer()).forEach(commodore::register);
 
-        commodore.register(bukkitCommand, main);
+        Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
     }
 
     public List<LiteralArgumentBuilder<Object>> getCommodoreCommand(Command command, Authorizer authorizer) {
+        return getCommodoreCommand(command, false, authorizer);
+    }
+
+    public List<LiteralArgumentBuilder<Object>> getCommodoreCommand(Command command, boolean optional, Authorizer authorizer) {
         LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(command.getName())
                 .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
+        if (optional) {
+            argumentBuilder.executes(context -> 1);
+        }
+
         toArgumentBuilder(command.getPart(), argumentBuilder, authorizer);
 
         List<LiteralArgumentBuilder<Object>> argumentBuilders = new ArrayList<>();
@@ -52,8 +78,16 @@ public class CommandBrigadierConverter {
         argumentBuilders.add(argumentBuilder);
 
         for (String alias : command.getAliases()) {
-            argumentBuilders.add(LiteralArgumentBuilder.literal(alias).redirect(argumentBuilder.build())
-                    .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore)));
+            LiteralArgumentBuilder<Object> aliasBuilder = LiteralArgumentBuilder
+                    .literal(alias)
+                    .redirect(argumentBuilder.build())
+                    .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
+
+            if (optional) {
+                aliasBuilder = aliasBuilder.executes(context -> 1);
+            }
+
+            argumentBuilders.add(aliasBuilder);
         }
 
         return argumentBuilders;
@@ -89,7 +123,21 @@ public class CommandBrigadierConverter {
                 }
             }
 
-            return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.string());
+            return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word())
+                    .suggests((context, builder) -> {
+                        CommandSender sender = commodore.getBukkitSender(context.getSource());
+
+                        Namespace namespace = Namespace.create();
+                        namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, sender);
+
+                        CommandContext commandContext = new SimpleCommandContext(namespace, new ArrayList<>());
+
+                        for (String suggestion : part.getSuggestions(commandContext, new SimpleArgumentStack(new ArrayList<>()))) {
+                            builder.suggest(suggestion);
+                        }
+
+                        return builder.buildFuture();
+                    });
         }
     }
 
@@ -160,12 +208,40 @@ public class CommandBrigadierConverter {
 
     private ArgumentBuilder<Object, ?> addSubCommands(SubCommandPart subCommandPart, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
         for (Command subcommand : subCommandPart.getSubCommands()) {
-            for (LiteralArgumentBuilder<Object> subCommandNode : getCommodoreCommand(subcommand, authorizer)) {
+            for (LiteralArgumentBuilder<Object> subCommandNode : getCommodoreCommand(subcommand, true, authorizer)) {
                 parent.then(subCommandNode);
             }
-
         }
 
         return parent;
+    }
+
+    /**
+     * Taken from CommodoreImpl, since we can't use the register method that registers this listener
+     * Removes minecraft namespaced argument data, & data for players without permission to view the
+     * corresponding commands.
+     */
+    private static final class CommandDataSendListener implements Listener {
+        private final Set<String> aliases;
+        private final Set<String> minecraftPrefixedAliases;
+        private final Predicate<? super Player> permissionTest;
+
+        CommandDataSendListener(org.bukkit.command.Command pluginCommand, Predicate<? super Player> permissionTest) {
+            this.aliases = new HashSet<>(Commodore.getAliases(pluginCommand));
+            this.minecraftPrefixedAliases = this.aliases.stream().map(alias -> "minecraft:" + alias).collect(Collectors.toSet());
+            this.permissionTest = permissionTest;
+        }
+
+        @EventHandler
+        public void onCommandSend(PlayerCommandSendEvent e) {
+            // always remove 'minecraft:' prefixed aliases added by craftbukkit.
+            // this happens because bukkit thinks our injected commands are vanilla commands.
+            e.getCommands().removeAll(this.minecraftPrefixedAliases);
+
+            // remove the actual aliases if the player doesn't pass the permission test
+            if (!this.permissionTest.test(e.getPlayer())) {
+                e.getCommands().removeAll(this.aliases);
+            }
+        }
     }
 }
