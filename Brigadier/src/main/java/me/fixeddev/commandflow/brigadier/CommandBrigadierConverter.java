@@ -38,6 +38,7 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -72,13 +73,7 @@ public class CommandBrigadierConverter {
             argumentBuilder.executes(context -> 1);
         }
 
-        if (isFirstPartOptional(command.getPart())) {
-            argumentBuilder.executes(context -> 1);
-        }
-
-        Object flattenedArguments = shallowFlattening(command.getPart());
-
-        for (CommandNode<Object> objectCommandNode : convertToNode(flattenedArguments, authorizer)) {
+        for (CommandNode<Object> objectCommandNode : convertToNode(shallowFlattening(command.getPart()), authorizer)) {
             argumentBuilder.then(objectCommandNode);
         }
 
@@ -101,32 +96,6 @@ public class CommandBrigadierConverter {
         }
 
         return argumentBuilders;
-    }
-
-    private boolean isFirstPartOptional(CommandPart part) {
-        if (part instanceof PartsWrapper) {
-            for (CommandPart commandPart : ((PartsWrapper) part).getParts()) {
-                if (!(commandPart instanceof ArgumentPart) && !(commandPart instanceof OptionalPart)) {
-                    continue;
-                }
-
-                return isFirstPartOptional(commandPart);
-            }
-        }
-
-        if (part instanceof SinglePartWrapper) {
-            if (part instanceof OptionalPart) {
-                return true;
-            }
-
-            return isFirstPartOptional(unwrap((SinglePartWrapper) part));
-        }
-
-        if (part instanceof SubCommandPart) {
-            return ((SubCommandPart) part).isOptional();
-        }
-
-        return false;
     }
 
     private Object shallowFlattening(CommandPart part) {
@@ -223,7 +192,7 @@ public class CommandBrigadierConverter {
 
                 ListIterator<CommandNode<Object>> nodeIterator = nodes.listIterator();
 
-                while (nodeIterator.hasNext()) {
+                while (nodeIterator.hasNext()){
                     CommandNode<Object> node = nodeIterator.next();
                     CommandNode<Object> commandNode = node;
 
@@ -263,7 +232,7 @@ public class CommandBrigadierConverter {
             Object part = entry.getValue();
             Object flattenedPart = part;
 
-            if (!(part instanceof ArgumentPart) || !(part instanceof List) || !(part instanceof Table)) {
+            if(!(part instanceof ArgumentPart) || !(part instanceof List) || !(part instanceof Table)){
                 flattenedPart = shallowFlattening((CommandPart) part);
             }
 
