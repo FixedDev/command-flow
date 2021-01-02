@@ -8,13 +8,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.SimpleCommandContext;
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
-import me.fixeddev.commandflow.bukkit.BukkitCommandWrapper;
-import me.fixeddev.commandflow.bukkit.part.CommandSenderPart;
 import me.fixeddev.commandflow.bukkit.part.OfflinePlayerPart;
 import me.fixeddev.commandflow.bukkit.part.PlayerPart;
 import me.fixeddev.commandflow.command.Command;
@@ -60,11 +60,11 @@ public class CommandBrigadierConverter {
         Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
     }
 
-    public List<LiteralArgumentBuilder<Object>> getCommodoreCommand(Command command, Authorizer authorizer) {
+    public List<LiteralCommandNode<Object>> getCommodoreCommand(Command command, Authorizer authorizer) {
         return getCommodoreCommand(command, false, authorizer);
     }
 
-    public List<LiteralArgumentBuilder<Object>> getCommodoreCommand(Command command, boolean optional, Authorizer authorizer) {
+    public List<LiteralCommandNode<Object>> getCommodoreCommand(Command command, boolean optional, Authorizer authorizer) {
         LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(command.getName())
                 .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
         if (optional) {
@@ -73,21 +73,22 @@ public class CommandBrigadierConverter {
 
         toArgumentBuilder(command.getPart(), argumentBuilder, authorizer);
 
-        List<LiteralArgumentBuilder<Object>> argumentBuilders = new ArrayList<>();
+        List<LiteralCommandNode<Object>> argumentBuilders = new ArrayList<>();
+        LiteralCommandNode<Object> mainNode = argumentBuilder.build();
 
-        argumentBuilders.add(argumentBuilder);
+        argumentBuilders.add(mainNode);
 
         for (String alias : command.getAliases()) {
             LiteralArgumentBuilder<Object> aliasBuilder = LiteralArgumentBuilder
                     .literal(alias)
-                    .redirect(argumentBuilder.build())
+                    .redirect(mainNode)
                     .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
 
             if (optional) {
                 aliasBuilder = aliasBuilder.executes(context -> 1);
             }
 
-            argumentBuilders.add(aliasBuilder);
+            argumentBuilders.add(aliasBuilder.build());
         }
 
         return argumentBuilders;
@@ -208,7 +209,7 @@ public class CommandBrigadierConverter {
 
     private ArgumentBuilder<Object, ?> addSubCommands(SubCommandPart subCommandPart, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
         for (Command subcommand : subCommandPart.getSubCommands()) {
-            for (LiteralArgumentBuilder<Object> subCommandNode : getCommodoreCommand(subcommand, true, authorizer)) {
+            for (CommandNode<Object> subCommandNode : getCommodoreCommand(subcommand, true, authorizer)) {
                 parent.then(subCommandNode);
             }
         }
