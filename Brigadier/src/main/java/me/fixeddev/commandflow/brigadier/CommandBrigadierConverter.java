@@ -103,6 +103,14 @@ public class CommandBrigadierConverter {
             return shallowWrapperFlattening((PartsWrapper) part);
         }
 
+        if (part instanceof SinglePartWrapper) {
+            return part;
+        }
+
+        if (part instanceof SubCommandPart) {
+            return shallowSubCommandFlattening((SubCommandPart) part);
+        }
+
         return part;
     }
 
@@ -213,8 +221,6 @@ public class CommandBrigadierConverter {
 
             if (part instanceof OptionalPart) {
                 setAsOptional = true;
-            } else if (part instanceof SubCommandPart) {
-                setAsOptional = ((SubCommandPart) part).isOptional();
             }
             lastNodes = nodes;
         }
