@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <version>${version.bukkit}</version>
+    <version>${version.brigadier}</version>
     <artifactId>commandflow-brigadier</artifactId>
     <packaging>jar</packaging>
 
