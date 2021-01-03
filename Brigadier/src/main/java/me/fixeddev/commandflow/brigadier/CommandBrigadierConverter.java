@@ -1,5 +1,7 @@
 package me.fixeddev.commandflow.brigadier;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
@@ -25,6 +27,7 @@ import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
+import me.fixeddev.commandflow.part.defaults.OptionalPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
@@ -41,8 +44,10 @@ import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -67,14 +72,11 @@ public class CommandBrigadierConverter {
     public List<LiteralCommandNode<Object>> getCommodoreCommand(Command command, boolean optional, Authorizer authorizer) {
         LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(command.getName())
                 .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
-        if (optional) {
-            argumentBuilder.executes(context -> 1);
-        }
+        LiteralCommandNode<Object> mainNode = argumentBuilder.build();
 
-        toArgumentBuilder(command.getPart(), argumentBuilder, authorizer);
+        toArgumentBuilder(command.getPart(), mainNode, authorizer);
 
         List<LiteralCommandNode<Object>> argumentBuilders = new ArrayList<>();
-        LiteralCommandNode<Object> mainNode = argumentBuilder.build();
 
         argumentBuilders.add(mainNode);
 
@@ -105,24 +107,25 @@ public class CommandBrigadierConverter {
         }
     }
 
-    private ArgumentBuilder<Object, ?> toArgumentBuilder(ArgumentPart part, Authorizer authorizer) {
+    private CommandNode<Object> toArgumentBuilder(ArgumentPart part) {
         if (part instanceof PlayerPart || part instanceof OfflinePlayerPart) {
             return RequiredArgumentBuilder.argument(part.getName(),
-                    constructMinecraftArgumentType(NamespacedKey.minecraft("entity"), new Class[]{boolean.class, boolean.class}, true, true));
+                    constructMinecraftArgumentType(NamespacedKey.minecraft("entity"),
+                            new Class[]{boolean.class, boolean.class}, true, true)).build();
         } else if (part instanceof BooleanPart) {
-            return RequiredArgumentBuilder.argument(part.getName(), BoolArgumentType.bool());
+            return RequiredArgumentBuilder.argument(part.getName(), BoolArgumentType.bool()).build();
         } else if (part instanceof IntegerPart) {
-            return RequiredArgumentBuilder.argument(part.getName(), IntegerArgumentType.integer());
+            return RequiredArgumentBuilder.argument(part.getName(), IntegerArgumentType.integer()).build();
         } else if (part instanceof DoublePart) {
-            return RequiredArgumentBuilder.argument(part.getName(), DoubleArgumentType.doubleArg());
+            return RequiredArgumentBuilder.argument(part.getName(), DoubleArgumentType.doubleArg()).build();
         } else {
             if (part instanceof StringPart) {
                 StringPart stringPart = (StringPart) part;
 
                 if (stringPart.isConsumeAll()) {
-                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.greedyString());
+                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.greedyString()).build();
                 } else {
-                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word());
+                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word()).build();
                 }
             }
 
@@ -140,11 +143,11 @@ public class CommandBrigadierConverter {
                         }
 
                         return builder.buildFuture();
-                    });
+                    }).build();
         }
     }
 
-    private ArgumentBuilder<Object, ?> toArgumentBuilder(CommandPart part, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
+    private List<CommandNode<Object>> toArgumentBuilder(CommandPart part, CommandNode<Object> parent, Authorizer authorizer) {
         if (part instanceof PartsWrapper) {
 
             return addArgumentsFromWrapper((PartsWrapper) part, parent, authorizer);
@@ -160,20 +163,43 @@ public class CommandBrigadierConverter {
                 return null;
             }
 
-            ArgumentBuilder<Object, ?> childBuilder = toArgumentBuilder((ArgumentPart) part, authorizer);
+            CommandNode<Object> childBuilder = toArgumentBuilder((ArgumentPart) part);
 
-            parent.then(childBuilder);
+            parent.addChild(childBuilder);
 
-            return childBuilder;
+            return new ArrayList<>(Collections.singletonList(childBuilder));
         }
     }
 
-    private ArgumentBuilder<Object, ?> addArgumentsFromWrapper(PartsWrapper wrapper, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
-        ArgumentBuilder<Object, ?> current = parent;
-        List<ArgumentBuilder<Object, ?>> builders = new ArrayList<>();
+    private List<CommandNode<Object>> addArgumentsFromWrapper(PartsWrapper wrapper, CommandNode<Object> parent, Authorizer authorizer) {
+        List<CommandNode<Object>> current = Collections.singletonList(parent);
+        List<List<CommandNode<Object>>> builders = new ArrayList<>();
 
-        for (CommandPart part : wrapper.getParts()) {
-            ArgumentBuilder<Object, ?> childBuilder = toArgumentBuilder(part, current, authorizer);
+        Multimap<CommandNode<Object>, CommandNode<Object>> optionalsRegistration = MultimapBuilder
+                .hashKeys()
+                .arrayListValues()
+                .build();
+
+        List<CommandNode<Object>> lastNonOptional = Collections.singletonList(parent);
+        ListIterator<CommandPart> partsIterator = wrapper.getParts().listIterator();
+
+        while (partsIterator.hasNext()) {
+            CommandPart part = partsIterator.next();
+
+            // use the first part
+            List<CommandNode<Object>> childBuilder = toArgumentBuilder(part, current.get(0), authorizer);
+
+            if (partsIterator.hasNext()) {
+                CommandPart nextPart = partsIterator.next();
+
+                partsIterator.previous();
+
+                if (isOptional(nextPart) && childBuilder != null) {
+                    childBuilder.replaceAll(objectCommandNode -> objectCommandNode.createBuilder().executes(context -> 1).build());
+                }
+            }
+
+            boolean optional = isOptional(part);
 
             // ignore null builders and same builders
             if (childBuilder == null || childBuilder == current) {
@@ -182,41 +208,72 @@ public class CommandBrigadierConverter {
 
             builders.add(childBuilder);
 
+            if (optional) {
+                for (CommandNode<Object> commandNode : lastNonOptional) {
+                    optionalsRegistration.putAll(commandNode, childBuilder);
+                }
+            } else {
+                lastNonOptional = childBuilder;
+            }
+
             current = childBuilder;
         }
 
-        ArgumentBuilder<Object, ?> last = null;
+
+        List<CommandNode<Object>> last = null;
 
         for (int i = builders.size() - 1; i >= 0; i--) {
-            ArgumentBuilder<Object, ?> child = builders.get(i);
+            List<CommandNode<Object>> child = builders.get(i);
 
-            if (last != null) {
-                child.then(last);
-            }
+            if (last != null && !last.isEmpty()) {
+                for (CommandNode<Object> childNode : child) {
+                    for (CommandNode<Object> lastNode : last) {
+                        childNode.addChild(lastNode);
+                    }
+                } }
 
             last = child;
         }
 
+        optionalsRegistration.forEach(CommandNode::addChild);
+
         if (last != null) {
-            parent.then(last);
+            for (CommandNode<Object> lastNode : last) {
+                parent.addChild(lastNode);
+            }
         }
 
         return current;
     }
 
+    private boolean isOptional(CommandPart part) {
+        if (part instanceof OptionalPart) {
+            return true;
+        } else if (part instanceof SubCommandPart) {
+            SubCommandPart subCommandPart = (SubCommandPart) part;
 
-    private ArgumentBuilder<Object, ?> addSingleWrapper(SinglePartWrapper wrapper, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
+            return subCommandPart.isOptional();
+        }
+
+        return false;
+    }
+
+    private List<CommandNode<Object>> addSingleWrapper(SinglePartWrapper wrapper, CommandNode<Object> parent, Authorizer authorizer) {
         return toArgumentBuilder(wrapper.getPart(), parent, authorizer);
     }
 
-    private ArgumentBuilder<Object, ?> addSubCommands(SubCommandPart subCommandPart, ArgumentBuilder<Object, ?> parent, Authorizer authorizer) {
+    private List<CommandNode<Object>> addSubCommands(SubCommandPart subCommandPart, CommandNode<Object> parent, Authorizer authorizer) {
+        List<CommandNode<Object>> subcommands = new ArrayList<>();
+
         for (Command subcommand : subCommandPart.getSubCommands()) {
             for (CommandNode<Object> subCommandNode : getCommodoreCommand(subcommand, true, authorizer)) {
-                parent.then(subCommandNode);
+                parent.addChild(subCommandNode);
+
+                subcommands.add(subCommandNode);
             }
         }
 
-        return parent;
+        return subcommands;
     }
 
     /**
