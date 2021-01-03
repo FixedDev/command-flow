@@ -72,6 +72,11 @@ public class CommandBrigadierConverter {
     public List<LiteralCommandNode<Object>> getCommodoreCommand(Command command, boolean optional, Authorizer authorizer) {
         LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(command.getName())
                 .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
+
+        if(isFirstPartOptional(command.getPart())){
+            argumentBuilder.executes(context -> 1);
+        }
+
         LiteralCommandNode<Object> mainNode = argumentBuilder.build();
 
         toArgumentBuilder(command.getPart(), mainNode, authorizer);
@@ -94,6 +99,32 @@ public class CommandBrigadierConverter {
         }
 
         return argumentBuilders;
+    }
+
+    private boolean isFirstPartOptional(CommandPart part) {
+        if (part instanceof PartsWrapper) {
+            for (CommandPart commandPart : ((PartsWrapper) part).getParts()) {
+                if (!(commandPart instanceof ArgumentPart) && !(commandPart instanceof OptionalPart)) {
+                    continue;
+                }
+
+                return isFirstPartOptional(commandPart);
+            }
+        }
+
+        if (part instanceof SinglePartWrapper) {
+            if (part instanceof OptionalPart) {
+                return true;
+            }
+
+            return isFirstPartOptional(part);
+        }
+
+        if (part instanceof SubCommandPart) {
+            return ((SubCommandPart) part).isOptional();
+        }
+
+        return false;
     }
 
     // Taken from https://github.com/lucko/commodore/blob/master/src/main/java/me/lucko/commodore/file/MinecraftArgumentTypeParser.java#L117
