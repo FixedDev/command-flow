@@ -93,7 +93,7 @@ public class SubCommandPart implements CommandPart {
             throw e;
         }
 
-        Command command = subCommands.get(label);
+        Command command = subCommands.get(label.toLowerCase());
 
         StackSnapshot snapshot = stack.getSnapshot();
         ContextSnapshot contextSnapshot = context.getSnapshot();
