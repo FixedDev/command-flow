@@ -27,10 +27,10 @@ Those are created using the `Command.builder(String)` method, which returns an `
 <dependency>
   <groupId>me.fixeddev</groupId>
   <artifactId>commandflow-universal</artifactId>
-  <version>0.3.0-SNAPSHOT</version>
+  <version>0.4.0-SNAPSHOT</version>
 </dependency>
 ```
 
 ## Known bugs or misbehaviours
 The next list are the known bugs that must be resolved at some point:
-- When using the FirstMatchPart in an ArgOrSub way(try to parse the arguments of the main command, if it fails try to parse the subcommand) with a main command with one  argument(or more) and a subcommand that is optional, called with an unexistent subcommand, the main command will be called with no arguments, making it fail. The actual solution is to set the subcommand as required.
+- ~When using the FirstMatchPart in an ArgOrSub way(try to parse the arguments of the main command, if it fails try to parse the subcommand) with a main command with one  argument(or more) and a subcommand that is optional, called with an unexistent subcommand, the main command will be called with no arguments, making it fail. The actual solution is to set the subcommand as required.~
