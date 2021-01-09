@@ -354,7 +354,7 @@ public class SimpleCommandManager implements CommandManager {
         CommandPart part = command.getPart();
 
         try {
-            part.parse(commandContext, stack);
+            part.parse(commandContext, stack, null);
         } catch (ArgumentException e) {
             CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
             usage.setCommand(commandContext.getCommand());
