@@ -36,6 +36,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     private SubCommandPart.SubCommandHandler subCommandHandler;
     private boolean optional = false;
     private boolean argumentsOrSubcommand = false;
+    private boolean argumentsOrSubcommandReversed = false;
     private Function<CommandPart, CommandPart> modifierFunction = Function.identity();
 
     public CommandBuilderNodesImpl(String name, PartInjector injector) {
@@ -240,8 +241,9 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     }
 
     @Override
-    public SubCommandsNode argumentsOrSubCommand() {
+    public SubCommandsNode argumentsOrSubCommand(boolean reversed) {
         argumentsOrSubcommand = true;
+        argumentsOrSubcommandReversed = reversed;
         return this;
     }
 
@@ -267,7 +269,12 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             if (argumentsOrSubcommand) {
                 Command command = builder.build();
 
-                part = Parts.firstMatch(part.getName() + "|" + "arguments", command.getPart(), part);
+                if(argumentsOrSubcommandReversed){
+                    part = Parts.firstMatch(part.getName() + "|" + "arguments", part, command.getPart());
+                } else{
+                    part = Parts.firstMatch(part.getName() + "|" + "arguments", command.getPart(), part);
+                }
+
 
                 builder.part(part);
             } else {

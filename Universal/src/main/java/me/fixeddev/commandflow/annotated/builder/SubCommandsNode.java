@@ -17,7 +17,11 @@ public interface SubCommandsNode extends Buildable {
 
     SubCommandsNode setModifiers(Annotation... modifiers);
 
-    SubCommandsNode argumentsOrSubCommand();
+    default SubCommandsNode argumentsOrSubCommand(){
+        return argumentsOrSubCommand(false);
+    }
+
+    SubCommandsNode argumentsOrSubCommand(boolean reversed);
 
     SubCommandsNode optional();
 }
