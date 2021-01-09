@@ -137,7 +137,7 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
         }
 
         if(clazz.isAnnotationPresent(ArgOrSub.class)){
-            subCommandsNode.argumentsOrSubCommand();
+            subCommandsNode.argumentsOrSubCommand(clazz.getAnnotation(ArgOrSub.class).value());
         }
 
         SubCommandClasses classesAnnotation = clazz.getAnnotation(SubCommandClasses.class);
