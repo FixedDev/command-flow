@@ -38,8 +38,13 @@ public class LimitingPart implements CommandPart, SinglePartWrapper {
     }
 
     @Override
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
+        part.parse(context, stack.getSlice(limit), this);
+    }
+
+    // ignored
+    @Override
     public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-        part.parse(context, stack.getSlice(limit));
     }
 
     @Override

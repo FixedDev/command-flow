@@ -64,7 +64,7 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
         ArgumentException last = null;
 
         Iterator<CommandPart> partIterator = partList.iterator();
@@ -76,7 +76,7 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
             StackSnapshot snapshot = stack.getSnapshot();
 
             try {
-                part.parse(context, stack);
+                part.parse(context, stack, this);
 
                 // make it a toggleable behaviour, since it can be kinda buggy
                 if (!considerNoChangesAsFail) {
@@ -112,6 +112,11 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
         if (last != null) {
             throw last;
         }
+    }
+
+    // ignored
+    @Override
+    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
     }
 
     @Override

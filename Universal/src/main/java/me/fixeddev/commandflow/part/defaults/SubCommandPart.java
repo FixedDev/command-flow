@@ -81,7 +81,7 @@ public class SubCommandPart implements CommandPart {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
         String label;
         try {
             label = stack.next();
@@ -111,6 +111,11 @@ public class SubCommandPart implements CommandPart {
 
             throw e;
         }
+    }
+
+    // ignored
+    @Override
+    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
     }
 
     @Override
@@ -250,7 +255,7 @@ public class SubCommandPart implements CommandPart {
             }
 
             commandContext.setCommand(command, label);
-            command.getPart().parse(commandContext, stack);
+            command.getPart().parse(commandContext, stack, command.getPart());
         }
     }
 }

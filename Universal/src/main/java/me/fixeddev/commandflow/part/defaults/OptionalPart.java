@@ -49,19 +49,19 @@ public class OptionalPart implements CommandPart, SinglePartWrapper {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
         StackSnapshot snapshot = stack.getSnapshot();
         ContextSnapshot contextSnapshot = context.getSnapshot();
 
         try {
-            part.parse(context, stack);
+            part.parse(context, stack, caller);
         } catch (ArgumentParseException | NoMoreArgumentsException e) {
             stack.applySnapshot(snapshot);
             context.applySnapshot(contextSnapshot);
 
             if (!defaultValues.isEmpty()) {
                 try {
-                    part.parse(context, new SimpleArgumentStack(defaultValues));
+                    part.parse(context, new SimpleArgumentStack(defaultValues), this);
 
                     return;
                 } catch (ArgumentParseException | NoMoreArgumentsException ignored) {
@@ -73,6 +73,11 @@ public class OptionalPart implements CommandPart, SinglePartWrapper {
             }*/
 
         }
+    }
+
+    // ignore
+    @Override
+    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
     }
 
     @Override

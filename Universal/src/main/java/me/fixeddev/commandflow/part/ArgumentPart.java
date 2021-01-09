@@ -19,7 +19,7 @@ public interface ArgumentPart extends CommandPart {
         return TextComponent.builder("<" + getName() + ">").build();
     }
 
-    default void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    default void parse(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
         StackSnapshot snapshot = stack.getSnapshot();
 
         int oldArgumentsLeft = stack.getArgumentsLeft();
@@ -40,6 +40,11 @@ public interface ArgumentPart extends CommandPart {
         context.setRaw(this, rawArgs);
     }
 
+    // ignored
+    @Override
+    default void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    }
+
     @Override
     default List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         if (stack.hasNext()) {
@@ -49,6 +54,14 @@ public interface ArgumentPart extends CommandPart {
         return Collections.emptyList();
     }
 
+    default List<? extends Object> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
+        return parseValue(context, stack);
+    }
+
+    /**
+     * @deprecated Should be replaced with {@link ArgumentPart#parseValue(CommandContext, ArgumentStack, CommandPart)}
+     */
+    @Deprecated
     List<? extends Object> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException;
 
     Type getType();

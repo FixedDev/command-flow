@@ -101,7 +101,7 @@ public class ValueFlagPart implements SinglePartWrapper {
 
         // parse the next parts
         try {
-            part.parse(context, stack);
+            part.parse(context, stack, this);
         } catch (ArgumentParseException ex) {
             // ignore
             context.applySnapshot(beforeParseContext);

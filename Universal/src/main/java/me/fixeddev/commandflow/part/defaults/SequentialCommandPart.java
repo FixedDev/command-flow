@@ -60,10 +60,15 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
         for (CommandPart part : parts) {
-            part.parse(context, stack);
+            part.parse(context, stack, this);
         }
+    }
+
+    // ignored
+    @Override
+    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
     }
 
     @Override
