@@ -257,9 +257,9 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             CommandPart part;
 
             if (subCommandHandler != null) {
-                part = new SubCommandPart("subcommand", subCommands, optional, subCommandHandler);
+                part = new SubCommandPart("subcommand", subCommands, optional && !argumentsOrSubcommand, subCommandHandler);
             } else {
-                part = new SubCommandPart("subcommand", subCommands, optional);
+                part = new SubCommandPart("subcommand", subCommands, optional && !argumentsOrSubcommand);
             }
 
             part = modifierFunction.apply(part);
