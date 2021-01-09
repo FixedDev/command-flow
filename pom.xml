@@ -6,7 +6,7 @@
 
     <groupId>me.fixeddev</groupId>
     <artifactId>commandflow</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.4.0-SNAPSHOT</version>
     <modules>
         <module>Universal</module>
         <module>Bukkit</module>
@@ -43,12 +43,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.universal>0.3.2-SNAPSHOT</version.universal>
-        <version.examples>0.3.0-SNAPSHOT</version.examples>
-        <version.bukkit>0.3.1-SNAPSHOT</version.bukkit>
-        <version.discord>0.3.0-SNAPSHOT</version.discord>
-        <version.bungee>0.3.0-SNAPSHOT</version.bungee>
-        <version.brigadier>0.3.4-SNAPSHOT</version.brigadier>
+        <version.universal>0.4.0-SNAPSHOT</version.universal>
+        <version.examples>0.4.0-SNAPSHOT</version.examples>
+        <version.bukkit>0.4.0-SNAPSHOT</version.bukkit>
+        <version.discord>0.4.0-SNAPSHOT</version.discord>
+        <version.bungee>0.4.0-SNAPSHOT</version.bungee>
+        <version.brigadier>0.4.0-SNAPSHOT</version.brigadier>
     </properties>
 
     <build>
