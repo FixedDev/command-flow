@@ -173,11 +173,8 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
                 continue;
             }
 
-            try {
-                List<Command> subCommands = fromClass(instanceCreator.createInstance(subCommandClass, parentInstance));
-                commandList.addAll(subCommands);
-            } catch (RuntimeException ignored) {
-            }
+            List<Command> subCommands = fromClass(instanceCreator.createInstance(subCommandClass, parentInstance));
+            commandList.addAll(subCommands);
         }
 
         return commandList;
