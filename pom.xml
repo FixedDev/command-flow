@@ -43,7 +43,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.universal>0.4.1-SNAPSHOT</version.universal>
+        <version.universal>0.4.2-SNAPSHOT</version.universal>
         <version.examples>0.4.0-SNAPSHOT</version.examples>
         <version.bukkit>0.4.0-SNAPSHOT</version.bukkit>
         <version.discord>0.4.0-SNAPSHOT</version.discord>
