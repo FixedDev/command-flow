@@ -26,6 +26,7 @@ import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
+import me.fixeddev.commandflow.part.defaults.FirstMatchPart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
 import me.fixeddev.commandflow.part.defaults.OptionalPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
@@ -180,10 +181,12 @@ public class CommandBrigadierConverter {
 
     private List<CommandNode<Object>> toArgumentBuilder(CommandPart part, CommandNode<Object> parent, Authorizer authorizer) {
         if (part instanceof PartsWrapper) {
+            if(part instanceof FirstMatchPart){
+                return addArgumentsFromFirstMatch((FirstMatchPart) part, parent, authorizer);
+            }
 
             return addArgumentsFromWrapper((PartsWrapper) part, parent, authorizer);
         } else if (part instanceof SinglePartWrapper) {
-
             return addSingleWrapper((SinglePartWrapper) part, parent, authorizer);
         } else if (part instanceof SubCommandPart) {
 
@@ -200,6 +203,16 @@ public class CommandBrigadierConverter {
 
             return new ArrayList<>(Collections.singletonList(childBuilder));
         }
+    }
+
+    private List<CommandNode<Object>> addArgumentsFromFirstMatch(FirstMatchPart firstMatchPart, CommandNode<Object> parent, Authorizer authorizer){
+        List<CommandNode<Object>> nodes = new ArrayList<>();
+
+        for (CommandPart part : firstMatchPart.getParts()) {
+            nodes.addAll(toArgumentBuilder(part, parent, authorizer));
+        }
+
+        return nodes;
     }
 
     private List<CommandNode<Object>> addArgumentsFromWrapper(PartsWrapper wrapper, CommandNode<Object> parent, Authorizer authorizer) {
