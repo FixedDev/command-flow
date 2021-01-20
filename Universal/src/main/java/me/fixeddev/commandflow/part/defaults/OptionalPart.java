@@ -3,8 +3,10 @@ package me.fixeddev.commandflow.part.defaults;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.ContextSnapshot;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.part.CommandPart;
+import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
@@ -20,15 +22,25 @@ import java.util.List;
 public class OptionalPart implements CommandPart, SinglePartWrapper {
     private final CommandPart part;
     private final List<String> defaultValues;
+    private boolean considerInvalidAsEmpty;
 
     public OptionalPart(CommandPart part) {
-        this.part = part;
-        this.defaultValues = new ArrayList<>();
+        this(part, true);
+    }
+
+    public OptionalPart(CommandPart part, boolean considerInvalidAsEmpty) {
+        this(part, considerInvalidAsEmpty, new ArrayList<>());
     }
 
     public OptionalPart(CommandPart part, List<String> defaultValues) {
+        this(part, false, defaultValues);
+    }
+
+    public OptionalPart(CommandPart part, boolean considerInvalidAsEmpty, List<String> defaultValues) {
         this.part = part;
         this.defaultValues = defaultValues;
+        this.considerInvalidAsEmpty = considerInvalidAsEmpty;
+
     }
 
     @Override
@@ -56,23 +68,32 @@ public class OptionalPart implements CommandPart, SinglePartWrapper {
         try {
             part.parse(context, stack, caller);
         } catch (ArgumentParseException | NoMoreArgumentsException e) {
+            if (shouldRewind(caller, e)) {
+                throw e;
+            }
+
             stack.applySnapshot(snapshot);
             context.applySnapshot(contextSnapshot);
 
             if (!defaultValues.isEmpty()) {
                 try {
                     part.parse(context, new SimpleArgumentStack(defaultValues), this);
-
-                    return;
                 } catch (ArgumentParseException | NoMoreArgumentsException ignored) {
                 }
             }
-            /* If this doesn't has any more arguments, then ignore it
-            if (!stack.hasNext()) {
-                throw e;
-            }*/
-
         }
+    }
+
+    private boolean shouldRewind(CommandPart caller, CommandException e) {
+        boolean isLast = true;
+
+        if (caller instanceof PartsWrapper) {
+            List<CommandPart> parts = ((PartsWrapper) caller).getParts();
+
+            isLast = parts.indexOf(this) == parts.size() - 1;
+        }
+
+        return isLast && !(e instanceof NoMoreArgumentsException) && !considerInvalidAsEmpty;
     }
 
     // ignore

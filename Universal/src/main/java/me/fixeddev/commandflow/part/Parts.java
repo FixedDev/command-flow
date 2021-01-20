@@ -354,7 +354,7 @@ public final class Parts {
     }
 
     /**
-     * Creates a part that rewinds the {@link ArgumentStack} and re-parses with default values when it can't be parsed the first time.
+     * Creates a part that rewinds the {@link ArgumentStack} and re-parses with default values when it can't be parsed.
      * <p>
      * Do not use it with a {@link SubCommandPart} as parameter, instead use {@link Parts#subCommand(String, Collection, boolean)},
      * using this with a {@linkplain SubCommandPart} will cause lots of errors.
@@ -366,4 +366,37 @@ public final class Parts {
     public static CommandPart optional(CommandPart part, List<String> defaultValues) {
         return new OptionalPart(part, defaultValues);
     }
+
+    /**
+     * Creates a part that rewinds the {@link ArgumentStack} when there's not an argument present.
+     * <p>
+     * This will throw the errors if the parsing fails and is the last part to parse
+     * <p>
+     * Do not use it with a {@link SubCommandPart} as parameter, instead use {@link Parts#subCommand(String, Collection, boolean)},
+     * using this with a {@linkplain SubCommandPart} will cause lots of errors.
+     *
+     * @param part The {@link CommandPart} to make optional.
+     * @return The given {@link CommandPart} that will rewind the {@link ArgumentStack} when it can't be parsed.
+     */
+    public static CommandPart strictOptional(CommandPart part) {
+        return new OptionalPart(part, false);
+    }
+
+    /**
+     * Creates a part that rewinds the {@link ArgumentStack} and re-parses with default values when there's not an argument present.
+     * <p>
+     * This will throw the errors if the parsing fails and is the last part to parse
+     * <p>
+     * Do not use it with a {@link SubCommandPart} as parameter, instead use {@link Parts#subCommand(String, Collection, boolean)},
+     * using this with a {@linkplain SubCommandPart} will cause lots of errors.
+     *
+     * @param part          The {@link CommandPart} to make optional.
+     * @param defaultValues The list default values when the {@link ArgumentStack} can't be parsed
+     * @return The given {@link CommandPart} that will rewind the {@link ArgumentStack} when it can't be parsed.
+     */
+    public static CommandPart strictOptional(CommandPart part, List<String> defaultValues) {
+        return new OptionalPart(part, false, defaultValues);
+    }
+
+
 }
