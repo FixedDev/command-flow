@@ -64,7 +64,7 @@ public class DefaultTranslator implements Translator {
             builder.content(component.key());
             return;
         }
-
+        Component last = null;
         Matcher matcher = format.matcher(trans);
         int position = 0;
         int i = 0;
@@ -72,7 +72,9 @@ public class DefaultTranslator implements Translator {
             int pos = matcher.start();
             if (pos != position) {
                 builder.mergeStyle(component);
-                builder.append(stringToComponent.apply(trans.substring(position, pos)));
+                last = stringToComponent.apply(trans.substring(position, pos));
+
+                builder.append(last);
             }
             position = matcher.end();
 
@@ -89,10 +91,19 @@ public class DefaultTranslator implements Translator {
                     if (args.size() > withIndexInt) {
                         Component withComponent = component.args().get(withIndexInt);
 
+                        if (last != null) {
+                            withComponent = withComponent.style(withComponent.style()
+                                    .colorIfAbsent(last.color())
+                                    .mergeDecorations(last.style())
+                                    .mergeEvents(last.style()));
+                        }
+
                         if (withComponent instanceof TranslatableComponent) {
                             convert(component, builder, namespace);
                         } else {
                             builder.append(withComponent);
+
+                            last = withComponent;
                         }
 
                     } else {
@@ -105,7 +116,17 @@ public class DefaultTranslator implements Translator {
             }
         }
         if (trans.length() != position) {
-            builder.append(stringToComponent.apply(trans.substring(position)));
+            Component afterComponent = stringToComponent.apply(trans.substring(position));
+
+            if (last != null) {
+                afterComponent = afterComponent.style(afterComponent.style()
+                        .colorIfAbsent(last.color())
+                        .mergeDecorations(last.style())
+                        .mergeEvents(last.style()));
+            }
+
+            builder.append(afterComponent);
+            last = afterComponent;
         }
     }
 }
