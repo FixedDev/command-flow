@@ -47,7 +47,7 @@
         <version.bukkit>0.4.0</version.bukkit>
         <version.discord>0.4.0</version.discord>
         <version.bungee>0.4.0</version.bungee>
-        <version.brigadier>0.4.1</version.brigadier>
+        <version.brigadier>0.4.2</version.brigadier>
     </properties>
 
     <build>
