@@ -5,7 +5,6 @@ import me.fixeddev.commandflow.bukkit.BukkitCommandWrapper;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
-import org.jetbrains.annotations.Nullable;
 
 public class BrigadierCommandWrapper extends BukkitCommandWrapper {
 
@@ -17,7 +16,6 @@ public class BrigadierCommandWrapper extends BukkitCommandWrapper {
         return commandManager;
     }
 
-    @Nullable
     public Component getPermissionMessageComponent() {
         return permissionMessage;
     }

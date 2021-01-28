@@ -45,6 +45,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -60,10 +61,20 @@ public class CommandBrigadierConverter {
         this.commodore = commodore;
     }
 
-    public void registerCommand(Command command, Plugin plugin, BrigadierCommandWrapper bukkitCommand) {
-        getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer()).forEach(commodore::register);
+    public List<LiteralCommandNode<Object>> registerCommand(Command command, Plugin plugin, BrigadierCommandWrapper bukkitCommand) {
+        List<LiteralCommandNode<Object>> nodes = getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer());
+
+        nodes.forEach(commodore::register);
 
         Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
+
+        return nodes;
+    }
+
+    public void unregisterCommand(List<LiteralCommandNode<Object>> nodes) {
+        Collection<CommandNode<Object>> rootNodes = commodore.getDispatcher().getRoot().getChildren();
+
+        rootNodes.removeAll(nodes);
     }
 
     public List<LiteralCommandNode<Object>> getCommodoreCommand(Command command, Authorizer authorizer) {
@@ -74,7 +85,7 @@ public class CommandBrigadierConverter {
         LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(command.getName())
                 .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
 
-        if(isFirstPartOptional(command.getPart())){
+        if (isFirstPartOptional(command.getPart())) {
             argumentBuilder.executes(context -> 1);
         }
 
@@ -181,7 +192,7 @@ public class CommandBrigadierConverter {
 
     private List<CommandNode<Object>> toArgumentBuilder(CommandPart part, CommandNode<Object> parent, Authorizer authorizer) {
         if (part instanceof PartsWrapper) {
-            if(part instanceof FirstMatchPart){
+            if (part instanceof FirstMatchPart) {
                 return addArgumentsFromFirstMatch((FirstMatchPart) part, parent, authorizer);
             }
 
@@ -205,7 +216,7 @@ public class CommandBrigadierConverter {
         }
     }
 
-    private List<CommandNode<Object>> addArgumentsFromFirstMatch(FirstMatchPart firstMatchPart, CommandNode<Object> parent, Authorizer authorizer){
+    private List<CommandNode<Object>> addArgumentsFromFirstMatch(FirstMatchPart firstMatchPart, CommandNode<Object> parent, Authorizer authorizer) {
         List<CommandNode<Object>> nodes = new ArrayList<>();
 
         for (CommandPart part : firstMatchPart.getParts()) {
@@ -274,7 +285,8 @@ public class CommandBrigadierConverter {
                     for (CommandNode<Object> lastNode : last) {
                         childNode.addChild(lastNode);
                     }
-                } }
+                }
+            }
 
             last = child;
         }
