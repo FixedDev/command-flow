@@ -1,9 +1,12 @@
 package me.fixeddev.commandflow.translator;
 
 import me.fixeddev.commandflow.Namespace;
+import me.fixeddev.commandflow.translator.TranslationProvider;
+import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
+import net.kyori.text.format.TextColor;
 
 import java.util.List;
 import java.util.function.Function;
@@ -64,7 +67,9 @@ public class DefaultTranslator implements Translator {
             builder.content(component.key());
             return;
         }
+        TextColor lastColor = null;
         Component last = null;
+
         Matcher matcher = format.matcher(trans);
         int position = 0;
         int i = 0;
@@ -73,6 +78,7 @@ public class DefaultTranslator implements Translator {
             if (pos != position) {
                 builder.mergeStyle(component);
                 last = stringToComponent.apply(trans.substring(position, pos));
+                lastColor = lastColor(last);
 
                 builder.append(last);
             }
@@ -93,7 +99,7 @@ public class DefaultTranslator implements Translator {
 
                         if (last != null) {
                             withComponent = withComponent.style(withComponent.style()
-                                    .colorIfAbsent(last.color())
+                                    .colorIfAbsent(lastColor)
                                     .mergeDecorations(last.style())
                                     .mergeEvents(last.style()));
                         }
@@ -104,6 +110,7 @@ public class DefaultTranslator implements Translator {
                             builder.append(withComponent);
 
                             last = withComponent;
+                            lastColor = lastColor(last);
                         }
 
                     } else {
@@ -120,13 +127,24 @@ public class DefaultTranslator implements Translator {
 
             if (last != null) {
                 afterComponent = afterComponent.style(afterComponent.style()
-                        .colorIfAbsent(last.color())
+                        .colorIfAbsent(lastColor)
                         .mergeDecorations(last.style())
                         .mergeEvents(last.style()));
             }
 
             builder.append(afterComponent);
             last = afterComponent;
+            lastColor = lastColor(last);
         }
+    }
+
+    private TextColor lastColor(Component component) {
+        List<Component> extra = component.children();
+
+        if (!extra.isEmpty()) {
+            return lastColor(extra.get(extra.size() - 1));
+        }
+
+        return component.color();
     }
 }
