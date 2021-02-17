@@ -2,6 +2,8 @@ package me.fixeddev.commandflow.stack;
 
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import net.kyori.text.TextComponent;
+import net.kyori.text.TranslatableComponent;
 
 import java.util.List;
 
@@ -98,7 +100,12 @@ public class SimpleArgumentStack implements ArgumentStack {
         try {
             return Integer.parseInt(next);
         } catch (NumberFormatException e) {
-            throw new ArgumentParseException("Failed to parse the string " + next + " as int!");
+            throw new ArgumentParseException(
+                TranslatableComponent.of(
+                    "invalid.integer",
+                    TextComponent.of(next)
+                )
+            );
         }
     }
 
@@ -109,7 +116,12 @@ public class SimpleArgumentStack implements ArgumentStack {
         try {
             return Float.parseFloat(next);
         } catch (NumberFormatException e) {
-            throw new ArgumentParseException("Failed to parse the string " + next + " as float!");
+            throw new ArgumentParseException(
+                TranslatableComponent.of(
+                    "invalid.float",
+                    TextComponent.of(next)
+                )
+            );
         }
     }
 
@@ -120,7 +132,12 @@ public class SimpleArgumentStack implements ArgumentStack {
         try {
             return Double.parseDouble(next);
         } catch (NumberFormatException e) {
-            throw new ArgumentParseException("Failed to parse the string " + next + " as double!");
+            throw new ArgumentParseException(
+                TranslatableComponent.of(
+                    "invalid.double",
+                    TextComponent.of(next)
+                )
+            );
         }
     }
 
@@ -131,7 +148,12 @@ public class SimpleArgumentStack implements ArgumentStack {
         try {
             return Byte.parseByte(next);
         } catch (NumberFormatException e) {
-            throw new ArgumentParseException("Failed to parse the string " + next + " as byte!");
+            throw new ArgumentParseException(
+                TranslatableComponent.of(
+                    "invalid.byte",
+                    TextComponent.of(next)
+                )
+            );
         }
     }
 
@@ -140,7 +162,12 @@ public class SimpleArgumentStack implements ArgumentStack {
         String next = next();
 
         if (!next.equalsIgnoreCase("true") && !next.equalsIgnoreCase("false")) {
-            throw new ArgumentParseException("Failed to parse the string " + next + " as boolean!");
+            throw new ArgumentParseException(
+                TranslatableComponent.of(
+                    "invalid.boolean",
+                    TextComponent.of(next)
+                )
+            );
         }
 
         return Boolean.parseBoolean(next);
