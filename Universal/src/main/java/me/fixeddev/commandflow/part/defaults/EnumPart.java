@@ -11,12 +11,26 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.List;
 
+/**
+ * A {@linkplain me.fixeddev.commandflow.part.CommandPart} that allows the parsing of every enum type.
+ * <p>
+ * This implementation eagerly loads the enum values from the specified class when created, allowing for fast lookup of
+ * enum values when parsing.
+ */
 public class EnumPart extends PrimitivePart {
 
     private final Map<String, Object> enumConstants;
     private final String joinedEnumConstants;
     private final Class<?> enumClass;
 
+    /**
+     * Creates an EnumPart with a specified name and enum type. This also supports setting the join delimiter, that's used to
+     * separate the different enum values on invalid value message.
+     *
+     * @param name          The name of this EnumPart.
+     * @param joinDelimiter The delimiter between different enum values.
+     * @param enumClass     The enum type for this EnumPart.
+     */
     public EnumPart(String name, String joinDelimiter, Class<? extends Enum<?>> enumClass) {
         super(name);
 
@@ -36,6 +50,12 @@ public class EnumPart extends PrimitivePart {
         this.joinedEnumConstants = String.join(joinDelimiter, enumConstants.keySet());
     }
 
+    /**
+     * Creates an EnumPart with a specified name and enum type and with the default delimiter ", ".
+     *
+     * @param name          The name of this EnumPart.
+     * @param enumClass     The enum type for this EnumPart.
+     */
     public EnumPart(String name, Class<? extends Enum<?>> enumClass) {
         this(name, ", ", enumClass);
     }

@@ -17,6 +17,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * A {@linkplain CommandPart} that wraps multiple {@linkplain CommandPart}s, allowing for multiple parsing paths.
+ * <p>
+ * The first part to parse is the one being used to parse.
+ */
 public class FirstMatchPart implements CommandPart, PartsWrapper {
 
     private final String name;
@@ -24,6 +29,15 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
     private Boolean async;
     private final boolean considerNoChangesAsFail;
 
+    /**
+     * Creates a new FirstMatchPart with a specified name, and a specified list of parts to parse, also allowing to change
+     * the "considerNoChangesAsFail" flag.
+     *
+     * @param name                    The name for this FirstMatchPart.
+     * @param partList                The list of parts that will be parsed.
+     * @param considerNoChangesAsFail Whether to consider as fail when no changes in the {@linkplain CommandContext} or in the {@linkplain ArgumentStack}
+     *                                as a fail.
+     */
     public FirstMatchPart(String name, List<CommandPart> partList, boolean considerNoChangesAsFail) {
         this.name = name;
         this.partList = partList;

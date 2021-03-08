@@ -13,6 +13,11 @@ import java.util.List;
 
 import static net.kyori.text.TextComponent.of;
 
+/**
+ * A {@linkplain me.fixeddev.commandflow.part.CommandPart} that parses one argument as a double.
+ * <p>
+ * This {@linkplain me.fixeddev.commandflow.part.CommandPart} also supports having only a permitted range.
+ */
 public class DoublePart extends PrimitivePart {
 
     private final double max;
@@ -20,10 +25,22 @@ public class DoublePart extends PrimitivePart {
 
     private final boolean ranged;
 
+    /**
+     * Creates a DoublePart without a range, with the specified name.
+     *
+     * @param name The name of this DoublePart.
+     */
     public DoublePart(String name) {
         this(name, 0, 0, false);
     }
 
+    /**
+     * Creates a DoublePart with a minimum and maximum value range and a specified name.
+     *
+     * @param name The name of this DoublePart.
+     * @param max  The maximum value(exclusive) allowed for this part.
+     * @param min  The minimum value(exclusive) allowed for this part.
+     */
     public DoublePart(String name, double min, double max) {
         this(name, min, max, true);
     }
@@ -39,7 +56,7 @@ public class DoublePart extends PrimitivePart {
 
     @Override
     public List<Double> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-        double next = stack.nextFloat();
+        double next = stack.nextDouble();
         if (ranged && (next > max || next < min)) {
             Component message = TranslatableComponent.of("number.out-range", of(next), of(min), of(max));
 

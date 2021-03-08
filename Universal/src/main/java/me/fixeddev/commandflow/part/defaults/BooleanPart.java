@@ -11,6 +11,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A {@linkplain me.fixeddev.commandflow.part.CommandPart} that parses one argument as a boolean, with the values true or false being allowed.
+ */
 public class BooleanPart extends PrimitivePart {
 
     public BooleanPart(String name) {
@@ -35,7 +38,7 @@ public class BooleanPart extends PrimitivePart {
             return Arrays.asList("true", "false");
         }
 
-        if(prefix.equalsIgnoreCase("true") || prefix.equalsIgnoreCase("false")){
+        if (prefix.equalsIgnoreCase("true") || prefix.equalsIgnoreCase("false")) {
             return Collections.emptyList();
         }
 

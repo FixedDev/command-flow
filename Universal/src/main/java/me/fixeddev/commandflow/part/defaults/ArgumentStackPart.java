@@ -12,6 +12,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * A {@linkplain me.fixeddev.commandflow.part.CommandPart} that provides direct access to the remaining {@linkplain ArgumentStack}.
+ * <p>
+ * Actually this shouldn't be an {@linkplain ArgumentPart} since it isn't using the arguments directly, but this is the best way to represent it.
+ */
 public class ArgumentStackPart implements ArgumentPart {
 
     private final String name;
@@ -21,7 +26,7 @@ public class ArgumentStackPart implements ArgumentPart {
     }
 
     @Override
-    public List<? extends Object> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<ArgumentStack> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
         StackSnapshot snapshot = stack.getSnapshot();
         stack.markAsConsumed();
 
