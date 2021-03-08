@@ -14,7 +14,7 @@ import java.util.List;
 
 public class ArgumentStackPart implements ArgumentPart {
 
-    private String name;
+    private final String name;
 
     public ArgumentStackPart(String name) {
         this.name = name;

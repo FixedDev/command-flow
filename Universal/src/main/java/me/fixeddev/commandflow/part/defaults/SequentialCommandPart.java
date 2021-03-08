@@ -16,8 +16,8 @@ import java.util.Objects;
 
 public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
-    private String name;
-    private List<CommandPart> parts;
+    private final String name;
+    private final List<CommandPart> parts;
     private boolean async;
 
     public SequentialCommandPart(String name, List<CommandPart> parts) {

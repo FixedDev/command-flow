@@ -7,7 +7,7 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 
 public class ContextPart implements CommandPart {
 
-    private String name;
+    private final String name;
 
     public ContextPart(String name) {
         this.name = name;
