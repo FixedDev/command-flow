@@ -7,7 +7,7 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 
 public class EmptyPart implements CommandPart {
 
-    private String name;
+    private final String name;
 
     public EmptyPart(String name) {
         this.name = name;

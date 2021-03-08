@@ -22,7 +22,7 @@ import java.util.List;
 public class OptionalPart implements CommandPart, SinglePartWrapper {
     private final CommandPart part;
     private final List<String> defaultValues;
-    private boolean considerInvalidAsEmpty;
+    private final boolean considerInvalidAsEmpty;
 
     public OptionalPart(CommandPart part) {
         this(part, true);
