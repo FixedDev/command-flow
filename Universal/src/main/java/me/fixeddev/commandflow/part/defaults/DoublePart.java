@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import net.kyori.text.TranslatableComponent;
@@ -55,7 +56,7 @@ public class DoublePart extends PrimitivePart {
     }
 
     @Override
-    public List<Double> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<Double> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         double next = stack.nextDouble();
         if (ranged && (next > max || next < min)) {
             Component message = TranslatableComponent.of("number.out-range", of(next), of(min), of(max));

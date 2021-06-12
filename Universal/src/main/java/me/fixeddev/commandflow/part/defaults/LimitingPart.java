@@ -42,11 +42,6 @@ public class LimitingPart implements CommandPart, SinglePartWrapper {
         part.parse(context, stack.getSlice(limit), this);
     }
 
-    // ignored
-    @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-    }
-
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         return part.getSuggestions(commandContext, stack.getSlice(limit));

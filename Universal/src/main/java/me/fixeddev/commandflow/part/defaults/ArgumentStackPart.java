@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.part.defaults;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
@@ -26,7 +27,7 @@ public class ArgumentStackPart implements ArgumentPart {
     }
 
     @Override
-    public List<ArgumentStack> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<ArgumentStack> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         StackSnapshot snapshot = stack.getSnapshot();
         stack.markAsConsumed();
 

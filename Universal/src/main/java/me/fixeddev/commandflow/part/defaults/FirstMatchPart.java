@@ -128,11 +128,6 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
         }
     }
 
-    // ignored
-    @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-    }
-
     @Override
     public List<String> getSuggestions(CommandContext context, ArgumentStack stack) {
         List<String> suggestions = new ArrayList<>();

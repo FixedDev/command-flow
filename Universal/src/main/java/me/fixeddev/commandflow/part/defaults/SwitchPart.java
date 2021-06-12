@@ -45,7 +45,7 @@ public class SwitchPart implements CommandPart {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         StackSnapshot snapshot = stack.getSnapshot();
 
         boolean found = false;

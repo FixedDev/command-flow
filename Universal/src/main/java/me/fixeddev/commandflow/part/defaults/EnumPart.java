@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
@@ -61,7 +62,7 @@ public class EnumPart extends PrimitivePart {
     }
 
     @Override
-    public List<?> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<?> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
 
         String name = stack.next().toLowerCase();
         Object value = enumConstants.get(name);

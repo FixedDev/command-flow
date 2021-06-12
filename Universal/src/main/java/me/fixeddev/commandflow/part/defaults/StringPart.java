@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import java.lang.reflect.Type;
@@ -65,7 +66,7 @@ public class StringPart extends PrimitivePart {
     }
 
     @Override
-    public List<String> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<String> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         List<String> objects = new ArrayList<>();
 
         String next = stack.next();

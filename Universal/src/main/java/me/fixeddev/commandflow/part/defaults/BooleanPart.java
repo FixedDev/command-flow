@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part.defaults;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import java.lang.reflect.Type;
@@ -21,7 +22,7 @@ public class BooleanPart extends PrimitivePart {
     }
 
     @Override
-    public List<Boolean> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<Boolean> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         return Collections.singletonList(stack.nextBoolean());
     }
 

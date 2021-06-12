@@ -113,11 +113,6 @@ public class SubCommandPart implements CommandPart {
         }
     }
 
-    // ignored
-    @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-    }
-
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         String next = stack.hasNext() ? stack.next() : "";

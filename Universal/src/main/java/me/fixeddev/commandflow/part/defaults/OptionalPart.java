@@ -96,11 +96,6 @@ public class OptionalPart implements CommandPart, SinglePartWrapper {
         return isLast && !(e instanceof NoMoreArgumentsException) && !considerInvalidAsEmpty;
     }
 
-    // ignore
-    @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
-    }
-
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         return Collections.emptyList();

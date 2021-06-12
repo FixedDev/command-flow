@@ -18,15 +18,7 @@ public interface CommandPart {
         return null;
     }
 
-    default void parse(CommandContext context, ArgumentStack stack, @Nullable CommandPart caller) throws ArgumentParseException {
-        parse(context, stack);
-    }
-
-    /**
-     * @deprecated Should be replaced with {@link CommandPart#parse(CommandContext, ArgumentStack, CommandPart)}
-     */
-    @Deprecated
-    void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException;
+     void parse(CommandContext context, ArgumentStack stack, @Nullable CommandPart caller) throws ArgumentParseException;
 
 
     default List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {

@@ -22,7 +22,7 @@ public class ContextPart implements CommandPart {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         context.setValue(this, context);
     }
 }
