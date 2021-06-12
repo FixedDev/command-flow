@@ -38,6 +38,14 @@ public interface Command {
     Component getDescription();
 
     /**
+     * The usage of this command, if not provided it will be automatically generated from the arguments.
+     *
+     * @return The usage of this command in form of a {@link Component}
+     */
+    @Nullable
+    Component getUsage();
+
+    /**
      * The permission needed to execute this command.
      *
      * @return A string representing the permission required to execute this command, or empty/null to represent no permission.
@@ -81,6 +89,8 @@ public interface Command {
         Builder addAlias(String alias);
 
         Builder description(Component component);
+
+        Builder usage(Component component);
 
         Builder permission(String permission);
 

@@ -12,7 +12,7 @@ public interface UsageBuilder {
      * Gets an usage based on the given {@link CommandContext}.
      *
      * @param commandContext The {@link CommandContext} used to create an usage.
-     * @return A {@link Component}containing the usage for this command, shouldn't be send directly to the
+     * @return A {@link Component} containing the usage for this command, shouldn't be send directly to the
      * any executor without being translated first by a {@link me.fixeddev.commandflow.translator.Translator}.
      */
     Component getUsage(CommandContext commandContext);

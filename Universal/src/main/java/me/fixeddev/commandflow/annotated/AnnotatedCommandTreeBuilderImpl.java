@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;
 import me.fixeddev.commandflow.annotated.annotation.Handler;
 import me.fixeddev.commandflow.annotated.annotation.Required;
 import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
+import me.fixeddev.commandflow.annotated.annotation.Usage;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilderImpl;
 import me.fixeddev.commandflow.annotated.builder.CommandPartsNode;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
 
@@ -91,6 +93,8 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
             return null;
         }
 
+        Usage usage = method.getAnnotation(Usage.class);
+
         String[] names = commandAnnotation.names();
 
         return builder.newCommand(names[0])
@@ -98,6 +102,7 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
                 .permission(commandAnnotation.permission())
                 .permissionMessage(fromString(commandAnnotation.permissionMessage()))
                 .description(fromString(commandAnnotation.desc()))
+                .usage(usage)
                 .parts()
                 .ofMethodParameters(method, commandClass)
                 .action(method, commandClass)

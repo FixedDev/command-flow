@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.annotated.action.ReflectiveAction;
 import me.fixeddev.commandflow.annotated.action.ValueGetter;
 import me.fixeddev.commandflow.annotated.annotation.Named;
 import me.fixeddev.commandflow.annotated.annotation.ParentArg;
+import me.fixeddev.commandflow.annotated.annotation.Usage;
 import me.fixeddev.commandflow.annotated.part.Key;
 import me.fixeddev.commandflow.annotated.part.PartFactory;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
@@ -15,7 +16,10 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.Parts;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import net.kyori.text.Component;
+import net.kyori.text.TextComponent;
+import net.kyori.text.TranslatableComponent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -178,6 +182,30 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     }
 
     @Override
+    public @NotNull CommandDataNode usage(@NotNull Component component) {
+        builder.usage(component);
+        return this;
+    }
+
+    @Override
+    public @NotNull CommandDataNode usage(@Nullable Usage usageAnnotation) {
+        if (usageAnnotation != null) {
+            builder.usage(fromString(usageAnnotation.value()));
+        }
+
+        return this;
+    }
+
+
+    private Component fromString(String component) {
+        if (component.startsWith("%translatable:") && component.endsWith("%")) {
+            return TranslatableComponent.of(component.substring(14, component.length() - 1));
+        } else {
+            return TextComponent.of(component);
+        }
+    }
+
+    @Override
     public @NotNull CommandDataNode permission(@NotNull String permission) {
         builder.permission(permission);
         return this;
@@ -269,9 +297,9 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             if (argumentsOrSubcommand) {
                 Command command = builder.build();
 
-                if(argumentsOrSubcommandReversed){
+                if (argumentsOrSubcommandReversed) {
                     part = Parts.firstMatch(part.getName() + "|" + "arguments", part, command.getPart());
-                } else{
+                } else {
                     part = Parts.firstMatch(part.getName() + "|" + "arguments", command.getPart(), part);
                 }
 
@@ -281,9 +309,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
                 builder.addPart(part);
             }
 
-
         }
-
 
         return builder.build();
     }

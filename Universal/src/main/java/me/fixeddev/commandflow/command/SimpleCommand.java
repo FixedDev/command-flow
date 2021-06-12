@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.part.defaults.EmptyPart;
 import me.fixeddev.commandflow.part.Parts;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,15 +16,17 @@ public class SimpleCommand implements Command {
     private final String name;
     private final List<String> aliases;
     private final Component description;
+    private final Component usage;
     private final String permission;
     private final Component permissionMessage;
     private final CommandPart mainPart;
     private final Action action;
 
-    public SimpleCommand(String name, List<String> aliases, Component description, String permission, Component permissionMessage, CommandPart mainPart, Action action) {
+    public SimpleCommand(String name, List<String> aliases, Component description, Component usage, String permission, Component permissionMessage, CommandPart mainPart, Action action) {
         this.name = name;
         this.aliases = aliases;
         this.description = description;
+        this.usage = usage;
         this.permission = permission;
         this.permissionMessage = permissionMessage;
         this.mainPart = mainPart;
@@ -43,6 +46,11 @@ public class SimpleCommand implements Command {
     @Override
     public Component getDescription() {
         return description;
+    }
+
+    @Override
+    public @Nullable Component getUsage() {
+        return null;
     }
 
     @Override
@@ -70,9 +78,10 @@ public class SimpleCommand implements Command {
         private final String name;
         private List<String> aliases;
         private Component description;
+        private Component usage;
         private String permission;
         private Component permissionMessage;
-        private List<CommandPart> parts;
+        private final List<CommandPart> parts;
         private Action action;
 
         public Builder(String name) {
@@ -111,6 +120,17 @@ public class SimpleCommand implements Command {
             }
 
             this.description = component;
+
+            return this;
+        }
+
+        @Override
+        public Command.Builder usage(Component component) {
+            if (component == null) {
+                throw new IllegalArgumentException("The usage shouldn't be a null!");
+            }
+
+            this.usage = component;
 
             return this;
         }
@@ -187,7 +207,7 @@ public class SimpleCommand implements Command {
                 permission = "";
             }
 
-            return new SimpleCommand(name, aliases, description, permission, permissionMessage, part, action);
+            return new SimpleCommand(name, aliases, description, usage, permission, permissionMessage, part, action);
         }
     }
 }

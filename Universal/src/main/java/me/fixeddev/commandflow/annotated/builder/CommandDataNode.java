@@ -1,7 +1,9 @@
 package me.fixeddev.commandflow.annotated.builder;
 
+import me.fixeddev.commandflow.annotated.annotation.Usage;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,6 +39,15 @@ public interface CommandDataNode extends Buildable {
      * @see me.fixeddev.commandflow.command.Command.Builder#description(Component)
      */
     @NotNull CommandDataNode description(@NotNull Component component);
+
+    /**
+     * @param component
+     * @return The same {@link CommandDataNode} instance.
+     * @see me.fixeddev.commandflow.command.Command.Builder#usage(Component)
+     */
+    @NotNull CommandDataNode usage(@NotNull Component component);
+
+    @NotNull CommandDataNode usage(@Nullable Usage usageAnnotation);
 
     /**
      * @param permission
