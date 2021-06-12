@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.bukkit.BukkitCommandManager;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -32,7 +33,7 @@ public class OfflinePlayerPart implements ArgumentPart {
     }
 
     @Override
-    public List<? extends OfflinePlayer> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<? extends OfflinePlayer> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         OfflinePlayer player;
 
         if (!stack.hasNext()) {

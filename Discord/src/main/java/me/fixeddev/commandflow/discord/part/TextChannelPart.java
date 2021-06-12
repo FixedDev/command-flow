@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.discord.DiscordCommandManager;
 import me.fixeddev.commandflow.discord.utils.ArgumentsUtils;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -23,7 +24,7 @@ public class TextChannelPart implements ArgumentPart {
     }
 
     @Override
-    public List<? extends TextChannel> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<? extends TextChannel> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         Message message = context.getObject(Message.class, DiscordCommandManager.MESSAGE_NAMESPACE);
 
         String argument = stack.next();

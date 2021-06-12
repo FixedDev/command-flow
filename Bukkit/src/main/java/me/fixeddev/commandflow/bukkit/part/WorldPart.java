@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.bukkit.part;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -20,7 +21,7 @@ public class WorldPart implements ArgumentPart {
     }
 
     @Override
-    public List<World> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<World> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         return Collections.singletonList(checkedWorld(stack));
     }
 

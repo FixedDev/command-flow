@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.bukkit.part;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 import net.kyori.text.TextComponent;
@@ -48,7 +49,7 @@ public class GameModePart implements ArgumentPart {
     }
 
     @Override
-    public List<GameMode> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<GameMode> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         String possibleGameModeName = stack.next().toLowerCase();
 
         GameMode possibleGameMode = GAMEMODE_ALIASES.get(possibleGameModeName);

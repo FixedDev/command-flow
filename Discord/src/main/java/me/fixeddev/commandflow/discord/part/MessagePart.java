@@ -23,7 +23,7 @@ public class MessagePart implements CommandPart {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         Message message = context.getObject(Message.class, DiscordCommandManager.MESSAGE_NAMESPACE);
 
         context.setValue(this, message);

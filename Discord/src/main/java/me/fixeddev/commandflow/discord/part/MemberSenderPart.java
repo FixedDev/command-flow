@@ -25,7 +25,7 @@ public class MemberSenderPart implements CommandPart {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         Member member = context.getObject(Member.class, DiscordCommandManager.MEMBER_NAMESPACE);
 
         if (member != null) {

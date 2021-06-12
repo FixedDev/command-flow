@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.bungee.BungeeCommandManager;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
+import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
@@ -27,7 +28,7 @@ public class ProxiedPlayerPart implements ArgumentPart {
     }
 
     @Override
-    public List<? extends ProxiedPlayer> parseValue(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public List<? extends ProxiedPlayer> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         ProxiedPlayer proxiedPlayer;
 
         if (!stack.hasNext()) {

@@ -26,7 +26,7 @@ public class ProxiedPlayerSenderPart implements CommandPart {
     }
 
     @Override
-    public void parse(CommandContext context, ArgumentStack stack) throws ArgumentParseException {
+    public void parse(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         CommandSender sender = context.getObject(CommandSender.class, BungeeCommandManager.SENDER_NAMESPACE);
 
         if (sender != null) {
