@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.part;
 
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
 import net.kyori.text.Component;
@@ -52,6 +53,11 @@ public interface ArgumentPart extends CommandPart {
         }
 
         return Collections.emptyList();
+    }
+
+    @Override
+    default <T> T acceptVisitor(CommandPartVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     default List<? extends Object> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {
