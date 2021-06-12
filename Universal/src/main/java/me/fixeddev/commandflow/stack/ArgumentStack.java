@@ -22,6 +22,8 @@ public interface ArgumentStack {
 
     int getArgumentsLeft();
 
+    String nextQuoted();
+
     int nextInt() throws ArgumentParseException;
 
     float nextFloat() throws ArgumentParseException;

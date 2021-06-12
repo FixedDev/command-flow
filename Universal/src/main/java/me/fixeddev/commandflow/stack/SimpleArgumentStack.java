@@ -6,6 +6,7 @@ import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
 import java.util.List;
+import java.util.StringJoiner;
 
 public class SimpleArgumentStack implements ArgumentStack {
     protected List<String> originalArguments;
@@ -92,6 +93,75 @@ public class SimpleArgumentStack implements ArgumentStack {
     @Override
     public int getArgumentsLeft() {
         return getSize() - getPosition();
+    }
+
+    @Override
+    public String nextQuoted() {
+        if (position >= originalArguments.size()) {
+            throw new NoMoreArgumentsException();
+        }
+
+        String argument = originalArguments.get(position);
+        char quote = argument.charAt(0);
+
+        // normal argument, just return it
+        if (quote != '"' && quote != '\'') {
+            position++;
+            return argument;
+        }
+
+        // remove the initial quote
+        argument = argument.substring(1);
+        StringJoiner joiner = new StringJoiner(" ");
+
+        while (true) {
+            boolean escaped = false;
+            StringBuilder builder = new StringBuilder(argument.length());
+
+            for (int i = 0; i < argument.length(); i++) {
+                char current = argument.charAt(i);
+                if (current == '\\') {
+                    escaped = true;
+                    continue;
+                }
+                if (current == quote) {
+                    if (escaped) {
+                        builder.append(quote);
+                        escaped = false;
+                        continue;
+                    }
+
+                    position++;
+                    String extra = argument.substring(i + 1);
+                    if (!extra.isEmpty()) {
+                        originalArguments.add(position, extra);
+                    }
+                    joiner.add(builder.toString());
+                    return joiner.toString();
+                }
+
+                if (escaped) {
+                    builder.append('\\');
+                    escaped = false;
+                }
+
+                builder.append(current);
+            }
+
+            if (builder.length() > 0) {
+                joiner.add(builder.toString());
+            }
+
+            // pass to the next argument
+            position++;
+            if (position >= originalArguments.size()) {
+                break;
+            } else {
+                argument = originalArguments.get(position);
+            }
+        }
+
+        return joiner.toString();
     }
 
     @Override
