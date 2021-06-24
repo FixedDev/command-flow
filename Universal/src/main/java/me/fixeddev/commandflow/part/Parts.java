@@ -6,6 +6,7 @@ import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.EnumPart;
 import me.fixeddev.commandflow.part.defaults.FirstMatchPart;
+import me.fixeddev.commandflow.part.defaults.LongPart;
 import me.fixeddev.commandflow.part.defaults.SwitchPart;
 import me.fixeddev.commandflow.part.defaults.FloatPart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
@@ -22,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+// TODO: Fix some unknown references in some methods of this class.
 /**
  * An utility class to ease the use of {@link CommandPart} and his sub classes.
  */
@@ -134,6 +136,30 @@ public final class Parts {
      */
     public static CommandPart string(String name) {
         return new StringPart(name);
+    }
+
+    /**
+     * Returns a non-ranged {@link LongPart} with the
+     * given {@code name}.
+     *
+     * @param name The name for the part.
+     * @return A {@link LongPart} with the provided {@code name}.
+     */
+    public static CommandPart longPart(String name) {
+        return new LongPart(name);
+    }
+
+    /**
+     * Returns a ranged {@link LongPart}, with the given
+     * {@code name}, {@code min} and {@code max} range.
+     *
+     * @param name The name for the part.
+     * @param min The minimum range for the part.
+     * @param max The maximum range for the part.
+     * @return A {@link LongPart} with the given {@code name}, {@code min} and {@code max} range.
+     */
+    public static CommandPart longPart(String name, long min, long max) {
+        return new LongPart(name, min, max);
     }
 
     /**
