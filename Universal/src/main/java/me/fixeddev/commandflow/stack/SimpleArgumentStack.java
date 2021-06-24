@@ -244,6 +244,22 @@ public class SimpleArgumentStack implements ArgumentStack {
     }
 
     @Override
+    public long nextLong() throws ArgumentParseException {
+        String next = next();
+
+        try {
+            return Long.parseLong(next);
+        } catch (NumberFormatException e) {
+            throw new ArgumentParseException(
+              TranslatableComponent.of(
+                "invalid.long",
+                TextComponent.of(next)
+              )
+            );
+        }
+    }
+
+    @Override
     public void markAsConsumed() {
         int oldPosition = position;
         this.position = originalArguments.size();
