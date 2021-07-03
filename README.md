@@ -17,8 +17,8 @@ Those are created using the `Command.builder(String)` method, which returns an `
 #### Repository:
 ```xml
 <repository>
-  <id>unnamed-snapshots</id>
-  <url>https://repo.unnamed.team/repository/unnamed-snapshots/</url>
+  <id>unnamed-public</id>
+  <url>https://repo.unnamed.team/repository/unnamed-public/</url>
 </repository>
 ```
 
