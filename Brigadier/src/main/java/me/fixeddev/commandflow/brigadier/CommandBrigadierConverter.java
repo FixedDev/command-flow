@@ -6,6 +6,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.arguments.LongArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -28,6 +29,7 @@ import me.fixeddev.commandflow.part.defaults.BooleanPart;
 import me.fixeddev.commandflow.part.defaults.DoublePart;
 import me.fixeddev.commandflow.part.defaults.FirstMatchPart;
 import me.fixeddev.commandflow.part.defaults.IntegerPart;
+import me.fixeddev.commandflow.part.defaults.LongPart;
 import me.fixeddev.commandflow.part.defaults.OptionalPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
@@ -161,6 +163,8 @@ public class CommandBrigadierConverter {
             return RequiredArgumentBuilder.argument(part.getName(), IntegerArgumentType.integer()).build();
         } else if (part instanceof DoublePart) {
             return RequiredArgumentBuilder.argument(part.getName(), DoubleArgumentType.doubleArg()).build();
+        } else if (part instanceof LongPart) {
+            return RequiredArgumentBuilder.argument(part.getName(), LongArgumentType.longArg()).build();
         } else {
             if (part instanceof StringPart) {
                 StringPart stringPart = (StringPart) part;

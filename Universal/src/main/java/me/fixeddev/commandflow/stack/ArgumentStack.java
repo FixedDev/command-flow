@@ -34,6 +34,8 @@ public interface ArgumentStack {
 
     boolean nextBoolean() throws ArgumentParseException;
 
+    long nextLong() throws ArgumentParseException;
+
     void markAsConsumed();
 
     List<String> getBacking();

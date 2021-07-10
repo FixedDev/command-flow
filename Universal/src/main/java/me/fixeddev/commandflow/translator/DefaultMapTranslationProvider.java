@@ -21,6 +21,7 @@ public class DefaultMapTranslationProvider implements TranslationProvider{
         translations.put("invalid.double", "The number %s is not a valid double!");
         translations.put("invalid.boolean", "The string %s is not a valid boolean!");
         translations.put("invalid.enum-value", "The value %s is not valid, the valid values are: %s");
+        translations.put("invalid.long", "The number %s is not a valid long!");
     }
 
     public String getTranslation(String key) {
