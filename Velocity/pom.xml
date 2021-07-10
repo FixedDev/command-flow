@@ -15,7 +15,7 @@
     <repositories>
         <repository>
             <id>velocity</id>
-            <url>https://nexus.velocitypowered.com/snapshots/</url>
+            <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
         </repository>
     </repositories>
 
