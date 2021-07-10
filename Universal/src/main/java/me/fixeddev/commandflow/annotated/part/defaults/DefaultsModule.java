@@ -12,6 +12,7 @@ import me.fixeddev.commandflow.annotated.part.defaults.factory.ArgumentStackPart
 import me.fixeddev.commandflow.annotated.part.defaults.factory.BooleanPartFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.factory.ContextFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.factory.DoublePartFactory;
+import me.fixeddev.commandflow.annotated.part.defaults.factory.LongPartFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.factory.SwitchPartFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.factory.FloatPartFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.factory.IntegerPartFactory;
@@ -40,6 +41,10 @@ public class DefaultsModule extends AbstractModule {
         IntegerPartFactory partFactory = new IntegerPartFactory();
         bindFactory(int.class, partFactory);
         bindFactory(Integer.class, partFactory);
+
+        LongPartFactory longPartFactory = new LongPartFactory();
+        bindFactory(long.class, longPartFactory);
+        bindFactory(Long.class, longPartFactory);
 
         bindFactory(String.class, new StringPartFactory());
 
