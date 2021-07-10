@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow.velocity;
 
 import com.velocitypowered.api.command.CommandSource;
+import com.velocitypowered.api.command.RawCommand;
 import com.velocitypowered.api.command.SimpleCommand;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VelocityCommandWrapper implements SimpleCommand {
+public class VelocityCommandWrapper implements RawCommand {
 
     protected final CommandManager commandManager;
     protected final Translator translator;
@@ -43,15 +44,10 @@ public class VelocityCommandWrapper implements SimpleCommand {
     @Override
     public void execute(Invocation invocation) {
         CommandSource commandSource = invocation.source();
-        String[] args = invocation.arguments();
-
-        List<String> argumentLine = new ArrayList<>();
-        argumentLine.add(this.command);
-        argumentLine.addAll(Arrays.asList(args));
+        String argumentLine = invocation.alias() + invocation.arguments();
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
-
 
         try {
             commandManager.execute(namespace, argumentLine);
@@ -93,14 +89,12 @@ public class VelocityCommandWrapper implements SimpleCommand {
     @Override
     public List<String> suggest(Invocation invocation) {
         CommandSource commandSource = invocation.source();
-        String[] strings = invocation.arguments();
-
-        List<String> argumentList = Arrays.asList(strings);
+        String argumentLine = invocation.arguments();
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
 
-        return commandManager.getSuggestions(namespace, argumentList);
+        return commandManager.getSuggestions(namespace, argumentLine);
     }
 
     private void sendMessageToSender(CommandException exception, CommandSource commandSource, Namespace namespace) {
