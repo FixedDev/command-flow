@@ -6,7 +6,12 @@ import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.exception.*;
+import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.exception.CommandException;
+import me.fixeddev.commandflow.exception.CommandUsage;
+import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 

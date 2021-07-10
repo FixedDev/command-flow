@@ -1,7 +1,12 @@
 package me.fixeddev.commandflow.velocity;
 
 import com.velocitypowered.api.proxy.ProxyServer;
-import me.fixeddev.commandflow.*;
+import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.CommandManager;
+import me.fixeddev.commandflow.Namespace;
+import me.fixeddev.commandflow.SimpleCommandManager;
+import me.fixeddev.commandflow.Authorizer;
+import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.executor.Executor;
