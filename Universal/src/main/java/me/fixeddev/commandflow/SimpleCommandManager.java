@@ -62,6 +62,11 @@ public class SimpleCommandManager implements CommandManager {
         command.getAliases().forEach(alias -> commandMap.putIfAbsent(alias.toLowerCase(), command));
     }
 
+    @Override
+    public void registerCommand(String label, Command command) {
+        commandMap.putIfAbsent(label, command);
+    }
+
     /**
      * {@inheritDoc}
      */

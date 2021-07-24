@@ -28,6 +28,15 @@ public interface CommandManager {
     void registerCommand(Command command);
 
     /**
+     * Registers the specified {@link Command} into the internal command map with the specified label
+     *
+     * @param command The command to register
+     * @implNote This method opposed to {@link CommandManager#registerCommand(Command)} doesn't has a fail-fast behaviour, just ignores the registered label
+     * if already registered.
+     */
+    void registerCommand(String label, Command command);
+
+    /**
      * Registers the specified {@link List} of {@link Command} into the internal command map doing a for loop and calling {@link CommandManager#registerCommand(Command)} for every command
      *
      * @param commandList The commands to register
@@ -201,7 +210,7 @@ public interface CommandManager {
      * Parses the specified list of arguments with the specified {@link Namespace} into a CommandContext.
      * As a side note, the implementation also injects this instance into the {@link Namespace} with the name "commandManager"
      *
-     * @param accessor  The {@link Namespace} used to inject things into the Command parsing/execution phase
+     * @param accessor The {@link Namespace} used to inject things into the Command parsing/execution phase
      * @param line     A String representing the command line to tokenize
      * @return An Optional CommandContext instance, absent if the arguments are not present or the command doesn't exists
      * @throws CommandException If the parsing fails for any reason, included but not limited to not having permissions.
