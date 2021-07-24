@@ -62,6 +62,10 @@ public class BukkitCommandManager implements CommandManager {
         BukkitCommandWrapper bukkitCommand = new BukkitCommandWrapper(command,
                 this, getTranslator());
 
+        for (String alias : command.getAliases()) {
+            registerCommand(fallbackPrefix + ":" + alias, command);
+        }
+
         wrapperMap.put(command.getName(), bukkitCommand);
         bukkitCommandMap.register(fallbackPrefix, bukkitCommand);
     }
