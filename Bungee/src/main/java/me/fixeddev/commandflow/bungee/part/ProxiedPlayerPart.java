@@ -30,7 +30,6 @@ public class ProxiedPlayerPart implements ArgumentPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-
         String last = stack.hasNext() ? stack.next() : "";
 
         if (ProxyServer.getInstance().getPlayer(last) != null) {

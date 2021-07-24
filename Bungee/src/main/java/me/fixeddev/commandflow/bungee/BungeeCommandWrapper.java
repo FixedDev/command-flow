@@ -88,7 +88,8 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender commandSender, String[] strings) {
-        List<String> argumentList = Arrays.asList(strings);
+        List<String> argumentList = new ArrayList<>(Arrays.asList(strings));
+        argumentList.add(0, getName());
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSender.class, BungeeCommandManager.SENDER_NAMESPACE, commandSender);
