@@ -13,6 +13,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -25,6 +26,25 @@ public class ProxiedPlayerPart implements ArgumentPart {
     public ProxiedPlayerPart(String name, boolean orSource) {
         this.name = name;
         this.orSource = orSource;
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+
+        String last = stack.hasNext() ? stack.next() : "";
+
+        if (ProxyServer.getInstance().getPlayer(last) != null) {
+            return Collections.emptyList();
+        }
+
+        List<String> names = new ArrayList<>();
+
+        for (ProxiedPlayer player : ProxyServer.getInstance().matchPlayer(last)) {
+            names.add(player.getName());
+        }
+
+        return names;
+
     }
 
     @Override
