@@ -66,6 +66,11 @@ public class BukkitCommandManager implements CommandManager {
         bukkitCommandMap.register(fallbackPrefix, bukkitCommand);
     }
 
+    @Override
+    public void registerCommand(String label, Command command) {
+        manager.registerCommand(label, command);
+    }
+
     public void registerCommands(List<Command> commandList) {
         for (Command command : commandList) {
             registerCommand(command);

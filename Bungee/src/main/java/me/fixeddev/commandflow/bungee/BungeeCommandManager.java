@@ -56,6 +56,12 @@ public class BungeeCommandManager implements CommandManager {
     }
 
     @Override
+    public void registerCommand(String label, Command command) {
+        commandManager.registerCommand(label, command);
+    }
+
+
+    @Override
     public void registerCommands(List<Command> commandList) {
         for (Command command : commandList) {
             registerCommand(command);
