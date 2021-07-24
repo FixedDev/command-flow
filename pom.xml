@@ -47,7 +47,7 @@
         <version.examples>0.5.0-SNAPSHOT</version.examples>
         <version.bukkit>0.5.0-SNAPSHOT</version.bukkit>
         <version.discord>0.5.0-SNAPSHOT</version.discord>
-        <version.bungee>0.5.0-SNAPSHOT</version.bungee>
+        <version.bungee>0.5.1-SNAPSHOT</version.bungee>
         <version.velocity>0.5.1-SNAPSHOT</version.velocity>
         <version.brigadier>0.5.0-SNAPSHOT</version.brigadier>
     </properties>
