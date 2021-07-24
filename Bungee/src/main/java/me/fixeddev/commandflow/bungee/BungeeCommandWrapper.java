@@ -57,17 +57,14 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
                 exceptionToSend = (ArgumentParseException) e.getCause();
             }
 
-           sendMessageToSender(exceptionToSend, commandSender, namespace);
+            sendMessageToSender(exceptionToSend, commandSender, namespace);
 
         } catch (InvalidSubCommandException e) {
             sendMessageToSender(e, commandSender, namespace);
 
             throw new CommandException("An internal parse exception occurred while executing the command " + getName(), e);
-        } catch (ArgumentParseException | NoMoreArgumentsException e) {
+        } catch (ArgumentParseException | NoMoreArgumentsException | NoPermissionsException e) {
             sendMessageToSender(e, commandSender, namespace);
-        } catch (NoPermissionsException e) {
-           sendMessageToSender(e, commandSender, namespace);
-
         } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
@@ -75,9 +72,9 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
                 exceptionToSend = (CommandException) e.getCause();
             }
 
-           sendMessageToSender(exceptionToSend, commandSender, namespace);
+            sendMessageToSender(exceptionToSend, commandSender, namespace);
 
-            throw new CommandException("An unexpected exception occurred while executing the command " + getName(), exceptionToSend);
+            throw new CommandException("An unexpected exception occurred while executing the command " + getName(), exceptionToSend.getCause() != null ? exceptionToSend.getCause() : exceptionToSend);
         }
     }
 
