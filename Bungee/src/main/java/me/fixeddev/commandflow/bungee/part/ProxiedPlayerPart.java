@@ -45,7 +45,7 @@ public class ProxiedPlayerPart implements ArgumentPart {
 
             proxiedPlayer = ProxyServer.getInstance().getPlayer(uuid);
         } catch (IllegalArgumentException exception) {
-            proxiedPlayer = ProxyServer.getInstance().getPlayer(name);
+            proxiedPlayer = ProxyServer.getInstance().getPlayer(target);
 
             if (proxiedPlayer == null) {
                 ArgumentParseException argumentParseException = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
