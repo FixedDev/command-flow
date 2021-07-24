@@ -51,7 +51,7 @@ public class ProxiedPlayerPart implements ArgumentPart {
                 ArgumentParseException argumentParseException = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
                 argumentParseException.setArgument(this);
 
-                throw exception;
+                throw argumentParseException;
             }
         }
 
