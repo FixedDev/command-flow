@@ -12,7 +12,6 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -92,11 +91,6 @@ public class ProxiedPlayerPart implements ArgumentPart {
         }
 
         return null;
-    }
-
-    @Override
-    public Type getType() {
-        return ProxiedPlayer.class;
     }
 
     @Override

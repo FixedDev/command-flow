@@ -12,7 +12,6 @@ import me.fixeddev.commandflow.velocity.VelocityCommandManager;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -75,11 +74,6 @@ public class PlayerPart implements ArgumentPart {
         }
 
         return null;
-    }
-
-    @Override
-    public Type getType() {
-        return Player.class;
     }
 
     @Override

@@ -11,7 +11,6 @@ import net.kyori.text.TranslatableComponent;
 
 import org.bukkit.GameMode;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,11 +70,6 @@ public class GameModePart implements ArgumentPart {
                 .map(gameMode -> gameMode.name().toLowerCase())
                 .filter(name -> possibleGameModeName.length() == 0 || name.startsWith(possibleGameModeName))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Type getType() {
-        return GameMode.class;
     }
 
     @Override

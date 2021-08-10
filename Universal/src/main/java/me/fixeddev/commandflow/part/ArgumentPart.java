@@ -57,5 +57,4 @@ public interface ArgumentPart extends CommandPart {
 
     List<? extends Object> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException;
 
-    Type getType();
 }

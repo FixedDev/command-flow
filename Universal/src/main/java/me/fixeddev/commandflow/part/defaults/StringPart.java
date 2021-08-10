@@ -5,7 +5,6 @@ import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -83,11 +82,6 @@ public class StringPart extends PrimitivePart {
         }
 
         return objects;
-    }
-
-    @Override
-    public Type getType() {
-        return String.class;
     }
 
     @Override

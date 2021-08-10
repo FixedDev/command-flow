@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.kyori.text.TranslatableComponent;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,11 +53,6 @@ public class UserPart implements ArgumentPart {
         }
 
         return Collections.singletonList(user);
-    }
-
-    @Override
-    public Type getType() {
-        return User.class;
     }
 
     @Override

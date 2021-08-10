@@ -8,7 +8,6 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,11 +34,6 @@ public class ArgumentStackPart implements ArgumentPart {
         newStack.applySnapshot(snapshot, true);
 
         return Collections.singletonList(newStack);
-    }
-
-    @Override
-    public Type getType() {
-        return ArgumentStack.class;
     }
 
     @Override

@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.kyori.text.TranslatableComponent;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -60,11 +59,6 @@ public class MemberPart implements ArgumentPart {
         }
 
         return Collections.singletonList(member);
-    }
-
-    @Override
-    public Type getType() {
-        return Member.class;
     }
 
     @Override

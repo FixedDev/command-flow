@@ -5,10 +5,7 @@ import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,11 +21,6 @@ public class BooleanPart extends PrimitivePart {
     @Override
     public List<Boolean> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         return Collections.singletonList(stack.nextBoolean());
-    }
-
-    @Override
-    public Type getType() {
-        return boolean.class;
     }
 
     @Override

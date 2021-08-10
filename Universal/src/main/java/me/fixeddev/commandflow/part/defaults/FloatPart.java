@@ -7,7 +7,6 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import net.kyori.text.TranslatableComponent;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -47,11 +46,6 @@ public class FloatPart extends PrimitivePart {
         }
 
         return Collections.singletonList(next);
-    }
-
-    @Override
-    public Type getType() {
-        return float.class;
     }
 
 }

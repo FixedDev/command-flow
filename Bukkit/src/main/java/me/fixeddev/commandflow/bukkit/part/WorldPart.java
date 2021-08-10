@@ -8,7 +8,6 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,11 +49,6 @@ public class WorldPart implements ArgumentPart {
             throw new ArgumentParseException("World not exist!");
         }
         return world;
-    }
-
-    @Override
-    public Type getType() {
-        return World.class;
     }
 
     @Override

@@ -8,7 +8,6 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.List;
 
@@ -99,11 +98,6 @@ public class EnumPart extends PrimitivePart {
         }
 
         return suggestions;
-    }
-
-    @Override
-    public Type getType() {
-        return enumClass;
     }
 
 }

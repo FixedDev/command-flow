@@ -11,7 +11,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -93,11 +92,6 @@ public class OfflinePlayerPart implements ArgumentPart {
         }
 
         return names;
-    }
-
-    @Override
-    public Type getType() {
-        return OfflinePlayer.class;
     }
 
     @Override

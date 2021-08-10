@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.kyori.text.TranslatableComponent;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -56,11 +55,6 @@ public class TextChannelPart implements ArgumentPart {
         }
 
         return Collections.singletonList(channel);
-    }
-
-    @Override
-    public Type getType() {
-        return TextChannel.class;
     }
 
     @Override

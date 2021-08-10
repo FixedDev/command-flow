@@ -12,7 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -94,11 +93,6 @@ public class PlayerPart implements ArgumentPart {
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
         return getStrings(stack);
-    }
-
-    @Override
-    public Type getType() {
-        return Player.class;
     }
 
     @Override

@@ -6,7 +6,6 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.TranslatableComponent;
 
-import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,8 +54,4 @@ public class LongPart extends PrimitivePart {
 		return Collections.singletonList(next);
 	}
 
-	@Override
-	public Type getType() {
-		return long.class;
-	}
 }
