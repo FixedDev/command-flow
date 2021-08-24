@@ -26,11 +26,15 @@ public class ValueFlagArguments {
         commandManager.execute(namespace, "test Fixed"); // Prints Hi Fixed
         commandManager.execute(namespace, "test Fixed -g GoodBye"); // Prints GoodBye Fixed
         commandManager.execute(namespace, "test Fixed -g Hello"); // Prints Hello Fixed
+
+        System.out.println(String.join(",", commandManager.getSuggestions(namespace, "test -g")));
+
         commandManager.execute(namespace, "test -g Fixed"); // Throws a NoMoreArguments exception, meaning that the parsing failed
         // because the Fixed argument was taken as the value for the flag and no argument
         // is remaining for the name.
         commandManager.execute(namespace, "test Fixed -g"); // Throws a NoMoreArguments exception, meaning that the parsing failed
         // because the flag doesn't has any argument left to use.
+
     }
 
     private static CommandManager create() {

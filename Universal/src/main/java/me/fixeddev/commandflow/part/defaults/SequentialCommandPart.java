@@ -6,14 +6,20 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
+import me.fixeddev.commandflow.stack.StackSnapshot;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
@@ -69,13 +75,39 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
     @Override
     public List<String> getSuggestions(CommandContext context, ArgumentStack stack) {
-
         Iterator<CommandPart> partIterator = parts.iterator();
+        List<CommandPart> flagParts = new LinkedList<>();
 
-        while (partIterator.hasNext()){
+        while (partIterator.hasNext()) {
+            String nextString = stack.hasNext() ? stack.peek() : "";
             CommandPart part = partIterator.next();
+            boolean nextCanBeFlag = nextString.startsWith("-");
+
+            if (part instanceof SwitchPart || part instanceof ValueFlagPart) {
+                flagParts.add(part);
+
+                if (!nextCanBeFlag) {
+                    continue;
+                }
+            }
 
             List<String> suggestions = part.getSuggestions(context, stack);
+
+            if (nextString.startsWith("-")) {
+                StackSnapshot snapshot = stack.getSnapshot();
+                boolean modified = false;
+
+                for (CommandPart flagPart : flagParts) {
+                    if (suggestions.addAll(flagPart.getSuggestions(context, stack))) {
+                        modified = true;
+                    }
+                }
+
+                if (!modified) {
+                    stack.applySnapshot(snapshot);
+                }
+            }
+
 
             if (!suggestions.isEmpty() && !stack.hasNext()) {
                 return suggestions;
