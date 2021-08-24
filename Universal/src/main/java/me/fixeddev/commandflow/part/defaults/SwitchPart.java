@@ -10,7 +10,6 @@ import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SwitchPart implements CommandPart {

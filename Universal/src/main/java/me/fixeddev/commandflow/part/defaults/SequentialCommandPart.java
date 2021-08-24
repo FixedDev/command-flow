@@ -4,22 +4,17 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.PartsWrapper;
-import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
