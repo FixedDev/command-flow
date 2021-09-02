@@ -3,7 +3,6 @@ package me.fixeddev.commandflow.examples.advanced;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.SimpleCommandManager;
-import me.fixeddev.commandflow.Test;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilder;
 import me.fixeddev.commandflow.annotated.AnnotatedCommandTreeBuilderImpl;
 import me.fixeddev.commandflow.annotated.CommandClass;
@@ -11,7 +10,6 @@ import me.fixeddev.commandflow.annotated.annotation.Command;
 import me.fixeddev.commandflow.annotated.annotation.Named;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.annotated.part.defaults.DefaultsModule;
-import me.fixeddev.commandflow.examples.user.User;
 import me.fixeddev.commandflow.input.QuotedSpaceTokenizer;
 
 import java.util.List;
