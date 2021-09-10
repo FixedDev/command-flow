@@ -6,7 +6,7 @@ import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -36,10 +36,10 @@ public class ProxiedPlayerSenderPart implements CommandPart {
                 return;
             }
 
-            throw new ArgumentParseException(TranslatableComponent.of("sender.only-player"));
+            throw new ArgumentParseException(Component.translatable("sender.only-player"));
         }
 
-        throw new CommandException(TranslatableComponent.of("sender.unknown"));
+        throw new CommandException(Component.translatable("sender.unknown"));
     }
 
     @Override

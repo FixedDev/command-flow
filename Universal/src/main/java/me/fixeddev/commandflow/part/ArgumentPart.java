@@ -5,11 +5,9 @@ import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,7 +15,7 @@ import java.util.List;
 public interface ArgumentPart extends CommandPart {
     @Override
     default @Nullable Component getLineRepresentation() {
-        return TextComponent.builder("<" + getName() + ">").build();
+        return Component.text("<" + getName() + ">");
     }
 
     default void parse(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException {

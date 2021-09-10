@@ -12,7 +12,7 @@ import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.UsageBuilder;
-import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
@@ -53,7 +53,7 @@ public class BukkitCommandManager implements CommandManager {
 
         setAuthorizer(new BukkitAuthorizer());
         getTranslator().setProvider(new BukkitDefaultTranslationProvider());
-        getTranslator().setConverterFunction(LegacyComponentSerializer.INSTANCE::deserialize);
+        getTranslator().setConverterFunction(LegacyComponentSerializer.legacyAmpersand()::deserialize);
     }
 
     public void registerCommand(Command command) {

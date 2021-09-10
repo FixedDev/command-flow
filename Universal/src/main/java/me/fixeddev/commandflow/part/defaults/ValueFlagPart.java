@@ -7,8 +7,8 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 public class ValueFlagPart implements SinglePartWrapper {
@@ -36,14 +36,15 @@ public class ValueFlagPart implements SinglePartWrapper {
 
     @Override
     public @Nullable Component getLineRepresentation() {
-        TextComponent.Builder builder = TextComponent.builder("[")
-                .append("-" + shortName + " ");
+        TextComponent.Builder builder = Component.text()
+                .append(Component.text("["))
+                .append(Component.text("-" + shortName + " "));
 
         if (part.getLineRepresentation() != null) {
             builder.append(part.getLineRepresentation());
         }
 
-        builder.append("]");
+        builder.append(Component.text("]"));
 
         return builder.build();
     }

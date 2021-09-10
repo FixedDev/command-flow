@@ -8,8 +8,8 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
 
     @Override
     public @Nullable Component getLineRepresentation() {
-        TextComponent component = TextComponent.of("<");
+        TextComponent component = Component.text("<");
 
         boolean first = true;
         for (CommandPart part : partList) {
@@ -65,14 +65,14 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
                 if (first) {
                     first = false;
                 } else {
-                    component = component.append(TextComponent.of("|"));
+                    component = component.append(Component.text("|"));
                 }
 
                 component = component.append(partComponent);
 
             }
         }
-        component = component.append(TextComponent.of(">"));
+        component = component.append(Component.text(">"));
 
         return component;
     }

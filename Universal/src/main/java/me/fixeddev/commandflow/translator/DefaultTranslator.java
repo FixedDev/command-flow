@@ -1,12 +1,10 @@
 package me.fixeddev.commandflow.translator;
 
 import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.translator.TranslationProvider;
-import me.fixeddev.commandflow.translator.Translator;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
-import net.kyori.text.format.TextColor;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.format.TextColor;
 
 import java.util.List;
 import java.util.function.Function;
@@ -18,7 +16,7 @@ public class DefaultTranslator implements Translator {
     private Function<String, TextComponent> stringToComponent;
 
     public DefaultTranslator(TranslationProvider provider) {
-        this(provider, TextComponent::of);
+        this(provider, Component::text);
     }
 
     public DefaultTranslator(TranslationProvider provider, Function<String, TextComponent> stringTextComponentFunction) {
@@ -34,7 +32,7 @@ public class DefaultTranslator implements Translator {
 
         TranslatableComponent translatableComponent = (TranslatableComponent) component;
 
-        TextComponent.Builder componentBuilder = TextComponent.builder("");
+        TextComponent.Builder componentBuilder = Component.text();
         convert(translatableComponent, componentBuilder, namespace);
 
         return componentBuilder.build();
@@ -100,8 +98,8 @@ public class DefaultTranslator implements Translator {
                         if (last != null) {
                             withComponent = withComponent.style(withComponent.style()
                                     .colorIfAbsent(lastColor)
-                                    .mergeDecorations(last.style())
-                                    .mergeEvents(last.style()));
+                                    .merge(last.style())
+                            );
                         }
 
                         if (withComponent instanceof TranslatableComponent) {
@@ -128,8 +126,8 @@ public class DefaultTranslator implements Translator {
             if (last != null) {
                 afterComponent = afterComponent.style(afterComponent.style()
                         .colorIfAbsent(lastColor)
-                        .mergeDecorations(last.style())
-                        .mergeEvents(last.style()));
+                        .merge(last.style())
+                );
             }
 
             builder.append(afterComponent);

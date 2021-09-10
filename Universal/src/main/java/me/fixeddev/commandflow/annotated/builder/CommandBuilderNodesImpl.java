@@ -15,9 +15,7 @@ import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.Parts;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -199,9 +197,9 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
 
     private Component fromString(String component) {
         if (component.startsWith("%translatable:") && component.endsWith("%")) {
-            return TranslatableComponent.of(component.substring(14, component.length() - 1));
+            return Component.translatable(component.substring(14, component.length() - 1));
         } else {
-            return TextComponent.of(component);
+            return Component.text(component);
         }
     }
 

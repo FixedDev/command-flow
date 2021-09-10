@@ -12,9 +12,8 @@ import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,15 +68,15 @@ public class SubCommandPart implements CommandPart {
 
     @Override
     public @Nullable Component getLineRepresentation() {
-        TextComponent.Builder builder;
+        Component component;
 
         if (isOptional()) {
-            builder = TextComponent.builder().content("[" + getName() + "]");
+            component = Component.text("[" + getName() + "]");
         } else {
-            builder = TextComponent.builder().content("<" + getName() + ">");
+            component = Component.text("<" + getName() + ">");
         }
 
-        return builder.build();
+        return component;
     }
 
     @Override
@@ -232,7 +231,7 @@ public class SubCommandPart implements CommandPart {
             ArgumentStack stack = context.getStack();
 
             if (command == null) {
-                InvalidSubCommandException commandException = new InvalidSubCommandException(TranslatableComponent.of("command.subcommand.invalid", TextComponent.of(label)));
+                InvalidSubCommandException commandException = new InvalidSubCommandException(Component.translatable("command.subcommand.invalid").args(Component.text(label)));
                 commandException.setArgument(context.getPart());
                 commandException.setCommand(commandContext.getCommand());
 

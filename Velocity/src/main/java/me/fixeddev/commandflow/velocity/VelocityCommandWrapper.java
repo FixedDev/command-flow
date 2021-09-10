@@ -2,22 +2,14 @@ package me.fixeddev.commandflow.velocity;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.RawCommand;
-import com.velocitypowered.api.command.SimpleCommand;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.exception.ArgumentParseException;
-import me.fixeddev.commandflow.exception.CommandException;
-import me.fixeddev.commandflow.exception.CommandUsage;
-import me.fixeddev.commandflow.exception.InvalidSubCommandException;
-import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
-import me.fixeddev.commandflow.exception.NoPermissionsException;
+import me.fixeddev.commandflow.exception.*;
 import me.fixeddev.commandflow.translator.Translator;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class VelocityCommandWrapper implements RawCommand {
@@ -101,6 +93,6 @@ public class VelocityCommandWrapper implements RawCommand {
         Component component = exception.getMessageComponent();
         Component translatedComponent = translator.translate(component, namespace);
 
-        commandSource.sendMessage(MessageUtils.kyoriToVelocityKyori(translatedComponent));
+        commandSource.sendMessage(translatedComponent);
     }
 }

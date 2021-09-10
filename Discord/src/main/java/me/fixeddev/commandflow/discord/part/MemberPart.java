@@ -10,7 +10,7 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +52,7 @@ public class MemberPart implements ArgumentPart {
         }
 
         if (member == null) {
-            ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("unknown.member"));
+            ArgumentParseException exception = new ArgumentParseException(Component.translatable("unknown.member"));
             exception.setArgument(this);
 
             throw exception;

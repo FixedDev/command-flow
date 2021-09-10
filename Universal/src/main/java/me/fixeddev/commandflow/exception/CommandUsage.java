@@ -1,6 +1,6 @@
 package me.fixeddev.commandflow.exception;
 
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 
 public class CommandUsage extends CommandException {
     public CommandUsage() {

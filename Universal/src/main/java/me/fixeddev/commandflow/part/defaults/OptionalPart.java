@@ -11,8 +11,7 @@ import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -55,9 +54,11 @@ public class OptionalPart implements CommandPart, SinglePartWrapper {
         if (partLineRepresent == null) {
             return null;
         }
-        return TextComponent.builder("[")
+        return Component.text()
+                .append(Component.text("["))
                 .append(partLineRepresent)
-                .append(TextComponent.of("]")).build();
+                .append(Component.text("]"))
+                .build();
     }
 
     @Override

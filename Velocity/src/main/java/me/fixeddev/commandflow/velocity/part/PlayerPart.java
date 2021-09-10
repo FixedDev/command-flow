@@ -9,8 +9,7 @@ import me.fixeddev.commandflow.part.ArgumentPart;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.velocity.VelocityCommandManager;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,7 +48,7 @@ public class PlayerPart implements ArgumentPart {
             player = proxyServer.getPlayer(name).orElse(null);
 
             if (player == null) {
-                ArgumentParseException argumentParseException = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
+                ArgumentParseException argumentParseException = new ArgumentParseException(Component.translatable("player.offline").args(Component.text(target)));
                 argumentParseException.setArgument(this);
 
                 throw exception;

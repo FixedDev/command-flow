@@ -3,7 +3,7 @@ package me.fixeddev.commandflow.command;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.defaults.SequentialCommandPart;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

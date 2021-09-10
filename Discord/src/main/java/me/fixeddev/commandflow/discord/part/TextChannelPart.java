@@ -9,7 +9,7 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.Collections;
 import java.util.List;
@@ -48,7 +48,7 @@ public class TextChannelPart implements ArgumentPart {
         }
 
         if (channel == null) {
-            ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("unknown.channel"));
+            ArgumentParseException exception = new ArgumentParseException(Component.translatable("unknown.channel"));
             exception.setArgument(this);
 
             throw exception;

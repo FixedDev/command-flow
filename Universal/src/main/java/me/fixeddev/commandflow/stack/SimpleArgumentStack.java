@@ -2,8 +2,7 @@ package me.fixeddev.commandflow.stack;
 
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.StringJoiner;
@@ -171,10 +170,9 @@ public class SimpleArgumentStack implements ArgumentStack {
             return Integer.parseInt(next);
         } catch (NumberFormatException e) {
             throw new ArgumentParseException(
-                TranslatableComponent.of(
-                    "invalid.integer",
-                    TextComponent.of(next)
-                )
+                Component.translatable(
+                    "invalid.integer"
+                ).args(Component.text(next))
             );
         }
     }
@@ -187,10 +185,9 @@ public class SimpleArgumentStack implements ArgumentStack {
             return Float.parseFloat(next);
         } catch (NumberFormatException e) {
             throw new ArgumentParseException(
-                TranslatableComponent.of(
-                    "invalid.float",
-                    TextComponent.of(next)
-                )
+                Component.translatable(
+                    "invalid.float"
+                ).args(Component.text(next))
             );
         }
     }
@@ -203,10 +200,9 @@ public class SimpleArgumentStack implements ArgumentStack {
             return Double.parseDouble(next);
         } catch (NumberFormatException e) {
             throw new ArgumentParseException(
-                TranslatableComponent.of(
-                    "invalid.double",
-                    TextComponent.of(next)
-                )
+                Component.translatable(
+                    "invalid.double"
+                ).args(Component.text(next))
             );
         }
     }
@@ -219,10 +215,9 @@ public class SimpleArgumentStack implements ArgumentStack {
             return Byte.parseByte(next);
         } catch (NumberFormatException e) {
             throw new ArgumentParseException(
-                TranslatableComponent.of(
-                    "invalid.byte",
-                    TextComponent.of(next)
-                )
+                Component.translatable(
+                    "invalid.byte"
+                ).args(Component.text(next))
             );
         }
     }
@@ -233,10 +228,9 @@ public class SimpleArgumentStack implements ArgumentStack {
 
         if (!next.equalsIgnoreCase("true") && !next.equalsIgnoreCase("false")) {
             throw new ArgumentParseException(
-                TranslatableComponent.of(
-                    "invalid.boolean",
-                    TextComponent.of(next)
-                )
+                Component.translatable(
+                    "invalid.boolean"
+                ).args(Component.text(next))
             );
         }
 
@@ -251,10 +245,9 @@ public class SimpleArgumentStack implements ArgumentStack {
             return Long.parseLong(next);
         } catch (NumberFormatException e) {
             throw new ArgumentParseException(
-              TranslatableComponent.of(
-                "invalid.long",
-                TextComponent.of(next)
-              )
+              Component.translatable(
+                "invalid.long"
+              ).args(Component.text(next))
             );
         }
     }
