@@ -28,7 +28,7 @@ public class SwitchArguments {
         commandManager.execute(namespace, "test Fixed -g"); // Prints Goodbye Fixed
         // due to missing arguments.
 
-        System.out.println(String.join(",", commandManager.getSuggestions(namespace, "test -g")));
+        System.out.println(String.join(",", commandManager.getSuggestions(namespace, "test -")));
     }
 
     private static CommandManager create() {
