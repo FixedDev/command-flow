@@ -88,7 +88,7 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
             List<String> suggestions = part.getSuggestions(context, stack);
 
-            if (nextString.startsWith("-")) {
+            if (nextCanBeFlag) {
                 StackSnapshot snapshot = stack.getSnapshot();
                 boolean modified = false;
 
