@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.annotated.part.defaults.factory;
 
+import me.fixeddev.commandflow.annotated.annotation.ConsumeAll;
 import me.fixeddev.commandflow.annotated.part.PartFactory;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
@@ -10,6 +11,6 @@ import java.util.List;
 public class StringPartFactory implements PartFactory {
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
-        return new StringPart(name);
+        return new StringPart(name, getAnnotation(modifiers, ConsumeAll.class) != null);
     }
 }
