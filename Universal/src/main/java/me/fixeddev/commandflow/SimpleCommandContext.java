@@ -103,13 +103,13 @@ public class SimpleCommandContext implements CommandContext, Namespace {
     }
 
     @Override
-    public Optional<List<String>> getRaw(CommandPart part) {
-        return Optional.ofNullable(rawBindings.get(part));
+    public List<String> getRaw(CommandPart part) {
+        return rawBindings.get(part);
     }
 
     @Override
-    public <V> Optional<List<V>> getValues(CommandPart part) {
-        return Optional.ofNullable((List<V>) valueBindings.get(part));
+    public <V> List<V> getValues(CommandPart part) {
+        return (List<V>) valueBindings.get(part);
     }
 
     private void addPart(CommandPart part) {

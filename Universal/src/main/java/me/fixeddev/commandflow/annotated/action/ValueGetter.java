@@ -32,13 +32,13 @@ public interface ValueGetter {
 
     static ValueGetter forPartValues(CommandPart part) {
         return commandContext ->
-                commandContext.getValues(part).orElse(Collections.emptyList());
+                commandContext.getValues(part);
     }
 
     static ValueGetter forPartValues(CommandPart part, int index) {
         return commandContext ->
                 commandContext.getPart(part.getName(), index)
-                        .flatMap(commandContext::getValues).orElse(Collections.emptyList());
+                        .map(commandContext::getValues);
     }
 
     static ValueGetter forPartRaw(CommandPart part) {

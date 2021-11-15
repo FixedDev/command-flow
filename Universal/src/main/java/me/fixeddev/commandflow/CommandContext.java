@@ -3,6 +3,7 @@ package me.fixeddev.commandflow;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -121,18 +122,18 @@ public interface CommandContext extends Namespace {
      * Gets the raw string value for the specified {@link CommandPart}
      *
      * @param part The {@link CommandPart} to search with.
-     * @return An {@link Optional} object containing the raw {@link List} of string arguments for the specified {@link CommandPart}.
+     * @return Raw {@link List} of string arguments for the specified {@link CommandPart}.
      */
-    Optional<List<String>> getRaw(CommandPart part);
+    List<String> getRaw(CommandPart part);
 
     /**
      * Gets the converted values of the specified {@link CommandPart}
      *
      * @param part The {@link CommandPart} to search values for.
      * @param <V>  The type of the returned value.
-     * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
+     * @return The {@link List} of values for the specified {@link CommandPart}.
      */
-    <V> Optional<List<V>> getValues(CommandPart part);
+    <V> List<V> getValues(CommandPart part);
 
 
     /**
@@ -140,10 +141,10 @@ public interface CommandContext extends Namespace {
      *
      * @param partName The of the {@link CommandPart} to search values for.
      * @param <V>      The type of the returned value.
-     * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
+     * @return The {@link List} of values for the specified {@link CommandPart}.
      */
-    default <V> Optional<List<V>> getValues(String partName) {
-        return getPart(partName).flatMap(this::getValues);
+    default <V> List<V> getValues(String partName) {
+        return getPart(partName).map(this::<V>getValues).orElse(Collections.emptyList());
     }
 
     /**
@@ -154,9 +155,9 @@ public interface CommandContext extends Namespace {
      * @return An {@link Optional} object containing the {@link List} of values for the specified {@link CommandPart}.
      */
     default <V> Optional<V> getValue(CommandPart part) {
-        Optional<List<V>> values = getValues(part);
+        List<V> values = getValues(part);
 
-        return values.map(objects -> !objects.isEmpty() ? objects.get(0) : null);
+        return Optional.ofNullable(values != null && values.size() > 0 ? values.get(0) : null);
     }
 
     /**
