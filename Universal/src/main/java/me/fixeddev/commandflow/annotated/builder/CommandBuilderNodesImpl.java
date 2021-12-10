@@ -90,26 +90,28 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             // I don't like this :/
             if (getRawType(parameter) == List.class) {
                 if (arg != null) {
-                    partGetters.add(ValueGetter.forPartValues(part, arg.value()));
+                    partGetters.add(ValueGetter.forPartValues(name, arg.value()));
                 } else {
                     partGetters.add(ValueGetter.forPartValues(part));
                 }
             } else if (getRawType(parameter) == Optional.class) {
                 if (arg != null) {
-                    partGetters.add(ValueGetter.forOptionalPart(part, arg.value()));
+                    partGetters.add(ValueGetter.forOptionalPart(name, arg.value()));
                 } else {
                     partGetters.add(ValueGetter.forOptionalPart(part));
                 }
             } else {
                 if (arg != null) {
-                    partGetters.add(ValueGetter.forPart(part, arg.value()));
+                    partGetters.add(ValueGetter.forPart(name, arg.value()));
                 } else {
                     partGetters.add(ValueGetter.forPart(part));
                 }
             }
 
-            part = modifier.modify(part, annotations);
-            builder.addPart(part);
+            if(arg == null) {
+                part = modifier.modify(part, annotations);
+                builder.addPart(part);
+            }
         }
 
         return this;

@@ -13,9 +13,9 @@ public interface ValueGetter {
                 commandContext.getValue(part).orElse(null);
     }
 
-    static ValueGetter forPart(CommandPart part, int index) {
+    static ValueGetter forPart(String partName, int index) {
         return commandContext ->
-                commandContext.getPart(part.getName(), index)
+                commandContext.getPart(partName, index)
                         .flatMap(commandContext::getValue).orElse(null);
     }
 
@@ -24,9 +24,9 @@ public interface ValueGetter {
                 commandContext.getValue(part);
     }
 
-    static ValueGetter forOptionalPart(CommandPart part, int index) {
+    static ValueGetter forOptionalPart(String partName, int index) {
         return commandContext ->
-                commandContext.getPart(part.getName(), index)
+                commandContext.getPart(partName, index)
                         .flatMap(commandContext::getValue);
     }
 
@@ -35,9 +35,9 @@ public interface ValueGetter {
                 commandContext.getValues(part);
     }
 
-    static ValueGetter forPartValues(CommandPart part, int index) {
+    static ValueGetter forPartValues(String partName, int index) {
         return commandContext ->
-                commandContext.getPart(part.getName(), index)
+                commandContext.getPart(partName, index)
                         .map(commandContext::getValues);
     }
 
