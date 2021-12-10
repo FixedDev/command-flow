@@ -1,21 +1,20 @@
 package me.fixeddev.commandflow.translator;
 
+import me.fixeddev.commandflow.ComponentUtil;
 import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.translator.TranslationProvider;
-import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
-import net.kyori.text.format.TextColor;
 
 import java.util.List;
 import java.util.function.Function;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DefaultTranslator implements Translator {
     private TranslationProvider provider;
     private Function<String, TextComponent> stringToComponent;
+
+    private static final Pattern FORMAT = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     public DefaultTranslator(TranslationProvider provider) {
         this(provider, TextComponent::of);
@@ -34,10 +33,15 @@ public class DefaultTranslator implements Translator {
 
         TranslatableComponent translatableComponent = (TranslatableComponent) component;
 
+        TextComponent translated = newConvert(translatableComponent, namespace);
+
+        return translated;
+/*
         TextComponent.Builder componentBuilder = TextComponent.builder("");
         convert(translatableComponent, componentBuilder, namespace);
 
         return componentBuilder.build();
+  */
     }
 
     @Override
@@ -58,32 +62,18 @@ public class DefaultTranslator implements Translator {
 
     // Taken from BungeeCord-Chat TranslatableComponent and modified to allow the conversion of a TranslatableComponent into a Text Component
     // instead of it being converted into plain text
-    private final Pattern format = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
-
-    private void convert(TranslatableComponent component, TextComponent.Builder builder, Namespace namespace) {
+    private TextComponent newConvert(TranslatableComponent component, Namespace namespace) {
         String trans = provider.getTranslation(namespace, component.key()); //translate
 
         if (trans == null || trans.isEmpty()) {
-            builder.content(component.key());
-            return;
+            return TextComponent.of(component.key());
         }
-        TextColor lastColor = null;
-        Component last = null;
 
-        Matcher matcher = format.matcher(trans);
-        int position = 0;
-        int i = 0;
-        while (matcher.find(position)) {
-            int pos = matcher.start();
-            if (pos != position) {
-                builder.mergeStyle(component);
-                last = stringToComponent.apply(trans.substring(position, pos));
-                lastColor = lastColor(last);
+        TextComponent translated = TextComponent.builder(trans).style(component.style()).build();
 
-                builder.append(last);
-            }
-            position = matcher.end();
-
+        // don't do this please.
+        int[] iw = new int[]{0};
+        return (TextComponent) ComponentUtil.recursiveDynamicReplace(translated, FORMAT, (s, matcher) -> {
             String formatCode = matcher.group(2);
             switch (formatCode.charAt(0)) {
                 case 's':
@@ -92,59 +82,21 @@ public class DefaultTranslator implements Translator {
 
                     List<Component> args = component.args();
 
-                    int withIndexInt = withIndex != null ? Integer.parseInt(withIndex) - 1 : i++;
+                    int withIndexInt = withIndex != null ? Integer.parseInt(withIndex) - 1 : iw[0]++;
 
                     if (args.size() > withIndexInt) {
-                        Component withComponent = component.args().get(withIndexInt);
+                        Component component1 = component.args().get(withIndexInt);
 
-                        if (last != null) {
-                            withComponent = withComponent.style(withComponent.style()
-                                    .colorIfAbsent(lastColor)
-                                    .mergeDecorations(last.style())
-                                    .mergeEvents(last.style()));
-                        }
-
-                        if (withComponent instanceof TranslatableComponent) {
-                            convert(component, builder, namespace);
-                        } else {
-                            builder.append(withComponent);
-
-                            last = withComponent;
-                            lastColor = lastColor(last);
-                        }
-
+                        return component1 instanceof TextComponent ? (TextComponent) component1 : newConvert(component, namespace);
                     } else {
-                        builder.append(stringToComponent.apply("%" + formatCode.charAt(0)));
+                        return stringToComponent.apply("%" + formatCode.charAt(0));
                     }
-                    break;
                 case '%':
-                    builder.append(stringToComponent.apply("%"));
-                    break;
+                    return stringToComponent.apply("%");
+                default:
+                    return TextComponent.of(s);
             }
-        }
-        if (trans.length() != position) {
-            Component afterComponent = stringToComponent.apply(trans.substring(position));
-
-            if (last != null) {
-                afterComponent = afterComponent.style(afterComponent.style()
-                        .colorIfAbsent(lastColor)
-                        .mergeDecorations(last.style())
-                        .mergeEvents(last.style()));
-            }
-
-            builder.append(afterComponent);
-            last = afterComponent;
-            lastColor = lastColor(last);
-        }
+        });
     }
 
-    private TextColor lastColor(Component component) {
-        List<Component> extra = component.children();
-
-        if (!extra.isEmpty()) {
-            return lastColor(extra.get(extra.size() - 1));
-        }
-
-        return component.color();
-    }
 }
