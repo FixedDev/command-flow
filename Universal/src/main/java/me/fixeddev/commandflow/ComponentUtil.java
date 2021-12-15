@@ -38,10 +38,17 @@ public class ComponentUtil {
             parentComponent.append(lastComponent = replacement);
         }
 
-        String textAfter = content.substring(last);
+        if (last < content.length()) {
+            String textAfter = content.substring(last);
 
-        parentComponent.append(lastComponent.toBuilder()
-                .content(textAfter).build());
+            Component componentToAppend = lastComponent.toBuilder()
+                    .content(textAfter)
+                    .build()
+                    .children(new ArrayList<>());
+
+            parentComponent.append(componentToAppend);
+
+        }
 
         return parentComponent.build();
     }
