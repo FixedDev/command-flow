@@ -9,7 +9,7 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SwitchPart implements CommandPart {
@@ -85,28 +85,31 @@ public class SwitchPart implements CommandPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        StackSnapshot snapshot = stack.getSnapshot();
+        String nextArgument = stack.hasNext() ? stack.next() : "";
 
-        while (stack.hasNext()) {
-            String arg = stack.next();
+        List<String> suggestions = new ArrayList<>();
 
-            if (!arg.startsWith("-")) {
-                continue;
-            }
-
-            if (arg.equals("--" + name) && allowFullName) {
-                stack.remove();
-                break;
-            }
-
-            if (arg.equals("-" + shortName)) {
-                stack.remove();
-                break;
-            }
+        if (!nextArgument.startsWith("-")) {
+            return suggestions;
         }
 
-        stack.applySnapshot(snapshot, false);
+        nextArgument = nextArgument.lastIndexOf('-') != 0 ? nextArgument.substring(2) : nextArgument.substring(1);
 
-        return Collections.emptyList();
+        if (allowFullName && name.startsWith(nextArgument)) {
+            suggestions.add("--" + name);
+        }
+
+        if (shortName.startsWith(nextArgument)) {
+            suggestions.add("-" + shortName);
+        }
+
+        if(nextArgument.equals(shortName) || nextArgument.equals(name)){
+            suggestions.clear();
+
+            return suggestions;
+        }
+
+        return suggestions;
     }
+
 }

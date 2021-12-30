@@ -11,6 +11,9 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ValueFlagPart implements SinglePartWrapper {
 
     private final CommandPart part;
@@ -89,6 +92,35 @@ public class ValueFlagPart implements SinglePartWrapper {
         }
 
         stack.applySnapshot(snapshot, false);
+    }
+
+    @Override
+    public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
+        String nextArgument = stack.hasNext() ? stack.next() : "";
+
+        List<String> suggestions = new ArrayList<>();
+
+        if (!nextArgument.startsWith("-")) {
+            return suggestions;
+        }
+
+        nextArgument = nextArgument.lastIndexOf('-') != 0 ? nextArgument.substring(2) : nextArgument.substring(1);
+
+        if (allowFullName&& name.startsWith(nextArgument)) {
+            suggestions.add("--" + name);
+        }
+
+        if (shortName.startsWith(nextArgument)) {
+            suggestions.add("-" + shortName);
+        }
+
+        if (nextArgument.equals(shortName) || nextArgument.equals(name)) {
+            suggestions.clear();
+
+            suggestions.addAll(part.getSuggestions(commandContext, stack));
+        }
+
+        return suggestions;
     }
 
     private boolean parseValueFlag(CommandContext context, ArgumentStack stack) {
