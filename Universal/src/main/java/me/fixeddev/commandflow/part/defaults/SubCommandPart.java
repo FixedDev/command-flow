@@ -10,6 +10,7 @@ import me.fixeddev.commandflow.exception.InvalidSubCommandException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.part.CommandPart;
+import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
 import net.kyori.text.Component;
@@ -131,6 +132,11 @@ public class SubCommandPart implements CommandPart {
         }
 
         return suggestions;
+    }
+
+    @Override
+    public <T> T acceptVisitor(CommandPartVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     public Map<String, Command> getSubCommandMap() {
