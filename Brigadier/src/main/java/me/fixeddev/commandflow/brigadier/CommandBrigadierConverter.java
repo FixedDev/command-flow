@@ -1,7 +1,5 @@
 package me.fixeddev.commandflow.brigadier;
 
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
@@ -33,6 +31,9 @@ import me.fixeddev.commandflow.part.defaults.LongPart;
 import me.fixeddev.commandflow.part.defaults.OptionalPart;
 import me.fixeddev.commandflow.part.defaults.StringPart;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
+import me.fixeddev.commandflow.part.defaults.SwitchPart;
+import me.fixeddev.commandflow.part.defaults.ValueFlagPart;
+import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.SimpleArgumentStack;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.MinecraftArgumentTypes;
@@ -48,8 +49,8 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -93,7 +94,15 @@ public class CommandBrigadierConverter {
 
         LiteralCommandNode<Object> mainNode = argumentBuilder.build();
 
-        toArgumentBuilder(command.getPart(), mainNode, authorizer);
+        CommandNode<Object> node = convertToNodes(command, authorizer);
+
+        if (node instanceof LiteralCommandNode && (node.getName().equals("valueFlag") || node.getName().equals("Wrapper"))) {
+            for (CommandNode<Object> child : node.getChildren()) {
+                mainNode.addChild(child);
+            }
+        } else {
+            mainNode.addChild(node);
+        }
 
         List<LiteralCommandNode<Object>> argumentBuilders = new ArrayList<>();
 
@@ -113,6 +122,106 @@ public class CommandBrigadierConverter {
         }
 
         return argumentBuilders;
+    }
+
+    private CommandNode<Object> convertToNodes(Command command, Authorizer authorizer) {
+        return command.getPart().acceptVisitor(new CommandPartVisitor<CommandNode<Object>>() {
+            @Override
+            public CommandNode<Object> visit(CommandPart part) {
+                if (part instanceof SwitchPart) {
+                    SwitchPart switchPart = (SwitchPart) part;
+
+                    LiteralCommandNode<Object> shortName = LiteralArgumentBuilder.literal("-" + switchPart.getShortName()).build();
+                    LiteralCommandNode<Object> fullName = LiteralArgumentBuilder.literal("--" + switchPart.getName()).build();
+
+                    LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("valueFlag");
+
+                    builder.then(shortName);
+
+                    if (switchPart.allowsFullName()) {
+                        builder.then(fullName);
+                    }
+
+                    return builder.build();
+                }
+
+                return null;
+            }
+
+            @Override
+            public CommandNode<Object> visit(ArgumentPart argumentPart) {
+                return CommandBrigadierConverter.this.visit(argumentPart);
+            }
+
+            @Override
+            public CommandNode<Object> visit(PartsWrapper partsWrapper) {
+                return CommandBrigadierConverter.this.visit(partsWrapper, this);
+            }
+
+            @Override
+            public CommandNode<Object> visit(SinglePartWrapper singlePartWrapper) {
+                return CommandBrigadierConverter.this.visit(singlePartWrapper, this);
+            }
+
+            @Override
+            public CommandNode<Object> visit(SubCommandPart subCommand) {
+                return CommandBrigadierConverter.this.visit(subCommand, this, authorizer);
+            }
+        });
+    }
+
+    private void handleSimpleWrapperAdd(MultipleHeadNode<Object> nodeBuilder, CommandNode<Object> node, boolean nextOptional) {
+        if (nextOptional) {
+            for (CommandNode<Object> child : node.getChildren()) {
+                ArgumentBuilder<Object, ?> childBuilder = child.createBuilder();
+                childBuilder.executes(context -> 1);
+
+                nodeBuilder.addChild(childBuilder.build());
+            }
+        } else {
+            nodeBuilder.addChild(node.getChildren());
+        }
+    }
+
+    private boolean handleValueFlagAdd(MultipleHeadNode<Object> nodeBuilder, CommandNode<Object> node, boolean shouldAddNextToTail) {
+        nodeBuilder.addChild(node.getChildren());
+
+        if (shouldAddNextToTail) {
+            for (CommandNode<Object> child : node.getChildren()) {
+                nodeBuilder.addTailPointer(child);
+            }
+        }
+
+        Iterator<CommandNode<Object>> iterator = node.getChildren().iterator();
+
+        // at least one is present
+        CommandNode<Object> mainNode = iterator.next();
+        shouldAddNextToTail = true;
+
+        // check if it is a SwitchPart, lol
+        if (!mainNode.getChildren().isEmpty()) {
+            // it isn't
+            nodeBuilder.setHeadPointer(0, mainNode.getChildren().iterator().next());
+        }
+
+        return shouldAddNextToTail;
+    }
+
+    private boolean handleSimplePartAdding(MultipleHeadNode<Object> nodeBuilder, boolean shouldAddNextToTail, CommandNode<Object> node, boolean nextOptional) {
+        if (nextOptional) {
+            ArgumentBuilder<Object, ?> childBuilder = node.createBuilder();
+
+            childBuilder.executes(context -> 1);
+            node = childBuilder.build();
+        }
+
+        nodeBuilder.addChild(node);
+
+        if (shouldAddNextToTail) {
+            nodeBuilder.addTailPointer(node);
+            shouldAddNextToTail = false;
+        }
+        return shouldAddNextToTail;
     }
 
     private boolean isFirstPartOptional(CommandPart part) {
@@ -194,146 +303,138 @@ public class CommandBrigadierConverter {
         }
     }
 
-    private List<CommandNode<Object>> toArgumentBuilder(CommandPart part, CommandNode<Object> parent, Authorizer authorizer) {
-        if (part instanceof PartsWrapper) {
-            if (part instanceof FirstMatchPart) {
-                return addArgumentsFromFirstMatch((FirstMatchPart) part, parent, authorizer);
-            }
-
-            return addArgumentsFromWrapper((PartsWrapper) part, parent, authorizer);
-        } else if (part instanceof SinglePartWrapper) {
-            return addSingleWrapper((SinglePartWrapper) part, parent, authorizer);
-        } else if (part instanceof SubCommandPart) {
-
-            return addSubCommands((SubCommandPart) part, parent, authorizer); // same as parent
-        } else {
-            // Don't try to parse the parts that are not arguments as arguments
-            if (!(part instanceof ArgumentPart)) {
-                return null;
-            }
-
-            CommandNode<Object> childBuilder = toArgumentBuilder((ArgumentPart) part);
-
-            parent.addChild(childBuilder);
-
-            return new ArrayList<>(Collections.singletonList(childBuilder));
-        }
+    public CommandNode<Object> visit(ArgumentPart argumentPart) {
+        return toArgumentBuilder(argumentPart);
     }
 
-    private List<CommandNode<Object>> addArgumentsFromFirstMatch(FirstMatchPart firstMatchPart, CommandNode<Object> parent, Authorizer authorizer) {
-        List<CommandNode<Object>> nodes = new ArrayList<>();
+    public CommandNode<Object> visit(PartsWrapper partsWrapper, CommandPartVisitor<CommandNode<Object>> visitor) {
+        if (partsWrapper instanceof FirstMatchPart) {
+            LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("Wrapper");
 
-        for (CommandPart part : firstMatchPart.getParts()) {
-            nodes.addAll(toArgumentBuilder(part, parent, authorizer));
+            FirstMatchPart firstMatchPart = (FirstMatchPart) partsWrapper;
+
+            for (CommandPart part : firstMatchPart.getParts()) {
+                CommandNode<Object> argumentNode = part.acceptVisitor(visitor);
+
+                if (argumentNode == null) {
+                    continue; // not available for brigadier completition.
+                }
+
+                builder.then(argumentNode);
+            }
+
+            return builder.build();
         }
 
-        return nodes;
-    }
+        MultipleHeadNode<Object> nodeBuilder = new MultipleHeadNode<>();
+        boolean shouldAddNextToTail = false;
 
-    private List<CommandNode<Object>> addArgumentsFromWrapper(PartsWrapper wrapper, CommandNode<Object> parent, Authorizer authorizer) {
-        List<CommandNode<Object>> current = Collections.singletonList(parent);
-        List<List<CommandNode<Object>>> builders = new ArrayList<>();
-
-        Multimap<CommandNode<Object>, CommandNode<Object>> optionalsRegistration = MultimapBuilder
-                .hashKeys()
-                .arrayListValues()
-                .build();
-
-        List<CommandNode<Object>> lastNonOptional = Collections.singletonList(parent);
-        ListIterator<CommandPart> partsIterator = wrapper.getParts().listIterator();
+        ListIterator<CommandPart> partsIterator = partsWrapper.getParts().listIterator();
 
         while (partsIterator.hasNext()) {
             CommandPart part = partsIterator.next();
 
-            // use the first part
-            List<CommandNode<Object>> childBuilder = toArgumentBuilder(part, current.get(0), authorizer);
+            CommandNode<Object> node = part.acceptVisitor(visitor);
+
+            if (node == null) {
+                continue; // ignore this part, it's not available to be completed in brigadier.
+            }
+
+            boolean nextOptional = false;
 
             if (partsIterator.hasNext()) {
-                CommandPart nextPart = partsIterator.next();
+                CommandPart next = partsIterator.next();
+
+                if (isFirstPartOptional(next)) {
+                    nextOptional = true;
+                }
 
                 partsIterator.previous();
-
-                if (isOptional(nextPart) && childBuilder != null) {
-                    childBuilder.replaceAll(objectCommandNode -> objectCommandNode.createBuilder().executes(context -> 1).build());
-                }
             }
 
-            boolean optional = isOptional(part);
+            if (nodeBuilder.getHeadsSize() > 0) {
+                if (node instanceof LiteralCommandNode) {
+                    if (node.getName().equals("Wrapper")) {
+                        handleSimpleWrapperAdd(nodeBuilder, node, nextOptional);
+                    } else if (node.getName().equals("valueFlag")) {
+                        shouldAddNextToTail = handleValueFlagAdd(nodeBuilder, node, shouldAddNextToTail);
+                    } else {
+                        if (nextOptional) {
+                            ArgumentBuilder<Object, ?> childBuilder = node.createBuilder();
 
-            // ignore null builders and same builders
-            if (childBuilder == null || childBuilder == current) {
-                continue;
-            }
+                            childBuilder.executes(context -> 1);
+                            node = childBuilder.build();
+                        }
 
-            builders.add(childBuilder);
-
-            if (optional) {
-                for (CommandNode<Object> commandNode : lastNonOptional) {
-                    optionalsRegistration.putAll(commandNode, childBuilder);
+                        nodeBuilder.addChild(node);
+                    }
+                } else {
+                    shouldAddNextToTail = handleSimplePartAdding(nodeBuilder, shouldAddNextToTail, node, nextOptional);
                 }
             } else {
-                lastNonOptional = childBuilder;
-            }
+                if (node.getName().equals("valueFlag")) {
+                    shouldAddNextToTail = handleValueFlagAdd(nodeBuilder, node, shouldAddNextToTail);
 
-            current = childBuilder;
-        }
-
-
-        List<CommandNode<Object>> last = null;
-
-        for (int i = builders.size() - 1; i >= 0; i--) {
-            List<CommandNode<Object>> child = builders.get(i);
-
-            if (last != null && !last.isEmpty()) {
-                for (CommandNode<Object> childNode : child) {
-                    for (CommandNode<Object> lastNode : last) {
-                        childNode.addChild(lastNode);
-                    }
+                    continue;
                 }
-            }
 
-            last = child;
-        }
-
-        optionalsRegistration.forEach(CommandNode::addChild);
-
-        if (last != null) {
-            for (CommandNode<Object> lastNode : last) {
-                parent.addChild(lastNode);
+                shouldAddNextToTail = handleSimplePartAdding(nodeBuilder, shouldAddNextToTail, node, nextOptional);
             }
         }
 
-        return current;
+        return nodeBuilder.getWrappedTail("Wrapper");
     }
 
-    private boolean isOptional(CommandPart part) {
-        if (part instanceof OptionalPart) {
-            return true;
-        } else if (part instanceof SubCommandPart) {
-            SubCommandPart subCommandPart = (SubCommandPart) part;
+    public CommandNode<Object> visit(SinglePartWrapper singlePartWrapper, CommandPartVisitor<CommandNode<Object>> visitor) {
+        if (singlePartWrapper instanceof ValueFlagPart) {
+            ValueFlagPart valueFlagPart = (ValueFlagPart) singlePartWrapper;
+            CommandNode<Object> node = singlePartWrapper.getPart().acceptVisitor(visitor);
 
-            return subCommandPart.isOptional();
+            LiteralCommandNode<Object> shortName = LiteralArgumentBuilder.literal("-" + valueFlagPart.getShortName()).then(node).build();
+            LiteralCommandNode<Object> fullName = LiteralArgumentBuilder.literal("--" + valueFlagPart.getName()).redirect(shortName).build();
+
+            LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("valueFlag");
+
+            builder.then(shortName);
+
+            if (valueFlagPart.allowsFullName()) {
+                builder.then(fullName);
+            }
+
+            return builder.build();
         }
 
-        return false;
+        return singlePartWrapper.getPart().acceptVisitor(visitor);
     }
 
-    private List<CommandNode<Object>> addSingleWrapper(SinglePartWrapper wrapper, CommandNode<Object> parent, Authorizer authorizer) {
-        return toArgumentBuilder(wrapper.getPart(), parent, authorizer);
-    }
+    public CommandNode<Object> visit(SubCommandPart subCommand, CommandPartVisitor<CommandNode<Object>> visitor, Authorizer authorizer) {
+        LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("Wrapper");
 
-    private List<CommandNode<Object>> addSubCommands(SubCommandPart subCommandPart, CommandNode<Object> parent, Authorizer authorizer) {
-        List<CommandNode<Object>> subcommands = new ArrayList<>();
+        for (Command command : subCommand.getSubCommands()) {
+            CommandNode<Object> node = command.getPart().acceptVisitor(visitor);
 
-        for (Command subcommand : subCommandPart.getSubCommands()) {
-            for (CommandNode<Object> subCommandNode : getCommodoreCommand(subcommand, true, authorizer)) {
-                parent.addChild(subCommandNode);
+            LiteralArgumentBuilder<Object> literalNodeBuilder = LiteralArgumentBuilder.literal(command.getName());
 
-                subcommands.add(subCommandNode);
+            if (command.getPermission() != null) {
+                literalNodeBuilder.requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
+            }
+
+            if (node != null) {
+                literalNodeBuilder.then(node);
+            }
+
+            LiteralCommandNode<Object> literalNode = literalNodeBuilder.build();
+
+            builder = builder.then(literalNode);
+
+            for (String alias : command.getAliases()) {
+                LiteralCommandNode<Object> aliasNode = LiteralArgumentBuilder.literal(alias).redirect(literalNode).build();
+
+                builder = builder.then(aliasNode);
             }
         }
 
-        return subcommands;
+        return builder.build();
     }
 
     /**
