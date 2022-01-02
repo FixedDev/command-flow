@@ -124,5 +124,13 @@ public class ValueFlagPart implements SinglePartWrapper {
         }
         return true;
     }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public boolean allowsFullName() {
+        return allowFullName;
+    }
 }
 

@@ -109,4 +109,12 @@ public class SwitchPart implements CommandPart {
 
         return Collections.emptyList();
     }
+
+    public String getShortName() {
+        return shortName;
+    }
+
+    public boolean allowsFullName() {
+        return allowFullName;
+    }
 }
