@@ -72,12 +72,16 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
         Iterator<CommandPart> partIterator = parts.iterator();
 
-        while (partIterator.hasNext()){
+        while (partIterator.hasNext()) {
             CommandPart part = partIterator.next();
 
             List<String> suggestions = part.getSuggestions(context, stack);
 
-            if (!suggestions.isEmpty() && !stack.hasNext()) {
+            if (suggestions == null) {
+                continue;
+            }
+
+            if (!stack.hasNext()) {
                 return suggestions;
             }
         }

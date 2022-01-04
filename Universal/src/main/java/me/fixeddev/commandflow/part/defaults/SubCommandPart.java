@@ -116,7 +116,13 @@ public class SubCommandPart implements CommandPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        String next = stack.hasNext() ? stack.next() : "";
+        String next = stack.hasNext() ? stack.next() : null;
+
+        if (next == null) {
+            // No next argument, this part shouldn't be parsed yet
+            return Collections.emptyList();
+        }
+
         Command command = subCommands.get(next);
 
         List<String> suggestions = new ArrayList<>();

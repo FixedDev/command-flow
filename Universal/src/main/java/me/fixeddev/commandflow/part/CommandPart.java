@@ -18,11 +18,11 @@ public interface CommandPart {
         return null;
     }
 
-     void parse(CommandContext context, ArgumentStack stack, @Nullable CommandPart caller) throws ArgumentParseException;
+    void parse(CommandContext context, ArgumentStack stack, @Nullable CommandPart caller) throws ArgumentParseException;
 
-
+    @Nullable
     default List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        return Collections.emptyList();
+        return null;
     }
 
     /**

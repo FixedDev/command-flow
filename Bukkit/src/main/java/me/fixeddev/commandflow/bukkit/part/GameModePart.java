@@ -62,7 +62,11 @@ public class GameModePart implements ArgumentPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        String next = stack.hasNext() ? stack.next() : "";
+        String next = stack.hasNext() ? stack.next() : null;
+
+        if (next == null) {
+            return Collections.emptyList();
+        }
 
         String possibleGameModeName = next.toUpperCase();
 

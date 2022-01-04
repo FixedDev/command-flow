@@ -26,7 +26,11 @@ public class WorldPart implements ArgumentPart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        String prefix = stack.hasNext() ? stack.next() : "";
+        String prefix = stack.hasNext() ? stack.next() : null;
+
+        if (prefix == null) {
+            return Collections.emptyList();
+        }
 
         List<String> suggestions = new ArrayList<>();
 

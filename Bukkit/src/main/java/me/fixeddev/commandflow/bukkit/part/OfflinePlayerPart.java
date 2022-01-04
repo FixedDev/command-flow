@@ -79,7 +79,11 @@ public class OfflinePlayerPart implements ArgumentPart {
     }
 
     static List<String> getStrings(ArgumentStack stack) {
-        String last = stack.hasNext() ? stack.next() : "";
+        String last = stack.hasNext() ? stack.next() : null;
+
+        if (last == null) {
+            return Collections.emptyList();
+        }
 
         if (Bukkit.getPlayerExact(last) != null) {
             return Collections.emptyList();

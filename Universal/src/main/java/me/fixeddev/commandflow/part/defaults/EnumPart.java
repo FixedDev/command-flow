@@ -85,8 +85,7 @@ public class EnumPart extends PrimitivePart {
         List<String> suggestions = new ArrayList<>();
 
         if (!stack.hasNext()) {
-            suggestions.addAll(enumConstants.keySet());
-            return suggestions;
+            return Collections.emptyList();
         }
 
         String prefix = stack.next().toLowerCase();
