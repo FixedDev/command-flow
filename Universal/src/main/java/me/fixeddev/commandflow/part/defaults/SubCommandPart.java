@@ -133,7 +133,7 @@ public class SubCommandPart implements CommandPart {
             }
         }
 
-        if (command != null && suggestions.size() == 1) {
+        if (stack.hasNext() && command != null) {
             return command.getPart().getSuggestions(commandContext, stack);
         }
 
