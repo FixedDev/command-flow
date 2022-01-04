@@ -243,7 +243,7 @@ public final class Parts {
     /**
      * A {@link CommandPart} that consist on a sequence of other CommandParts.
      * <p>
-     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
+     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack, CommandPart)} on this {@link CommandPart} every part on
      * this {@link FirstMatchPart} will be parsed until some part parses correctly.
      *
      * @param name  The name for this part.
@@ -257,7 +257,7 @@ public final class Parts {
     /**
      * A {@link CommandPart} that consist on a sequence of other CommandParts.
      * <p>
-     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
+     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack, CommandPart)} on this {@link CommandPart} every part on
      * this {@link FirstMatchPart} will be parsed until some part parses correctly/
      *
      * @param name  The name for this part.
@@ -271,7 +271,7 @@ public final class Parts {
     /**
      * A {@link CommandPart} that consist on a sequence of other CommandParts.
      * <p>
-     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
+     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack, CommandPart)} on this {@link CommandPart} every part on
      * this CommandPart will be parsed until all the parts are parsed or an error is thrown
      *
      * @param name  The name for this part.
@@ -285,7 +285,7 @@ public final class Parts {
     /**
      * A {@link CommandPart} that consist on a sequence of other CommandParts.
      * <p>
-     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack)} on this {@link CommandPart} every part on
+     * After calling {@link CommandPart#parse(CommandContext, ArgumentStack, CommandPart)} on this {@link CommandPart} every part on
      * this CommandPart will be parsed until all the parts are parsed or an error is thrown
      *
      * @param name  The name for this part.

@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface CommandDataNode extends Buildable {
     /**
-     * @param aliases
+     * @param aliases The command aliases
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#aliases(List)
      */
     @NotNull CommandDataNode aliases(@NotNull List<String> aliases);
 
     /**
-     * @param aliases
+     * @param aliases The command aliases
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#aliases(String...)
      */
@@ -27,21 +27,21 @@ public interface CommandDataNode extends Buildable {
     }
 
     /**
-     * @param alias
+     * @param alias The alias to add
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#addAlias(String)
      */
     @NotNull CommandDataNode addAlias(@NotNull String alias);
 
     /**
-     * @param component
+     * @param component The description component
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#description(Component)
      */
     @NotNull CommandDataNode description(@NotNull Component component);
 
     /**
-     * @param component
+     * @param component The usage component
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#usage(Component)
      */
@@ -50,14 +50,14 @@ public interface CommandDataNode extends Buildable {
     @NotNull CommandDataNode usage(@Nullable Usage usageAnnotation);
 
     /**
-     * @param permission
+     * @param permission The permission string for the command.
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#permission(String)
      */
     @NotNull CommandDataNode permission(@NotNull String permission);
 
     /**
-     * @param permissionMessage
+     * @param permissionMessage The component to be send when the user doesn't have permissions4.
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#permissionMessage(Component)
      */

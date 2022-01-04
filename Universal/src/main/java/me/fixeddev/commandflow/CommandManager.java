@@ -30,9 +30,11 @@ public interface CommandManager {
     /**
      * Registers the specified {@link Command} into the internal command map with the specified label
      *
-     * @param command The command to register
-     * @implNote This method opposed to {@link CommandManager#registerCommand(Command)} doesn't has a fail-fast behaviour, just ignores the registered label
+     * This method opposed to {@link CommandManager#registerCommand(Command)} doesn't has a fail-fast behaviour, just ignores the registered label
      * if already registered.
+     * @param command The command to register
+     * @param label   The label to register the command with
+
      */
     void registerCommand(String label, Command command);
 

@@ -19,5 +19,11 @@
             <version>${version.universal}</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.checkerframework</groupId>
+            <artifactId>checker-qual</artifactId>
+            <version>3.6.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 </project>
