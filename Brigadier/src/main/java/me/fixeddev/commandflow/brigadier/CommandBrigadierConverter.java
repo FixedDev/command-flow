@@ -96,13 +96,16 @@ public class CommandBrigadierConverter {
 
         CommandNode<Object> node = convertToNodes(command, authorizer);
 
-        if (node instanceof LiteralCommandNode && (node.getName().equals("valueFlag") || node.getName().equals("Wrapper"))) {
-            for (CommandNode<Object> child : node.getChildren()) {
-                mainNode.addChild(child);
+        if (node != null) {
+            if (node instanceof LiteralCommandNode && (node.getName().equals("valueFlag") || node.getName().equals("Wrapper"))) {
+                for (CommandNode<Object> child : node.getChildren()) {
+                    mainNode.addChild(child);
+                }
+            } else {
+                mainNode.addChild(node);
             }
-        } else {
-            mainNode.addChild(node);
         }
+
 
         List<LiteralCommandNode<Object>> argumentBuilders = new ArrayList<>();
 
