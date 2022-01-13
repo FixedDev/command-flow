@@ -3,17 +3,24 @@ package me.fixeddev.commandflow.discord;
 import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
+import me.fixeddev.commandflow.ErrorHandler;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
+import me.fixeddev.commandflow.exception.CommandUsage;
+import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.UsageBuilder;
 import net.dv8tion.jda.api.JDA;
 
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,6 +30,7 @@ public class DiscordCommandManager implements CommandManager {
     public static final String MESSAGE_NAMESPACE = "MESSAGE";
     public static final String MEMBER_NAMESPACE = "MEMBER";
     public static final String USER_NAMESPACE = "USER";
+    public static final String CHANNEL_NAMESPACE = "CHANNEL";
 
     protected final CommandManager commandManager;
 
@@ -37,6 +45,51 @@ public class DiscordCommandManager implements CommandManager {
 
         setAuthorizer(new DiscordAuthorizer());
         getTranslator().setProvider(new DiscordDefaultTranslationProvider());
+
+        getErrorHandler().addExceptionHandler(CommandUsage.class, (namespace, e) -> {
+            CommandException exceptionToSend = e;
+            if (e.getCause() instanceof ArgumentParseException) {
+                exceptionToSend = (ArgumentParseException) e.getCause();
+            }
+
+            MessageListener.sendMessage(namespace, exceptionToSend);
+            return true;
+        });
+
+        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, e) -> {
+            MessageListener.sendMessage(namespace, e);
+
+            throw new CommandException("An internal parse exception occurred while executing the command", e);
+        });
+
+        ErrorHandler.ErrorConsumer<CommandException> commonHandler = (namespace, e) -> {
+            MessageListener.sendMessage(namespace, e);
+
+            return true;
+        };
+
+        getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonHandler);
+        getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonHandler);
+        getErrorHandler().addExceptionHandler(NoPermissionsException.class, commonHandler);
+
+        getErrorHandler().addExceptionHandler(CommandException.class, (namespace, e) -> {
+            CommandException exceptionToSend = e;
+
+            if (e.getCause() instanceof CommandException) {
+                exceptionToSend = (CommandException) e.getCause();
+            }
+
+            MessageListener.sendMessage(namespace, exceptionToSend);
+
+            throw new CommandException("An unexpected exception occurred while executing the command " + e.getCommand().getName(), exceptionToSend);
+        });
+
+
+        getErrorHandler().setFallbackHandler((namespace, throwable) -> {
+            String label = namespace.getObject(String.class, "label");
+
+            throw new CommandException("An unexpected exception occurred while executing the command " + label, throwable);
+        });
     }
 
     @Override
@@ -46,7 +99,7 @@ public class DiscordCommandManager implements CommandManager {
 
     @Override
     public void registerCommand(String label, Command command) {
-        commandManager.registerCommand(label,command);
+        commandManager.registerCommand(label, command);
     }
 
     @Override
@@ -127,6 +180,16 @@ public class DiscordCommandManager implements CommandManager {
     @Override
     public void setUsageBuilder(UsageBuilder usageBuilder) {
         commandManager.setUsageBuilder(usageBuilder);
+    }
+
+    @Override
+    public ErrorHandler getErrorHandler() {
+        return commandManager.getErrorHandler();
+    }
+
+    @Override
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        commandManager.setErrorHandler(errorHandler);
     }
 
     @Override

@@ -3,12 +3,18 @@ package me.fixeddev.commandflow.velocity;
 import com.velocitypowered.api.proxy.ProxyServer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
+import me.fixeddev.commandflow.ErrorHandler;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
+import me.fixeddev.commandflow.exception.CommandUsage;
+import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.Translator;
@@ -41,6 +47,52 @@ public class VelocityCommandManager implements CommandManager {
         setAuthorizer(new VelocityAuthorizer());
         getTranslator().setProvider(new VelocityDefaultTranslationProvider());
         getTranslator().setConverterFunction(LegacyComponentSerializer.INSTANCE::deserialize);
+
+
+        getErrorHandler().addExceptionHandler(CommandUsage.class, (namespace, e) -> {
+            CommandException exceptionToSend = e;
+            if (e.getCause() instanceof ArgumentParseException) {
+                exceptionToSend = (ArgumentParseException) e.getCause();
+            }
+
+            VelocityCommandWrapper.sendMessageToSender(exceptionToSend, namespace);
+            return true;
+        });
+
+        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, e) -> {
+            VelocityCommandWrapper.sendMessageToSender(e, namespace);
+
+            throw new CommandException("An internal parse exception occurred while executing the command", e);
+        });
+
+        ErrorHandler.ErrorConsumer<CommandException> commonHandler = (namespace, e) -> {
+            VelocityCommandWrapper.sendMessageToSender(e, namespace);
+
+            return true;
+        };
+
+        getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonHandler);
+        getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonHandler);
+        getErrorHandler().addExceptionHandler(NoPermissionsException.class, commonHandler);
+
+        getErrorHandler().addExceptionHandler(CommandException.class, (namespace, e) -> {
+            CommandException exceptionToSend = e;
+
+            if (e.getCause() instanceof CommandException) {
+                exceptionToSend = (CommandException) e.getCause();
+            }
+
+            VelocityCommandWrapper.sendMessageToSender(e, namespace);
+
+            throw new CommandException("An unexpected exception occurred while executing the command " + e.getCommand().getName(), exceptionToSend);
+        });
+
+
+        getErrorHandler().setFallbackHandler((namespace, throwable) -> {
+            String label = namespace.getObject(String.class, "label");
+
+            throw new CommandException("An unexpected exception occurred while executing the command " + label, throwable);
+        });
     }
 
     @Override
@@ -183,5 +235,15 @@ public class VelocityCommandManager implements CommandManager {
     @Override
     public ParseResult parse(Namespace accessor, String line) throws CommandException {
         return commandManager.parse(accessor, line);
+    }
+
+    @Override
+    public ErrorHandler getErrorHandler() {
+        return commandManager.getErrorHandler();
+    }
+
+    @Override
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        commandManager.setErrorHandler(errorHandler);
     }
 }

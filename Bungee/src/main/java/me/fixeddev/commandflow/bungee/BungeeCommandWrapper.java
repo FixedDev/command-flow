@@ -47,24 +47,10 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSender.class, BungeeCommandManager.SENDER_NAMESPACE, commandSender);
-
+        namespace.setObject(String.class, "label", getName());
 
         try {
             commandManager.execute(namespace, argumentLine);
-        } catch (CommandUsage e) {
-            CommandException exceptionToSend = e;
-            if (e.getCause() instanceof ArgumentParseException) {
-                exceptionToSend = (ArgumentParseException) e.getCause();
-            }
-
-            sendMessageToSender(exceptionToSend, commandSender, namespace);
-
-        } catch (InvalidSubCommandException e) {
-            sendMessageToSender(e, commandSender, namespace);
-
-            throw new CommandException("An internal parse exception occurred while executing the command " + getName(), e);
-        } catch (ArgumentParseException | NoMoreArgumentsException | NoPermissionsException e) {
-            sendMessageToSender(e, commandSender, namespace);
         } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
@@ -72,7 +58,7 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
                 exceptionToSend = (CommandException) e.getCause();
             }
 
-            sendMessageToSender(exceptionToSend, commandSender, namespace);
+            sendMessageToSender(exceptionToSend, namespace);
 
             throw new CommandException("An unexpected exception occurred while executing the command " + getName(), exceptionToSend.getCause() != null ? exceptionToSend.getCause() : exceptionToSend);
         }
@@ -97,9 +83,12 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
         return commandManager.getSuggestions(namespace, argumentList);
     }
 
-    private void sendMessageToSender(CommandException exception, CommandSender sender, Namespace namespace) {
+    protected static void sendMessageToSender(CommandException exception, Namespace namespace) {
+        CommandManager commandManager = namespace.getObject(CommandManager.class, "commandManager");
+        CommandSender sender = namespace.getObject(CommandSender.class, BungeeCommandManager.SENDER_NAMESPACE);
+
         Component component = exception.getMessageComponent();
-        Component translatedComponent = translator.translate(component, namespace);
+        Component translatedComponent = commandManager.getTranslator().translate(component, namespace);
 
         BaseComponent[] components = MessageUtils.kyoriToBungee(translatedComponent);
 

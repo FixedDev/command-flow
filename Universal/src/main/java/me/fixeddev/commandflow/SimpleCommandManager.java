@@ -33,6 +33,7 @@ public class SimpleCommandManager implements CommandManager {
     private Executor executor;
     private Translator translator;
     private UsageBuilder usageBuilder;
+    private ErrorHandler errorHandler;
 
     public SimpleCommandManager(Authorizer authorizer) {
         this.authorizer = authorizer;
@@ -42,6 +43,8 @@ public class SimpleCommandManager implements CommandManager {
         executor = new DefaultExecutor();
         translator = new DefaultTranslator(new DefaultMapTranslationProvider());
         usageBuilder = new DefaultUsageBuilder();
+
+        errorHandler = new SimpleErrorHandler();
     }
 
     public SimpleCommandManager() {
@@ -209,6 +212,20 @@ public class SimpleCommandManager implements CommandManager {
         this.usageBuilder = usageBuilder;
     }
 
+    @Override
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    @Override
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        if (this.errorHandler == null) {
+            throw new IllegalArgumentException("Trying to set a null ErrorHandler!");
+        }
+
+        this.errorHandler = errorHandler;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -251,10 +268,18 @@ public class SimpleCommandManager implements CommandManager {
                 usage.setCommand(commandContext.getCommand());
 
                 usage.initCause(e);
-                throw usage;
+
+                try {
+                    return errorHandler.handleException(accessor, usage);
+                } catch (Throwable ex) {
+                    throwOrWrap(ex);
+                }
             } else {
-                // rethrow, we can't handle this exception
-                throw exception;
+                try {
+                    return errorHandler.handleException(accessor, exception);
+                } catch (Throwable e) {
+                    throwOrWrap(e);
+                }
             }
         }
 
@@ -264,7 +289,17 @@ public class SimpleCommandManager implements CommandManager {
 
         CommandContext commandContext = optionalContext.get();
 
-        return executor.execute(commandContext, getUsageBuilder());
+        try {
+            return executor.execute(commandContext, getUsageBuilder());
+        } catch (Throwable e) {
+            try {
+                return errorHandler.handleException(accessor, e);
+            } catch (Throwable ex) {
+                throwOrWrap(ex);
+            }
+
+            return false;
+        }
     }
 
     /**
@@ -339,6 +374,8 @@ public class SimpleCommandManager implements CommandManager {
             return empty();
         }
 
+        accessor.setObject(CommandManager.class, "commandManager", this);
+
         ArgumentStack stack = new SimpleArgumentStack(arguments);
 
         String label = stack.next();
@@ -354,7 +391,6 @@ public class SimpleCommandManager implements CommandManager {
         CommandContext commandContext = new SimpleCommandContext(accessor, arguments);
         commandContext.setCommand(command, label);
 
-        accessor.setObject(CommandManager.class, "commandManager", this);
 
         CommandPart part = command.getPart();
 
@@ -370,6 +406,14 @@ public class SimpleCommandManager implements CommandManager {
         }
 
         return ofSuccess(commandContext);
+    }
+
+    private void throwOrWrap(Throwable throwable) throws CommandException {
+        if (throwable instanceof CommandException) {
+            throw (CommandException) throwable;
+        }
+
+        throw new CommandException(throwable);
     }
 
     private ParseResult empty() {

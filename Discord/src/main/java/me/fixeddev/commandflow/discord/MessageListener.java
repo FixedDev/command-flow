@@ -30,7 +30,6 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-
         Member member = event.getMember();
         User user = event.getAuthor();
         Message message = event.getMessage();
@@ -42,31 +41,20 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
+        rawMessage = rawMessage.substring(commandPrefix.length());
+
+        String label = rawMessage.substring(0, rawMessage.indexOf(" "));
+
         Namespace namespace = new NamespaceImpl();
 
         namespace.setObject(Message.class, DiscordCommandManager.MESSAGE_NAMESPACE, message);
         namespace.setObject(Member.class, DiscordCommandManager.MEMBER_NAMESPACE, member);
         namespace.setObject(User.class, DiscordCommandManager.USER_NAMESPACE, user);
+        namespace.setObject(TextChannel.class, DiscordCommandManager.CHANNEL_NAMESPACE, channel);
+        namespace.setObject(String.class, "label", label);
 
         try {
             commandManager.execute(namespace, rawMessage.substring(commandPrefix.length()));
-        } catch (CommandUsage e) {
-            CommandException exceptionToSend = e;
-            if (e.getCause() instanceof ArgumentParseException) {
-                exceptionToSend = (ArgumentParseException) e.getCause();
-            }
-
-            sendMessage(namespace, exceptionToSend, channel);
-        } catch (InvalidSubCommandException e) {
-            sendMessage(namespace, e, channel);
-
-            throw new CommandException("An internal parse exception occurred while executing the command", e);
-        } catch (ArgumentParseException | NoMoreArgumentsException e) {
-            sendMessage(namespace, e, channel);
-
-        } catch (NoPermissionsException e) {
-            sendMessage(namespace, e, channel);
-
         } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
@@ -74,14 +62,16 @@ public class MessageListener extends ListenerAdapter {
                 exceptionToSend = (CommandException) e.getCause();
             }
 
-            sendMessage(namespace, exceptionToSend, event.getChannel());
+            sendMessage(namespace, exceptionToSend);
 
             throw new CommandException("An unexpected exception occurred while executing the command " + e.getCommand().getName(), exceptionToSend);
         }
 
     }
 
-    private void sendMessage(Namespace namespace, CommandException exception, TextChannel channel) {
+    protected static void sendMessage(Namespace namespace, CommandException exception) {
+        CommandManager commandManager = namespace.getObject(CommandManager.class, "commandManager");
+        TextChannel channel = namespace.getObject(TextChannel.class, DiscordCommandManager.CHANNEL_NAMESPACE);
 
         Component component = exception.getMessageComponent();
         Component translatedComponent = commandManager.getTranslator().translate(component, namespace);

@@ -69,43 +69,25 @@ public class BukkitCommandWrapper extends Command {
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, commandSender);
+        namespace.setObject(String.class, "label", label);
 
         try {
-            if (commandManager.execute(namespace, argumentLine)) {
-                return true;
-            }
-        } catch (CommandUsage e) {
-            CommandException exceptionToSend = e;
-            if (e.getCause() instanceof ArgumentParseException) {
-                exceptionToSend = (ArgumentParseException) e.getCause();
-            }
-
-            sendMessageToSender(exceptionToSend, commandSender, namespace);
-
-            return true;
-        } catch (InvalidSubCommandException e) {
-            sendMessageToSender(e, commandSender, namespace);
-
-            throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, e);
-        } catch (ArgumentParseException | NoMoreArgumentsException e) {
-            sendMessageToSender(e, commandSender, namespace);
-        } catch (NoPermissionsException e) {
-            sendMessageToSender(e, commandSender, namespace);
-
-            return true;
+            return commandManager.execute(namespace, argumentLine);
         } catch (CommandException e) {
-            CommandException exceptionToSend = e;
+            Throwable exceptionToSend = e;
 
-            if (e.getCause() instanceof CommandException) {
-                exceptionToSend = (CommandException) e.getCause();
+            Throwable cause = e.getCause();
+
+            if (cause instanceof org.bukkit.command.CommandException) {
+                throw (org.bukkit.command.CommandException) cause;
             }
 
-            sendMessageToSender(exceptionToSend, commandSender, namespace);
+            if (cause != null) {
+                exceptionToSend = cause;
+            }
 
             throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, exceptionToSend);
         }
-
-        return false;
     }
 
     @Override
@@ -147,9 +129,12 @@ public class BukkitCommandWrapper extends Command {
         return authorizer.isAuthorized(namespace, getPermission());
     }
 
-    private void sendMessageToSender(CommandException exception, CommandSender sender, Namespace namespace) {
+    protected static void sendMessageToSender(CommandException exception, Namespace namespace) {
+        CommandManager commandManager = namespace.getObject(CommandManager.class, "commandManager");
+        CommandSender sender = namespace.getObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE);
+
         Component component = exception.getMessageComponent();
-        Component translatedComponent = translator.translate(component, namespace);
+        Component translatedComponent = commandManager.getTranslator().translate(component, namespace);
 
         BaseComponent[] components = MessageUtils.kyoriToBungee(translatedComponent);
 

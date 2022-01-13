@@ -2,7 +2,6 @@ package me.fixeddev.commandflow.velocity;
 
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.RawCommand;
-import com.velocitypowered.api.command.SimpleCommand;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.NamespaceImpl;
@@ -16,8 +15,6 @@ import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class VelocityCommandWrapper implements RawCommand {
@@ -48,31 +45,18 @@ public class VelocityCommandWrapper implements RawCommand {
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
+        namespace.setObject(String.class, "label", invocation.alias());
 
         try {
             commandManager.execute(namespace, argumentLine);
-        } catch (CommandUsage e) {
-            CommandException exceptionToSend = e;
-            if (e.getCause() instanceof ArgumentParseException) {
-                exceptionToSend = (ArgumentParseException) e.getCause();
-            }
-
-            sendMessageToSender(exceptionToSend, commandSource, namespace);
-
-        } catch (InvalidSubCommandException e) {
-            sendMessageToSender(e, commandSource, namespace);
-
-            throw new CommandException("An internal parse exception occurred while executing the command " + this.command, e);
-        } catch (ArgumentParseException | NoMoreArgumentsException | NoPermissionsException e) {
-            sendMessageToSender(e, commandSource, namespace);
-        } catch (CommandException e) {
+         } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
             if (e.getCause() instanceof CommandException) {
                 exceptionToSend = (CommandException) e.getCause();
             }
 
-            sendMessageToSender(exceptionToSend, commandSource, namespace);
+            sendMessageToSender(e, namespace);
 
             throw new CommandException("An unexpected exception occurred while executing the command " + this.command, exceptionToSend);
         }
@@ -97,10 +81,13 @@ public class VelocityCommandWrapper implements RawCommand {
         return commandManager.getSuggestions(namespace, argumentLine);
     }
 
-    private void sendMessageToSender(CommandException exception, CommandSource commandSource, Namespace namespace) {
-        Component component = exception.getMessageComponent();
-        Component translatedComponent = translator.translate(component, namespace);
+    protected static void sendMessageToSender(CommandException exception, Namespace namespace) {
+        CommandManager commandManager = namespace.getObject(CommandManager.class, "commandManager");
+        CommandSource sender = namespace.getObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE);
 
-        commandSource.sendMessage(MessageUtils.kyoriToVelocityKyori(translatedComponent));
+        Component component = exception.getMessageComponent();
+        Component translatedComponent = commandManager.getTranslator().translate(component, namespace);
+
+        sender.sendMessage(MessageUtils.kyoriToVelocityKyori(translatedComponent));
     }
 }

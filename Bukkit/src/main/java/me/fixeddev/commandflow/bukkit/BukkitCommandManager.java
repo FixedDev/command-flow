@@ -3,11 +3,18 @@ package me.fixeddev.commandflow.bukkit;
 import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
+import me.fixeddev.commandflow.ErrorHandler;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.ArgumentException;
+import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
+import me.fixeddev.commandflow.exception.CommandUsage;
+import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.Translator;
@@ -46,6 +53,61 @@ public class BukkitCommandManager implements CommandManager {
         } catch (NoSuchFieldException | IllegalAccessException ex) {
             Bukkit.getLogger().log(Level.SEVERE, "Failed to get command map: ", ex);
         }
+
+        this.getErrorHandler().addExceptionHandler(CommandUsage.class, (namespace, ex) -> {
+            CommandException exceptionToSend = ex;
+            if (ex.getCause() instanceof ArgumentParseException) {
+                exceptionToSend = (ArgumentParseException) ex.getCause();
+            }
+
+            BukkitCommandWrapper.sendMessageToSender(exceptionToSend, namespace);
+
+            return true;
+        });
+
+        this.getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, ex) -> {
+            BukkitCommandWrapper.sendMessageToSender(ex, namespace);
+
+            String label = namespace.getObject(String.class, "label");
+
+            throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, ex);
+        });
+
+        ErrorHandler.ErrorConsumer<ArgumentException> commonArgumentExceptionConsumer = (namespace, ex) -> {
+            BukkitCommandWrapper.sendMessageToSender(ex, namespace);
+
+            return false;
+        };
+
+        this.getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonArgumentExceptionConsumer);
+        this.getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonArgumentExceptionConsumer);
+        this.getErrorHandler().addExceptionHandler(NoPermissionsException.class, (namespace, throwable) -> {
+            BukkitCommandWrapper.sendMessageToSender(throwable, namespace);
+
+            return true;
+        });
+
+        this.getErrorHandler().addExceptionHandler(CommandException.class, (namespace, throwable) -> {
+            Throwable exceptionToSend = throwable;
+
+            String throwableMessage = throwable.getMessage();
+
+            if ((throwableMessage != null && throwableMessage.equals("Internal error.")) || throwable.getCause() instanceof CommandException) {
+                exceptionToSend = throwable.getCause();
+            }
+
+            BukkitCommandWrapper.sendMessageToSender(throwable, namespace);
+            String label = namespace.getObject(String.class, "label");
+
+            throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, exceptionToSend);
+        });
+
+
+        this.getErrorHandler().setFallbackHandler((namespace, throwable) -> {
+            String label = namespace.getObject(String.class, "label");
+
+            throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, throwable);
+        });
     }
 
     public BukkitCommandManager(String fallbackPrefix) {
@@ -165,6 +227,16 @@ public class BukkitCommandManager implements CommandManager {
     @Override
     public void setUsageBuilder(UsageBuilder usageBuilder) {
         manager.setUsageBuilder(usageBuilder);
+    }
+
+    @Override
+    public ErrorHandler getErrorHandler() {
+        return manager.getErrorHandler();
+    }
+
+    @Override
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        manager.setErrorHandler(errorHandler);
     }
 
     @Override

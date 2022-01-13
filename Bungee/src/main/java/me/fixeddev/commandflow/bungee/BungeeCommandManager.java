@@ -3,11 +3,17 @@ package me.fixeddev.commandflow.bungee;
 import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
+import me.fixeddev.commandflow.ErrorHandler;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
+import me.fixeddev.commandflow.exception.CommandUsage;
+import me.fixeddev.commandflow.exception.InvalidSubCommandException;
+import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
+import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.Translator;
@@ -43,6 +49,53 @@ public class BungeeCommandManager implements CommandManager {
         setAuthorizer(new BungeeAuthorizer());
         getTranslator().setProvider(new BungeeDefaultTranslationProvider());
         getTranslator().setConverterFunction(LegacyComponentSerializer.INSTANCE::deserialize);
+
+        getErrorHandler().addExceptionHandler(CommandUsage.class, (namespace, e) -> {
+            CommandException exceptionToSend = e;
+            if (e.getCause() instanceof ArgumentParseException) {
+                exceptionToSend = (ArgumentParseException) e.getCause();
+            }
+
+            BungeeCommandWrapper.sendMessageToSender(exceptionToSend, namespace);
+
+            return false;
+        });
+
+        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, e) -> {
+            String label = namespace.getObject(String.class, "label");
+            BungeeCommandWrapper.sendMessageToSender(e, namespace);
+
+            throw new CommandException("An internal parse exception occurred while executing the command " + label, e);
+        });
+
+        ErrorHandler.ErrorConsumer<CommandException> commonHandler = (namespace, e) -> {
+            BungeeCommandWrapper.sendMessageToSender(e, namespace);
+
+            return true;
+        };
+
+        getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonHandler);
+        getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonHandler);
+        getErrorHandler().addExceptionHandler(NoPermissionsException.class, commonHandler);
+
+        getErrorHandler().addExceptionHandler(CommandException.class, (namespace, e) -> {
+            CommandException exceptionToSend = e;
+
+            if (e.getCause() instanceof CommandException) {
+                exceptionToSend = (CommandException) e.getCause();
+            }
+            String label = namespace.getObject(String.class, "label");
+
+            BungeeCommandWrapper.sendMessageToSender(e, namespace);
+
+            throw new CommandException("An unexpected exception occurred while executing the command " + label, exceptionToSend.getCause() != null ? exceptionToSend.getCause() : exceptionToSend);
+        });
+
+        getErrorHandler().setFallbackHandler((namespace, e) -> {
+            String label = namespace.getObject(String.class, "label");
+
+            throw new CommandException("An unexpected exception occurred while executing the command " + label, e.getCause() != null ? e.getCause() : e);
+        });
     }
 
     @Override
@@ -146,6 +199,16 @@ public class BungeeCommandManager implements CommandManager {
     @Override
     public void setUsageBuilder(UsageBuilder usageBuilder) {
         commandManager.setUsageBuilder(usageBuilder);
+    }
+
+    @Override
+    public ErrorHandler getErrorHandler() {
+        return commandManager.getErrorHandler();
+    }
+
+    @Override
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        commandManager.setErrorHandler(errorHandler);
     }
 
     @Override
