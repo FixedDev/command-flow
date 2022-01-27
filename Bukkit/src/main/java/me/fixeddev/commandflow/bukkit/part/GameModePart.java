@@ -40,7 +40,7 @@ public class GameModePart implements ArgumentPart {
         this.name = name;
     }
 
-    private static void addAlias(String alias, GameMode gameMode) {
+    public static void addAlias(String alias, GameMode gameMode) {
         GAMEMODE_ALIASES.put(alias, gameMode);
     }
 
