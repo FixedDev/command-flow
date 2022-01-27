@@ -68,10 +68,9 @@ public class GameModePart implements ArgumentPart {
         String possibleGameModeName = next.toUpperCase();
         List<String> suggestions = new ArrayList<>();
 
-        for (GameMode gameMode : GameMode.values()) {
-            String name = gameMode.name().toLowerCase();
-            if (possibleGameModeName.isEmpty() || name.startsWith(possibleGameModeName)) {
-                suggestions.add(name);
+        for (String aliases : GAMEMODE_ALIASES.keySet()) {
+            if (possibleGameModeName.isEmpty() || aliases.startsWith(possibleGameModeName)) {
+                suggestions.add(aliases);
             }
         }
 
