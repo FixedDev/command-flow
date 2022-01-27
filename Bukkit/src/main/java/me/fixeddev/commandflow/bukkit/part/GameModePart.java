@@ -70,7 +70,7 @@ public class GameModePart implements ArgumentPart {
 
         for (GameMode gameMode : GameMode.values()) {
             String name = gameMode.name().toLowerCase();
-            if (possibleGameModeName.length() == 0 || name.startsWith(possibleGameModeName)) {
+            if (possibleGameModeName.isEmpty() || name.startsWith(possibleGameModeName)) {
                 suggestions.add(name);
             }
         }
