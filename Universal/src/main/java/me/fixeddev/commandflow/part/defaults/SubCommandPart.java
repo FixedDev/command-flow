@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.part.defaults;
 
+import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.ContextSnapshot;
@@ -127,11 +128,19 @@ public class SubCommandPart implements CommandPart {
 
         List<String> suggestions = new ArrayList<>();
 
-        for (String subcommand : subCommands.keySet()) {
-            if (subcommand.startsWith(next)) {
-                suggestions.add(subcommand);
+        // Should be there
+        CommandManager manager = commandContext.getObject(CommandManager.class, "commandManager");
+        Authorizer authorizer = manager.getAuthorizer();
+
+        Map<Command, Boolean> testedCommands = new HashMap<>();
+
+        subCommands.forEach((name, subCommand) -> {
+            if (name.startsWith(next)) {
+                if (testedCommands.computeIfAbsent(subCommand, c -> authorizer.isAuthorized(commandContext, subCommand.getPermission()))) {
+                    suggestions.add(name);
+                }
             }
-        }
+        });
 
         if (stack.hasNext() && command != null) {
             return command.getPart().getSuggestions(commandContext, stack);
