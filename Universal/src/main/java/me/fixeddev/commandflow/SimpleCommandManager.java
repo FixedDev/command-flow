@@ -269,17 +269,13 @@ public class SimpleCommandManager implements CommandManager {
 
                 usage.initCause(e);
 
-                try {
-                    return errorHandler.handleException(accessor, usage);
-                } catch (Throwable ex) {
-                    throwOrWrap(ex);
-                }
-            } else {
-                try {
-                    return errorHandler.handleException(accessor, exception);
-                } catch (Throwable e) {
-                    throwOrWrap(e);
-                }
+                exception = usage;
+            }
+
+            try {
+                return errorHandler.handleException(accessor, exception);
+            } catch (Throwable ex) {
+                throwOrWrap(ex);
             }
         }
 
