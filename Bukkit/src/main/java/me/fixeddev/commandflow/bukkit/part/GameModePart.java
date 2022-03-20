@@ -5,14 +5,11 @@ import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.ArgumentPart;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
-
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
-
 import org.bukkit.GameMode;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameModePart implements ArgumentPart {
 
@@ -20,31 +17,31 @@ public class GameModePart implements ArgumentPart {
 
     static {
         for (GameMode gameMode : GameMode.values()) {
-            GAMEMODE_ALIASES.put(gameMode.getValue() + "", gameMode);
+            addAlias(Integer.toString(gameMode.getValue()), gameMode);
 
             String gameModeName = gameMode.name().toLowerCase();
 
-            GAMEMODE_ALIASES.put(gameModeName, gameMode);
+            addAlias(gameModeName, gameMode);
 
             if (gameMode == GameMode.SPECTATOR) {
-                GAMEMODE_ALIASES.put("spec", gameMode);
-                GAMEMODE_ALIASES.put("sp", gameMode);
+                addAlias("spec", gameMode);
+                addAlias("sp", gameMode);
 
                 continue;
             }
 
-            GAMEMODE_ALIASES.put(String.valueOf(gameModeName.charAt(0)), gameMode);
+            addAlias(Character.toString(gameModeName.charAt(0)), gameMode);
         }
-    }
-
-    public static void addAlias(String alias, GameMode gameMode) {
-        GAMEMODE_ALIASES.put(alias.toLowerCase(), gameMode);
     }
 
     private final String name;
 
     public GameModePart(String name) {
         this.name = name;
+    }
+
+    public static void addAlias(String alias, GameMode gameMode) {
+        GAMEMODE_ALIASES.put(alias, gameMode);
     }
 
     @Override
@@ -69,11 +66,15 @@ public class GameModePart implements ArgumentPart {
         }
 
         String possibleGameModeName = next.toUpperCase();
+        List<String> suggestions = new ArrayList<>();
 
-        return Arrays.stream(GameMode.values())
-                .map(gameMode -> gameMode.name().toLowerCase())
-                .filter(name -> possibleGameModeName.length() == 0 || name.startsWith(possibleGameModeName))
-                .collect(Collectors.toList());
+        for (String aliases : GAMEMODE_ALIASES.keySet()) {
+            if (possibleGameModeName.isEmpty() || aliases.startsWith(possibleGameModeName)) {
+                suggestions.add(aliases);
+            }
+        }
+
+        return suggestions;
     }
 
     @Override
