@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.annotated.annotation.Limit;
 import me.fixeddev.commandflow.annotated.annotation.Flag;
 import me.fixeddev.commandflow.annotated.annotation.OptArg;
+import me.fixeddev.commandflow.annotated.annotation.Rewrites;
 import me.fixeddev.commandflow.annotated.annotation.Switch;
 import me.fixeddev.commandflow.annotated.annotation.Text;
 import me.fixeddev.commandflow.annotated.part.AbstractModule;
@@ -20,6 +21,7 @@ import me.fixeddev.commandflow.annotated.part.defaults.factory.StringPartFactory
 import me.fixeddev.commandflow.annotated.part.defaults.factory.StringTextPartFactory;
 import me.fixeddev.commandflow.annotated.part.defaults.modifier.LimitModifier;
 import me.fixeddev.commandflow.annotated.part.defaults.modifier.OptionalModifier;
+import me.fixeddev.commandflow.annotated.part.defaults.modifier.RewritesModifier;
 import me.fixeddev.commandflow.annotated.part.defaults.modifier.ValueFlagModifier;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
@@ -60,5 +62,6 @@ public class DefaultsModule extends AbstractModule {
         bindModifier(Limit.class, new LimitModifier());
         bindModifier(OptArg.class, new OptionalModifier());
         bindModifier(Flag.class, new ValueFlagModifier());
+        bindModifier(Rewrites.class, new RewritesModifier());
     }
 }
