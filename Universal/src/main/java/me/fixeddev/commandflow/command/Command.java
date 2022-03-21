@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow.command;
 
 import me.fixeddev.commandflow.CommandContext;
+import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.defaults.SequentialCommandPart;
 import net.kyori.text.Component;
@@ -71,6 +72,15 @@ public interface Command {
     CommandPart getPart();
 
     /**
+     * A utility object, that has all the {@linkplain me.fixeddev.commandflow.command.modifiers.CommandModifiers} for this command,
+     * and allows to easily call them at any phase of the execution of the command
+     *
+     * @return The {@link CommandModifiers} for this command.
+     */
+    @NotNull
+    CommandModifiers getModifiers();
+
+    /**
      * The {@link Action} executed after the parsing has been finished. The {@link me.fixeddev.commandflow.CommandContext} passed to the action
      * is the resulting one after the parsing by the {@link CommandPart} returned by {@link Command#getPart()} is done.
      *
@@ -101,6 +111,8 @@ public interface Command {
         Builder addParts(CommandPart... part);
 
         Builder addPart(CommandPart part);
+
+        Builder modifiers(CommandModifiers modifiers);
 
         Builder action(Action action);
 

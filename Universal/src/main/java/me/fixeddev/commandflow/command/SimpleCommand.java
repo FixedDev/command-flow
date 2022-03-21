@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.command;
 
+import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.defaults.EmptyPart;
 import me.fixeddev.commandflow.part.Parts;
@@ -20,9 +21,10 @@ public class SimpleCommand implements Command {
     private final String permission;
     private final Component permissionMessage;
     private final CommandPart mainPart;
+    private final CommandModifiers modifiers;
     private final Action action;
 
-    public SimpleCommand(String name, List<String> aliases, Component description, Component usage, String permission, Component permissionMessage, CommandPart mainPart, Action action) {
+    public SimpleCommand(String name, List<String> aliases, Component description, Component usage, String permission, Component permissionMessage, CommandPart mainPart, CommandModifiers modifiers, Action action) {
         this.name = name;
         this.aliases = aliases;
         this.description = description;
@@ -30,6 +32,7 @@ public class SimpleCommand implements Command {
         this.permission = permission;
         this.permissionMessage = permissionMessage;
         this.mainPart = mainPart;
+        this.modifiers = modifiers;
         this.action = action;
     }
 
@@ -69,6 +72,11 @@ public class SimpleCommand implements Command {
     }
 
     @Override
+    public @NotNull CommandModifiers getModifiers() {
+        return modifiers;
+    }
+
+    @Override
     public @NotNull Action getAction() {
         return action;
     }
@@ -82,6 +90,7 @@ public class SimpleCommand implements Command {
         private String permission;
         private Component permissionMessage;
         private final List<CommandPart> parts;
+        private CommandModifiers modifiers;
         private Action action;
 
         public Builder(String name) {
@@ -181,6 +190,13 @@ public class SimpleCommand implements Command {
         }
 
         @Override
+        public Command.Builder modifiers(CommandModifiers modifiers) {
+            this.modifiers = modifiers;
+
+            return this;
+        }
+
+        @Override
         public Builder action(Action action) {
             if (action == null) {
                 throw new IllegalArgumentException("The Action shouldn't be a null!");
@@ -207,7 +223,11 @@ public class SimpleCommand implements Command {
                 permission = "";
             }
 
-            return new SimpleCommand(name, aliases, description, usage, permission, permissionMessage, part, action);
+            if (modifiers == null) {
+                modifiers = CommandModifiers.EMPTY;
+            }
+
+            return new SimpleCommand(name, aliases, description, usage, permission, permissionMessage, part, modifiers, action);
         }
     }
 }

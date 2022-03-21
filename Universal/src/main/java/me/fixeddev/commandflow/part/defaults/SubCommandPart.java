@@ -4,12 +4,15 @@ import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.ContextSnapshot;
+import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.InvalidSubCommandException;
 import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
+import me.fixeddev.commandflow.exception.StopParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
@@ -271,6 +274,11 @@ public class SubCommandPart implements CommandPart {
             }
 
             commandContext.setCommand(command, label);
+            if (!command.getModifiers().callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
+                // we just want to stop here if the pre-parse modifiers return false
+
+                throw new StopParseException();
+            }
             command.getPart().parse(commandContext, stack, command.getPart());
         }
     }

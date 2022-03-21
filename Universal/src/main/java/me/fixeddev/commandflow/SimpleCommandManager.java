@@ -1,9 +1,13 @@
 package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.command.modifiers.CommandModifier;
+import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
+import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.CommandUsage;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
+import me.fixeddev.commandflow.exception.StopParseException;
 import me.fixeddev.commandflow.executor.DefaultExecutor;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.exception.CommandException;
@@ -45,6 +49,9 @@ public class SimpleCommandManager implements CommandManager {
         usageBuilder = new DefaultUsageBuilder();
 
         errorHandler = new SimpleErrorHandler();
+
+        // do nothing, just ignore it.
+        errorHandler.addExceptionHandler(StopParseException.class, (namespace, throwable) -> true);
     }
 
     public SimpleCommandManager() {
@@ -285,6 +292,12 @@ public class SimpleCommandManager implements CommandManager {
 
         CommandContext commandContext = optionalContext.get();
 
+        CommandModifiers modifiers = commandContext.getCommand().getModifiers();
+
+        if (!modifiers.callModifiers(ModifierPhase.PRE_EXECUTE, commandContext, null)) {
+            return false;
+        }
+
         try {
             return executor.execute(commandContext, getUsageBuilder());
         } catch (Throwable e) {
@@ -295,6 +308,8 @@ public class SimpleCommandManager implements CommandManager {
             }
 
             return false;
+        } finally {
+            commandContext.getCommand().getModifiers().callModifiers(ModifierPhase.POST_EXECUTE, commandContext, null);
         }
     }
 
@@ -387,6 +402,10 @@ public class SimpleCommandManager implements CommandManager {
         CommandContext commandContext = new SimpleCommandContext(accessor, arguments);
         commandContext.setCommand(command, label);
 
+        if (!command.getModifiers().callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
+            // we just want to stop here if the pre-parse modifiers return false
+            return new ParseResultImpl();
+        }
 
         CommandPart part = command.getPart();
 
