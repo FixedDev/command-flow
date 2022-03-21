@@ -53,7 +53,7 @@ public class SimpleCommand implements Command {
 
     @Override
     public @Nullable Component getUsage() {
-        return null;
+        return usage;
     }
 
     @Override
