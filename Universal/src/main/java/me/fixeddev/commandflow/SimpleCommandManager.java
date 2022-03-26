@@ -1,8 +1,8 @@
 package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.command.modifiers.CommandModifier;
 import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
+import me.fixeddev.commandflow.command.modifiers.FallbackCommandModifiers;
 import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.CommandUsage;

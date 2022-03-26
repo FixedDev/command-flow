@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.command.modifiers.FallbackCommandModifiers;
 import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.input.InputTokenizer;

@@ -1,10 +1,4 @@
-package me.fixeddev.commandflow;
-
-import me.fixeddev.commandflow.command.modifiers.CommandModifier;
-import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
-import me.fixeddev.commandflow.command.modifiers.ModifierUtils;
-import me.fixeddev.commandflow.command.modifiers.SequentialCommandModifier;
-import me.fixeddev.commandflow.command.modifiers.SimpleCommandModifiers;
+package me.fixeddev.commandflow.command.modifiers;
 
 import java.util.HashMap;
 import java.util.LinkedList;

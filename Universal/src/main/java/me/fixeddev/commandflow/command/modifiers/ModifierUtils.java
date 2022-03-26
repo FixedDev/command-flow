@@ -3,7 +3,7 @@ package me.fixeddev.commandflow.command.modifiers;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class ModifierUtils {
+class ModifierUtils {
     public static void removeModifier(CommandModifier modifier, ModifierPhase phase, Map<ModifierPhase, CommandModifier> modifiersByPhase) {
         if (!modifiersByPhase.remove(phase, modifier)) {
             CommandModifier phaseModifier = modifiersByPhase.get(phase);
