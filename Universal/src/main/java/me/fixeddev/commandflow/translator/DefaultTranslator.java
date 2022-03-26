@@ -33,15 +33,7 @@ public class DefaultTranslator implements Translator {
 
         TranslatableComponent translatableComponent = (TranslatableComponent) component;
 
-        TextComponent translated = newConvert(translatableComponent, namespace);
-
-        return translated;
-/*
-        TextComponent.Builder componentBuilder = TextComponent.builder("");
-        convert(translatableComponent, componentBuilder, namespace);
-
-        return componentBuilder.build();
-  */
+        return newConvert(translatableComponent, namespace);
     }
 
     @Override
