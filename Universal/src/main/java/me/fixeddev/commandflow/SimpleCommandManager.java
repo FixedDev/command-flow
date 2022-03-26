@@ -39,6 +39,8 @@ public class SimpleCommandManager implements CommandManager {
     private UsageBuilder usageBuilder;
     private ErrorHandler errorHandler;
 
+    private final FallbackCommandModifiers fallbackCommandModifiers;
+
     public SimpleCommandManager(Authorizer authorizer) {
         this.authorizer = authorizer;
         commandMap = new HashMap<>();
@@ -47,6 +49,8 @@ public class SimpleCommandManager implements CommandManager {
         executor = new DefaultExecutor();
         translator = new DefaultTranslator(new DefaultMapTranslationProvider());
         usageBuilder = new DefaultUsageBuilder();
+
+        fallbackCommandModifiers = new FallbackCommandModifiers();
 
         errorHandler = new SimpleErrorHandler();
 
@@ -233,6 +237,11 @@ public class SimpleCommandManager implements CommandManager {
         this.errorHandler = errorHandler;
     }
 
+    @Override
+    public FallbackCommandModifiers getCommandModifiers() {
+        return fallbackCommandModifiers;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -294,9 +303,16 @@ public class SimpleCommandManager implements CommandManager {
 
         CommandModifiers modifiers = commandContext.getCommand().getModifiers();
 
-        if (!modifiers.callModifiers(ModifierPhase.PRE_EXECUTE, commandContext, null)) {
-            return false;
+        if (!modifiers.hasModifiers(ModifierPhase.PRE_EXECUTE)) {
+            if (!fallbackCommandModifiers.callModifiers(ModifierPhase.PRE_EXECUTE, commandContext, null)) {
+                return false;
+            }
+        } else {
+            if (!modifiers.callModifiers(ModifierPhase.PRE_EXECUTE, commandContext, null)) {
+                return false;
+            }
         }
+
 
         try {
             return executor.execute(commandContext, getUsageBuilder());
@@ -309,7 +325,11 @@ public class SimpleCommandManager implements CommandManager {
 
             return false;
         } finally {
-            commandContext.getCommand().getModifiers().callModifiers(ModifierPhase.POST_EXECUTE, commandContext, null);
+            if (!modifiers.hasModifiers(ModifierPhase.POST_EXECUTE)) {
+                fallbackCommandModifiers.callModifiers(ModifierPhase.POST_EXECUTE, commandContext, null);
+            } else {
+                commandContext.getCommand().getModifiers().callModifiers(ModifierPhase.POST_EXECUTE, commandContext, null);
+            }
         }
     }
 
@@ -402,9 +422,18 @@ public class SimpleCommandManager implements CommandManager {
         CommandContext commandContext = new SimpleCommandContext(accessor, arguments);
         commandContext.setCommand(command, label);
 
-        if (!command.getModifiers().callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
-            // we just want to stop here if the pre-parse modifiers return false
-            return new ParseResultImpl();
+        CommandModifiers modifiers = command.getModifiers();
+
+        if (!modifiers.hasModifiers(ModifierPhase.PRE_PARSE)) {
+            if (!fallbackCommandModifiers.callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
+                // we just want to stop here if the pre-parse modifiers return false
+                return new ParseResultImpl();
+            }
+        } else {
+            if (!modifiers.callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
+                // we just want to stop here if the pre-parse modifiers return false
+                return new ParseResultImpl();
+            }
         }
 
         CommandPart part = command.getPart();

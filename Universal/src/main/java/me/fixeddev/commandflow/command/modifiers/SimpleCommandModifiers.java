@@ -9,9 +9,9 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class SimpleCommandModifiers implements CommandModifiers {
-    private final Map<ModifierPhase, CommandModifier> modifiersByPhase;
+    protected final Map<ModifierPhase, CommandModifier> modifiersByPhase;
 
-    private SimpleCommandModifiers(Map<ModifierPhase, CommandModifier> modifiersByPhase) {
+    protected SimpleCommandModifiers(Map<ModifierPhase, CommandModifier> modifiersByPhase) {
         this.modifiersByPhase = modifiersByPhase;
 
         Iterator<ModifierPhase> phasesIterator = modifiersByPhase.keySet().iterator();

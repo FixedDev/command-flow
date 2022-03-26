@@ -134,6 +134,8 @@ public interface CommandManager {
 
     void setErrorHandler(ErrorHandler errorHandler);
 
+    FallbackCommandModifiers getCommandModifiers();
+
     /**
      * Searches a command with the specified name or alias and wraps it in an {@link Optional} instance
      * This operation is case insensitive

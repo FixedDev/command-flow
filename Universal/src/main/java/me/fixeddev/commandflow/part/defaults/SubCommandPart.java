@@ -4,8 +4,10 @@ import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.ContextSnapshot;
+import me.fixeddev.commandflow.FallbackCommandModifiers;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
 import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
@@ -273,12 +275,23 @@ public class SubCommandPart implements CommandPart {
                 throw exception;
             }
 
-            commandContext.setCommand(command, label);
-            if (!command.getModifiers().callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
-                // we just want to stop here if the pre-parse modifiers return false
+            FallbackCommandModifiers fallbackModifiers = manager.getCommandModifiers();
 
-                throw new StopParseException();
+            commandContext.setCommand(command, label);
+            CommandModifiers modifiers = command.getModifiers();
+
+            if (!modifiers.hasModifiers(ModifierPhase.PRE_PARSE)) {
+                if (!fallbackModifiers.callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
+                    // we just want to stop here if the pre-parse modifiers return false
+                    throw new StopParseException();
+                }
+            } else {
+                if (!modifiers.callModifiers(ModifierPhase.PRE_PARSE, commandContext, stack)) {
+                    // we just want to stop here if the pre-parse modifiers return false
+                    throw new StopParseException();
+                }
             }
+
             command.getPart().parse(commandContext, stack, command.getPart());
         }
     }
