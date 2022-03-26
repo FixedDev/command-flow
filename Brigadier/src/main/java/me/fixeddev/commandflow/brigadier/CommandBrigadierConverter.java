@@ -49,6 +49,7 @@ import org.bukkit.plugin.Plugin;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -297,8 +298,12 @@ public class CommandBrigadierConverter {
 
                         CommandContext commandContext = new SimpleCommandContext(namespace, new ArrayList<>());
 
-                        for (String suggestion : part.getSuggestions(commandContext, new SimpleArgumentStack(new ArrayList<>()))) {
-                            builder.suggest(suggestion);
+                        List<String> suggestions = part.getSuggestions(commandContext, new SimpleArgumentStack(Collections.singletonList("")));
+
+                        if (suggestions != null) {
+                            for (String suggestion : suggestions) {
+                                builder.suggest(suggestion);
+                            }
                         }
 
                         return builder.buildFuture();
