@@ -437,7 +437,13 @@ public class CommandBrigadierConverter {
             }
 
             if (node != null) {
-                literalNodeBuilder.then(node);
+                if (node instanceof LiteralCommandNode && (node.getName().equals("valueFlag") || node.getName().equals("Wrapper"))) {
+                    for (CommandNode<Object> child : node.getChildren()) {
+                        literalNodeBuilder.then(child);
+                    }
+                } else {
+                    literalNodeBuilder.then(node);
+                }
             }
 
             LiteralCommandNode<Object> literalNode = literalNodeBuilder.build();
