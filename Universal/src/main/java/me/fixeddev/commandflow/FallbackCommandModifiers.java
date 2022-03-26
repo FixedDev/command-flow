@@ -2,6 +2,7 @@ package me.fixeddev.commandflow;
 
 import me.fixeddev.commandflow.command.modifiers.CommandModifier;
 import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
+import me.fixeddev.commandflow.command.modifiers.ModifierUtils;
 import me.fixeddev.commandflow.command.modifiers.SequentialCommandModifier;
 import me.fixeddev.commandflow.command.modifiers.SimpleCommandModifiers;
 
@@ -58,17 +59,7 @@ public class FallbackCommandModifiers extends SimpleCommandModifiers {
      * @param phase    The phase to remove the modifier from.
      */
     public void removeModifier(CommandModifier modifier, ModifierPhase phase) {
-        if (!modifiersByPhase.remove(phase, modifier)) {
-            CommandModifier phaseModifier = modifiersByPhase.get(phase);
-
-            if (phaseModifier instanceof SequentialCommandModifier) {
-                SequentialCommandModifier seqModifier = (SequentialCommandModifier) phaseModifier;
-
-                seqModifier.removeModifier(modifier);
-            }
-        } else {
-            modifiersByPhase.put(phase, new SequentialCommandModifier(new LinkedList<>()));
-        }
+        ModifierUtils.removeModifier(modifier, phase, modifiersByPhase);
     }
 
     /**
@@ -100,17 +91,6 @@ public class FallbackCommandModifiers extends SimpleCommandModifiers {
     }
 
     private SequentialCommandModifier getSequential(ModifierPhase phase) {
-        CommandModifier modifier = modifiersByPhase.get(phase);
-
-        if (!(modifier instanceof SequentialCommandModifier)) {
-            SequentialCommandModifier seqModifier = new SequentialCommandModifier(new LinkedList<>());
-            seqModifier.addModifier(modifier);
-
-            modifiersByPhase.put(phase, seqModifier);
-
-            return seqModifier;
-        }
-
-        return (SequentialCommandModifier) modifier;
+        return ModifierUtils.getSequential(phase, modifiersByPhase);
     }
 }

@@ -76,17 +76,7 @@ public class SimpleCommandModifiers implements CommandModifiers {
 
         @Override
         public void removeModifier(CommandModifier modifier, ModifierPhase phase) {
-            if (!modifiersByPhase.remove(phase, modifier)) {
-                CommandModifier phaseModifier = modifiersByPhase.get(phase);
-
-                if (phaseModifier instanceof SequentialCommandModifier) {
-                    SequentialCommandModifier seqModifier = (SequentialCommandModifier) phaseModifier;
-
-                    seqModifier.removeModifier(modifier);
-                }
-            } else {
-                modifiersByPhase.put(phase, new SequentialCommandModifier(new LinkedList<>()));
-            }
+            ModifierUtils.removeModifier(modifier, phase, modifiersByPhase);
         }
 
         @Override
@@ -111,18 +101,7 @@ public class SimpleCommandModifiers implements CommandModifiers {
         }
 
         private SequentialCommandModifier getSequential(ModifierPhase phase) {
-            CommandModifier modifier = modifiersByPhase.get(phase);
-
-            if (!(modifier instanceof SequentialCommandModifier)) {
-                SequentialCommandModifier seqModifier = new SequentialCommandModifier(new LinkedList<>());
-                seqModifier.addModifier(modifier);
-
-                modifiersByPhase.put(phase, seqModifier);
-
-                return seqModifier;
-            }
-
-            return (SequentialCommandModifier) modifier;
+            return ModifierUtils.getSequential(phase, modifiersByPhase);
         }
     }
 }
