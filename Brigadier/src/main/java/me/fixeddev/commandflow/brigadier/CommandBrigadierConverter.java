@@ -323,6 +323,15 @@ public class CommandBrigadierConverter {
                     continue; // not available for brigadier completition.
                 }
 
+                if (argumentNode instanceof LiteralCommandNode) {
+                    if (argumentNode.getName().equals("Wrapper") || argumentNode.getName().equals("valueFlag")) {
+                        // we can't do a lot more lol.
+                        argumentNode.getChildren().forEach(builder::then);
+
+                        continue;
+                    }
+                }
+
                 builder.then(argumentNode);
             }
 
