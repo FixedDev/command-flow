@@ -133,11 +133,17 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
         List<String> suggestions = new ArrayList<>();
 
         for (CommandPart part : partList) {
+            ContextSnapshot snapshot = context.getSnapshot();
+            StackSnapshot stackSnapshot = stack.getSnapshot();
+
             List<String> partSuggestions = part.getSuggestions(context, stack);
 
             if (partSuggestions != null) {
                 suggestions.addAll(partSuggestions);
             }
+
+            stack.applySnapshot(stackSnapshot, true);
+            context.applySnapshot(snapshot);
         }
 
         return suggestions;
