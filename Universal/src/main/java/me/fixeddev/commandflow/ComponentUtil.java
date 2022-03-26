@@ -81,7 +81,10 @@ public class ComponentUtil {
 
         TextComponent lastComponent = textComponent;
 
+        boolean matchedOnce = false;
+
         while (matcher.find()) {
+            matchedOnce = true;
             int start = matcher.start();
             int end = matcher.end();
 
@@ -93,8 +96,14 @@ public class ComponentUtil {
 
             lastIdx = end;
 
-            lastComponent = (TextComponent) recursiveDynamicReplace(replacementProvider.apply(toReplace, matcher), pattern, replacementProvider);
+            TextComponent replacement = replacementProvider.apply(toReplace, matcher);
+
+            lastComponent = (TextComponent) recursiveDynamicReplace(replacement, pattern, replacementProvider);
             parentComponent.append(lastComponent);
+        }
+
+        if (!matchedOnce) {
+            return component;
         }
 
         if (lastIdx < content.length()) {
