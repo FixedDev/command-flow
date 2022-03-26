@@ -8,6 +8,7 @@ import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.command.modifiers.FallbackCommandModifiers;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
@@ -237,6 +238,11 @@ public class BukkitCommandManager implements CommandManager {
     @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         manager.setErrorHandler(errorHandler);
+    }
+
+    @Override
+    public FallbackCommandModifiers getCommandModifiers() {
+        return manager.getCommandModifiers();
     }
 
     @Override

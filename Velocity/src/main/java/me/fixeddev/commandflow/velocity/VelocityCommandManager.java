@@ -9,6 +9,7 @@ import me.fixeddev.commandflow.SimpleCommandManager;
 import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.ParseResult;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.command.modifiers.FallbackCommandModifiers;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.exception.CommandUsage;
@@ -245,5 +246,10 @@ public class VelocityCommandManager implements CommandManager {
     @Override
     public void setErrorHandler(ErrorHandler errorHandler) {
         commandManager.setErrorHandler(errorHandler);
+    }
+
+    @Override
+    public FallbackCommandModifiers getCommandModifiers() {
+        return commandManager.getCommandModifiers();
     }
 }
