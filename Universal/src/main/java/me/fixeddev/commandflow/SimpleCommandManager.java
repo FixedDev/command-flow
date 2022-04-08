@@ -78,7 +78,7 @@ public class SimpleCommandManager implements CommandManager {
 
     @Override
     public void registerCommand(String label, Command command) {
-        commandMap.putIfAbsent(label, command);
+        commandMap.putIfAbsent(label.toLowerCase(), command);
     }
 
     /**
