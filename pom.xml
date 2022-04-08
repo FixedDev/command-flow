@@ -49,7 +49,7 @@
         <version.discord>0.5.0</version.discord>
         <version.bungee>0.5.1</version.bungee>
         <version.velocity>0.5.1</version.velocity>
-        <version.brigadier>0.5.1</version.brigadier>
+        <version.brigadier>0.5.2</version.brigadier>
     </properties>
 
     <build>
