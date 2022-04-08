@@ -61,10 +61,8 @@ public class MultipleHeadNodeBuilder<T> {
             iterator.set(headPointer.then(node));
         }
 
-        if (getHeadsSize() > 1) {
-            headPointers.clear();
-            headPointers.add(node);
-        }
+        headPointers.clear();
+        headPointers.add(node);
 
         return this;
     }
