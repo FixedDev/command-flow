@@ -447,6 +447,8 @@ public class SimpleCommandManager implements CommandManager {
             usage.initCause(e);
 
             return ofError(commandContext, e);
+        } catch (CommandException e) {
+            return ofError(commandContext, e);
         }
 
         return ofSuccess(commandContext);

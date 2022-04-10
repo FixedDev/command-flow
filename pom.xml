@@ -43,7 +43,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.universal>0.5.0</version.universal>
+        <version.universal>0.5.1</version.universal>
         <version.examples>0.5.0</version.examples>
         <version.bukkit>0.5.0</version.bukkit>
         <version.discord>0.5.0</version.discord>
