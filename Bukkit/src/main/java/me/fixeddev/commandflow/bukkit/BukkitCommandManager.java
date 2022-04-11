@@ -129,6 +129,8 @@ public class BukkitCommandManager implements CommandManager {
             registerCommand(fallbackPrefix + ":" + alias, command);
         }
 
+        registerCommand(fallbackPrefix + ":" + command.getName(), command);
+
         wrapperMap.put(command.getName(), bukkitCommand);
         bukkitCommandMap.register(fallbackPrefix, bukkitCommand);
     }
