@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
 import me.fixeddev.commandflow.command.modifiers.FallbackCommandModifiers;
 import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
 import me.fixeddev.commandflow.exception.ArgumentException;
+import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandUsage;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.exception.StopParseException;
@@ -440,6 +441,8 @@ public class SimpleCommandManager implements CommandManager {
 
         try {
             part.parse(commandContext, stack, null);
+        } catch (ArgumentParseException e) {
+            return ofError(commandContext, e);
         } catch (ArgumentException e) {
             CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
             usage.setCommand(commandContext.getCommand());
