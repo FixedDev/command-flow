@@ -182,4 +182,5 @@ public class FirstMatchPart implements CommandPart, PartsWrapper {
     public int hashCode() {
         return Objects.hash(name, partList);
     }
+
 }

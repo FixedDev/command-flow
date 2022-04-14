@@ -26,6 +26,7 @@ import me.fixeddev.commandflow.annotated.part.defaults.modifier.ValueFlagModifie
 import me.fixeddev.commandflow.stack.ArgumentStack;
 
 public class DefaultsModule extends AbstractModule {
+
     @Override
     public void configure() {
         BooleanPartFactory booleanPartFactory = new BooleanPartFactory();
@@ -64,4 +65,5 @@ public class DefaultsModule extends AbstractModule {
         bindModifier(Flag.class, new ValueFlagModifier());
         bindModifier(Rewrites.class, new RewritesModifier());
     }
+
 }

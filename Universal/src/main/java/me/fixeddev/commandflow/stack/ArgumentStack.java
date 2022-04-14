@@ -6,6 +6,7 @@ import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
 import java.util.List;
 
 public interface ArgumentStack {
+
     boolean hasNext();
 
     String next() throws NoMoreArgumentsException;

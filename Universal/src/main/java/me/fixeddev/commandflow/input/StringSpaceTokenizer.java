@@ -11,7 +11,7 @@ public class StringSpaceTokenizer implements InputTokenizer {
      */
     @Override
     public List<String> tokenize(String line) {
-        return
-                new ArrayList<>(Arrays.asList(line.split(" ")));
+        return new ArrayList<>(Arrays.asList(line.split(" ")));
     }
+
 }

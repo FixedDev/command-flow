@@ -103,7 +103,6 @@ public class OfflinePlayerPart implements ArgumentPart {
         return name;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -117,4 +116,5 @@ public class OfflinePlayerPart implements ArgumentPart {
     public int hashCode() {
         return Objects.hash(name, orSource);
     }
+
 }

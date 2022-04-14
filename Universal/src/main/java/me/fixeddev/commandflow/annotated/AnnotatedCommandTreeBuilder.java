@@ -7,10 +7,11 @@ import me.fixeddev.commandflow.command.Command;
 import java.util.List;
 
 /**
- * This class has the purpose of creating entire {@linkplain Command} trees based completely on anotations
+ * This class has the purpose of creating entire {@linkplain Command} trees based completely on annotations
  * and methods.
  */
 public interface AnnotatedCommandTreeBuilder {
+
     /**
      * Creates a {@linkplain Command} tree from the given {@link CommandClass} instance.
      * The {@link Command} instances created from annotated methods should be public instance methods(not static ones) that return boolean or void,
@@ -30,7 +31,7 @@ public interface AnnotatedCommandTreeBuilder {
      * This allows multiple levels of subcommands without a lot of hassle.
      *
      * @param commandClass The {@link CommandClass} instance of this command tree.
-     * @return A not null list of of {@link Command} containing the main level commands which are on this class.
+     * @return A not null list of {@link Command} containing the main level commands which are on this class.
      */
     List<Command> fromClass(CommandClass commandClass);
 
@@ -41,6 +42,7 @@ public interface AnnotatedCommandTreeBuilder {
     static AnnotatedCommandTreeBuilder create(PartInjector injector) {
         return new AnnotatedCommandTreeBuilderImpl(injector);
     }
+
 }
 
 

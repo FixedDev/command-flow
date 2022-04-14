@@ -197,6 +197,7 @@ public class BrigadierCommandManager extends BukkitCommandManager {
 
                 CommandSender sender = accessor.getObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE);
                 try {
+                    @SuppressWarnings("unchecked")
                     List<Entity> entities = (List<Entity>) selectEntitiesHandle.invoke(sender, argument);
 
                     List<Player> matchedPlayers = entities.stream()
@@ -233,4 +234,5 @@ public class BrigadierCommandManager extends BukkitCommandManager {
             }
         }
     }
+
 }

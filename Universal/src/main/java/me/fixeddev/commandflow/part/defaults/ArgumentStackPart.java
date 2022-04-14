@@ -40,4 +40,5 @@ public class ArgumentStackPart implements ArgumentPart {
     public String getName() {
         return name;
     }
+
 }

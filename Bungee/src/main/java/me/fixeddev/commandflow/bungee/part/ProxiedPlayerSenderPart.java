@@ -30,7 +30,7 @@ public class ProxiedPlayerSenderPart implements CommandPart {
         CommandSender sender = context.getObject(CommandSender.class, BungeeCommandManager.SENDER_NAMESPACE);
 
         if (sender != null) {
-            if(sender instanceof ProxiedPlayer){
+            if (sender instanceof ProxiedPlayer) {
                 context.setValue(this, sender);
 
                 return;
@@ -54,4 +54,5 @@ public class ProxiedPlayerSenderPart implements CommandPart {
     public int hashCode() {
         return Objects.hash(name);
     }
+
 }

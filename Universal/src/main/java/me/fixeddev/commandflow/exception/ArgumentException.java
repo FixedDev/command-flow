@@ -41,4 +41,5 @@ public class ArgumentException extends CommandException {
     public CommandPart getArgument() {
         return argument;
     }
+
 }

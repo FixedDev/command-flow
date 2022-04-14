@@ -204,4 +204,5 @@ public interface CommandContext extends Namespace {
      * @param raw  The {@link List} of raw values to add into the specified {@link CommandPart}
      */
     void setRaw(CommandPart part, List<String> raw);
+
 }

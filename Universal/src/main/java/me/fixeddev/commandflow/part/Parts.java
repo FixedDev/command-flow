@@ -23,11 +23,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-// TODO: Fix some unknown references in some methods of this class.
 /**
- * An utility class to ease the use of {@link CommandPart} and his sub classes.
+ * A utility class to ease the use of {@link CommandPart} and its sub-classes
  */
 public final class Parts {
+
     /**
      * Creates a part that limits the available arguments for the given {@link CommandPart} into the given limit.
      *
@@ -40,57 +40,65 @@ public final class Parts {
     }
 
     /**
-     * Creates a new {@link SwitchPart} that searches non positional boolean arguments with the next format -&lt;shortName&gt;, the value for
-     * this part will be true if the argument is present at least one time, false if it isn't.
-     * <p>
-     * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
+     * Creates a new {@link SwitchPart} that searches non-positional boolean arguments with the next format
+     * -&lt;shortName&gt;, the value for this part will be true if the argument is present at least one time,
+     * false if it isn't.
+     *
+     * <p>After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere
+     * with other parsed {@link CommandPart}</p>
      *
      * @param shortName The short name of the {@link SwitchPart}, this will be used as the flag name(-&lt;shortName&gt;)
-     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending on whether it's present or not.
      */
     public static CommandPart switchPart(String shortName) {
         return switchPart(shortName, shortName);
     }
 
     /**
-     * Creates a new {@link SwitchPart} that searches non positional boolean arguments with the next format -&lt;shortName&gt;, the value for
-     * this part will be true if the argument is present at least one time, false if it isn't.
-     * <p>
-     * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
+     * Creates a new {@link SwitchPart} that searches non-positional boolean arguments with the next format
+     * -&lt;shortName&gt;, the value for this part will be true if the argument is present at least one time,
+     * false if it isn't.
+     *
+     * <p>After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere
+     * with other parsed {@link CommandPart}</p>
      *
      * @param name      The full internal name of the {@link SwitchPart}.
      * @param shortName The short name of the {@link SwitchPart}, this will be used as the flag name(-&lt;shortName&gt;)
-     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending on whether it's present or not.
      */
     public static CommandPart switchPart(String name, String shortName) {
         return switchPart(name, shortName, false);
     }
 
     /**
-     * Creates a new {@link SwitchPart} that searches non positional boolean arguments with the format -&lt;shortName&gt; or --&lt;name&gt;, the second one only
-     * being allowed if the allowFullNameUse parameter is true; the value for this part will be true if the argument is present
-     * at least one time in any of its formats, false if it isn't.
-     * <p>
-     * After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't interfere with other parsed {@link CommandPart}.
+     * Creates a new {@link SwitchPart} that searches non-positional boolean arguments with the format
+     * -&lt;shortName&gt; or --&lt;name&gt;, the second one only being allowed if the allowFullNameUse
+     * parameter is true; the value for this part will be true if the argument is present at least one
+     * time in any of its formats, false if it isn't.
+     *
+     * <p>After the argument being found it will be deleted from the {@link ArgumentStack} so it doesn't
+     * interfere with other parsed {@link CommandPart}</p>
      *
      * @param name             The full name of the {@link SwitchPart}, if the parameter allowFullNameUse is true, this will be allowed as flag name(--&lt;name&gt;).
      * @param shortName        The short name of the {@link SwitchPart}, this will be used as the flag name(-&lt;shortName&gt;)
      * @param allowFullNameUse Whether the format --&lt;name&gt; is allowed or not.
-     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending on whether it's present or not.
      */
     public static CommandPart switchPart(String name, String shortName, boolean allowFullNameUse) {
         return new SwitchPart(name, shortName, allowFullNameUse);
     }
 
     /**
-     * Creates a new {@link ValueFlagPart} that searches non positional arguments with the format -&lt;shortName&gt; the value for this part will be the value returned by the provided {@link CommandPart}.
-     * <p>
-     * After the argument being found it will be deleted from the {@link ArgumentStack} and in that position of the stack the provided {@link CommandPart} will
-     * start the parsing, if the parse fails the whole process is reverted. The parsed arguments are removed also.
+     * Creates a new {@link ValueFlagPart} that searches non-positional arguments with the format
+     * -&lt;shortName&gt; the value for this part will be the value returned by the provided {@link CommandPart}.
+     *
+     * <p>After the argument being found it will be deleted from the {@link ArgumentStack} and in that position
+     * of the stack the provided {@link CommandPart} will start the parsing, if the parse fails the whole process
+     * is reverted. The parsed arguments are removed also</p>
      *
      * @param part      The {@link CommandPart} that will parse the arguments.
      * @param shortName The short name of the {@link SwitchPart}, this will be used as the flag name(-&lt;shortName&gt;)
-     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending on whether it's present or not.
      * @see Parts#switchPart(String, String, boolean)
      */
     public static CommandPart valueFlag(CommandPart part, String shortName) {
@@ -98,16 +106,19 @@ public final class Parts {
     }
 
     /**
-     * Creates a new {@link ValueFlagPart} that searches non positional arguments with the format -&lt;shortName&gt; or --&lt;name&gt;(name being the name of the provided part), the second one only
-     * being allowed if the allowFullNameUse parameter is true; the value for this part will be the value returned by the provided {@link CommandPart}.
-     * <p>
-     * After the argument being found it will be deleted from the {@link ArgumentStack} and in that position of the stack the provided {@link CommandPart} will
-     * start the parsing, if the parse fails the whole process is reverted. The parsed arguments are removed also.
+     * Creates a new {@link ValueFlagPart} that searches non-positional arguments with the format
+     * -&lt;shortName&gt; or --&lt;name&gt;(name being the name of the provided part), the second
+     * one only being allowed if the allowFullNameUse parameter is true; the value for this part
+     * will be the value returned by the provided {@link CommandPart}.
+     *
+     * <p>After the argument being found it will be deleted from the {@link ArgumentStack} and in
+     * that position of the stack the provided {@link CommandPart} will start the parsing, if the
+     * parse fails the whole process is reverted. The parsed arguments are also removed</p>
      *
      * @param part             The {@link CommandPart} that will parse the arguments.
      * @param shortName        The short name of the {@link SwitchPart}, this will be used as the flag name(-&lt;shortName&gt;)
      * @param allowFullNameUse Whether the format --&lt;name&gt; is allowed or not.
-     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending weather it's present or not.
+     * @return A {@link CommandPart} that will detect flags on the argument stack and delete them, returning true or false depending on whether it's present or not.
      * @see Parts#switchPart(String, String, boolean)
      */
     public static CommandPart valueFlag(CommandPart part, String shortName, boolean allowFullNameUse) {
@@ -116,8 +127,8 @@ public final class Parts {
 
 
     /**
-     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack} and converts it into an Enum
-     * value.
+     * A basic {@link CommandPart} that takes a string from the {@link me.fixeddev.commandflow.stack.ArgumentStack}
+     * and converts it into an Enum value.
      *
      * @param name     The name for this part.
      * @param enumType The type of the enum for this part.
@@ -181,7 +192,7 @@ public final class Parts {
      * @return A {@link CommandPart} with the given name that takes a {@link Integer} as argument.
      */
     public static CommandPart integer(String name, int min, int max) {
-        return new IntegerPart(name);
+        return new IntegerPart(name, min, max);
     }
 
     /**
@@ -423,6 +434,5 @@ public final class Parts {
     public static CommandPart strictOptional(CommandPart part, List<String> defaultValues) {
         return new OptionalPart(part, false, defaultValues);
     }
-
 
 }

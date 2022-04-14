@@ -40,9 +40,7 @@ public class IntegerPart extends PrimitivePart {
     public List<Integer> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         int next = stack.nextInt();
         if (ranged && (next > max || next < min)) {
-            Component message = TranslatableComponent.of("number.out-range", of(next), of(min), of(max));
-
-            throw new ArgumentParseException(message);
+            throw new ArgumentParseException(TranslatableComponent.of("number.out-range", of(next), of(min), of(max)));
         }
 
         return Collections.singletonList(next);

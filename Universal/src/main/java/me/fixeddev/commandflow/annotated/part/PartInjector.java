@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface PartInjector {
+
     /**
      * Gets a {@link PartFactory} for a given {@link Type}.
      *
@@ -123,4 +124,5 @@ public interface PartInjector {
     static PartInjector create() {
         return new SimplePartInjector();
     }
+
 }

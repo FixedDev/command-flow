@@ -36,6 +36,7 @@ public class ComponentRendererTranslator implements Translator {
 
     @Override
     public void setConverterFunction(Function<String, TextComponent> stringToComponent) {
-        // NOP, this translator doesn't allows this
+        // NOP, this translator doesn't allow this
     }
+
 }

@@ -256,4 +256,5 @@ public class BungeeCommandManager implements CommandManager {
     public ParseResult parse(Namespace accessor, String line) throws CommandException {
         return commandManager.parse(accessor, line);
     }
+
 }

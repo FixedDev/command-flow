@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 public class ReflectionInstanceCreator implements SubCommandInstanceCreator {
+
     @Override
     public CommandClass createInstance(Class<? extends CommandClass> clazz, CommandClass parent) {
         try {
@@ -36,4 +37,5 @@ public class ReflectionInstanceCreator implements SubCommandInstanceCreator {
 
         return null;
     }
+
 }

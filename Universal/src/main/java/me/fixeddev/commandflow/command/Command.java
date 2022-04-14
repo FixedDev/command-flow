@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public interface Command {
+
     /**
      * The main name for this command used to identify the command internally.
      *
@@ -130,4 +131,5 @@ public interface Command {
     static Builder builder(String name) {
         return new SimpleCommand.Builder(name);
     }
+
 }

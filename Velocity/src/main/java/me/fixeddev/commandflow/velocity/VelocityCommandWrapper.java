@@ -90,4 +90,5 @@ public class VelocityCommandWrapper implements RawCommand {
 
         sender.sendMessage(MessageUtils.kyoriToVelocityKyori(translatedComponent));
     }
+
 }

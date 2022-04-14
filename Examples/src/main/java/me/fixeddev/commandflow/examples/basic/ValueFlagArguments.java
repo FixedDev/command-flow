@@ -71,4 +71,5 @@ public class ValueFlagArguments {
 
         manager.registerCommand(testUserCommand);
     }
+
 }

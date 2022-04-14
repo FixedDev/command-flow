@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class RewritesModifier implements PartModifier {
+
     @Override
     public CommandPart modify(CommandPart original, List<? extends Annotation> modifiers) {
         Rewrites rewrites = getModifier(modifiers, Rewrites.class);
@@ -21,4 +22,5 @@ public class RewritesModifier implements PartModifier {
 
         return rewriterPart;
     }
+
 }

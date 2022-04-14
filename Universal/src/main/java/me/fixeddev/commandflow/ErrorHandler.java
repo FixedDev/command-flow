@@ -47,6 +47,7 @@ public interface ErrorHandler {
      * @param <T> The generic type of the throwable to handle.
      */
     interface ErrorConsumer<T> {
+
         /**
          * Handles the throwable.
          * @param namespace The namespace of the command parsing/execution.
@@ -55,5 +56,7 @@ public interface ErrorHandler {
          * @throws Throwable Any type of exception that should be handled by the caller.
          */
         boolean accept(Namespace namespace, T throwable) throws Throwable;
+
     }
+
 }

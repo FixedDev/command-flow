@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.Namespace;
 import org.bukkit.command.CommandSender;
 
 public class BukkitAuthorizer implements Authorizer {
+
     @Override
     public boolean isAuthorized(Namespace namespace, String permission) {
         if (permission.isEmpty()) {
@@ -15,4 +16,5 @@ public class BukkitAuthorizer implements Authorizer {
 
         return sender.hasPermission(permission);
     }
+
 }

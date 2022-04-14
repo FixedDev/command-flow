@@ -24,4 +24,5 @@ public interface UnwrappedCommandPartVisitor<R> extends CommandPartVisitor<R> {
     R visitSequential(SequentialCommandPart sequentialCommandPart);
 
     R visitFirstMatch(FirstMatchPart firstMatchPart);
+
 }

@@ -33,6 +33,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNode, CommandPartsNode, SubCommandsNode {
+
     private final Command.Builder builder;
     private final List<Command> subCommands;
     private final PartInjector injector;
@@ -71,7 +72,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             PartFactory factory = getFactory(parameter);
 
             if (factory == null) {
-                throw new IllegalStateException("The parameter " + parameter.toString() + " of the method " + method.getName() + " doesn't has a valid factory!");
+                throw new IllegalStateException("The parameter " + parameter + " of the method " + method.getName() + " doesn't has a valid factory!");
             }
 
             String name = getName(parameter);
@@ -108,7 +109,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
                 }
             }
 
-            if(arg == null) {
+            if (arg == null) {
                 part = modifier.modify(part, annotations);
                 builder.addPart(part);
             }
@@ -315,4 +316,5 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
 
         return builder.build();
     }
+
 }

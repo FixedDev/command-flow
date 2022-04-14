@@ -23,4 +23,5 @@ public class EnumPartFactory implements PartFactory {
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
         return Parts.enumPart(name, enumType);
     }
+
 }

@@ -59,4 +59,5 @@ public class CommandContextUsage {
 
         manager.registerCommand(testUserCommand);
     }
+
 }

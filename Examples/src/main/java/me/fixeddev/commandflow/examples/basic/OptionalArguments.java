@@ -77,4 +77,5 @@ public class OptionalArguments {
 
         manager.registerCommand(testUserCommand);
     }
+
 }

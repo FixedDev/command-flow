@@ -6,6 +6,7 @@ import me.fixeddev.commandflow.part.CommandPart;
  * An utility class to ease the use of some {@link me.fixeddev.commandflow.part.CommandPart} specific instances for bukkit.
  */
 public final class BukkitParts {
+
     /**
      * A basic {@link me.fixeddev.commandflow.part.CommandPart} that provides the {@link org.bukkit.command.CommandSender} of the command from
      * the namespace.
@@ -120,4 +121,5 @@ public final class BukkitParts {
     public static WorldPart world(String name) {
         return new WorldPart(name);
     }
+
 }

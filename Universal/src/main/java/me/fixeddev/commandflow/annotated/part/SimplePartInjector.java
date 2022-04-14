@@ -8,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class SimplePartInjector implements PartInjector {
 
-    private Map<Key, PartFactory> factoryBindings;
-    private Map<Class<? extends Annotation>, PartModifier> modifiers;
+    private final Map<Key, PartFactory> factoryBindings;
+    private final Map<Class<? extends Annotation>, PartModifier> modifiers;
 
     public SimplePartInjector() {
         this.factoryBindings = new ConcurrentHashMap<>();
@@ -54,4 +54,5 @@ public class SimplePartInjector implements PartInjector {
         module.configure();
         module.setInjector(null);
     }
+
 }

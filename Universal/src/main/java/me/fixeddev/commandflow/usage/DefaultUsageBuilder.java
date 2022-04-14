@@ -6,6 +6,7 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 
 public class DefaultUsageBuilder implements UsageBuilder {
+
     @Override
     public Component getUsage(CommandContext commandContext) {
         Command toExecute = commandContext.getCommand();
@@ -28,4 +29,5 @@ public class DefaultUsageBuilder implements UsageBuilder {
 
         return labelComponent;
     }
+
 }

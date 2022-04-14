@@ -25,4 +25,5 @@ public class ContextPart implements CommandPart {
     public void parse(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         context.setValue(this, context);
     }
+
 }

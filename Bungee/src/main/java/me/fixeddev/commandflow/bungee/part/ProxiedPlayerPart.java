@@ -99,4 +99,5 @@ public class ProxiedPlayerPart implements ArgumentPart {
     public String getName() {
         return name;
     }
+
 }

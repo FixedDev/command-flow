@@ -112,4 +112,5 @@ public class PlayerPart implements ArgumentPart {
     public int hashCode() {
         return Objects.hash(name, exact, orSource);
     }
+
 }

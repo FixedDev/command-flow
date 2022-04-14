@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class OfflinePlayerPartFactory implements PartFactory {
+
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
         boolean orSource = false;
@@ -21,4 +22,5 @@ public class OfflinePlayerPartFactory implements PartFactory {
 
         return new OfflinePlayerPart(name, orSource);
     }
+
 }

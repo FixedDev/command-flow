@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class DoublePartFactory implements PartFactory {
+
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
         Range range = getAnnotation(modifiers, Range.class);
@@ -19,4 +20,5 @@ public class DoublePartFactory implements PartFactory {
 
         return new DoublePart(name);
     }
+
 }

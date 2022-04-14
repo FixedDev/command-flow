@@ -33,4 +33,5 @@ public class SimpleErrorHandler implements ErrorHandler {
         ErrorConsumer<Throwable> consumer = (ErrorConsumer<Throwable>) exceptionHandlers.getOrDefault(throwableType, defaultHandler);
         return consumer.accept(namespace, exception);
     }
+
 }

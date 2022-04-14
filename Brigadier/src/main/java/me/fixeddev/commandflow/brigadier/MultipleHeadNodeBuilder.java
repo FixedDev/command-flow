@@ -204,4 +204,5 @@ public class MultipleHeadNodeBuilder<T> {
     public int getTailsSize() {
         return tailPointers.size();
     }
+
 }

@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.annotated.builder;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
 
 public interface AnnotatedCommandBuilder {
+
     /**
      * Creates a new builder to create a {@link me.fixeddev.commandflow.command.Command} instance.
      * <p>
@@ -18,4 +19,5 @@ public interface AnnotatedCommandBuilder {
     static AnnotatedCommandBuilder create(PartInjector injector) {
         return new AnnotatedCommandBuilderImpl(injector);
     }
+
 }

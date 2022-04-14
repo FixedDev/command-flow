@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 public class BukkitCommandManager implements CommandManager {
+
     public static final String SENDER_NAMESPACE = "SENDER";
 
     protected CommandManager manager;
@@ -286,4 +287,5 @@ public class BukkitCommandManager implements CommandManager {
     public ParseResult parse(Namespace accessor, String line) throws CommandException {
         return manager.parse(accessor, line);
     }
+
 }

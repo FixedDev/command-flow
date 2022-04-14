@@ -230,4 +230,5 @@ public class SimpleCommand implements Command {
             return new SimpleCommand(name, aliases, description, usage, permission, permissionMessage, part, modifiers, action);
         }
     }
+
 }

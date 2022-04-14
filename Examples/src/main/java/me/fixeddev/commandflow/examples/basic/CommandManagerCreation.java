@@ -15,4 +15,5 @@ public class CommandManagerCreation {
         // We change the tokenizer to take as 1 argument the quoted strings
         commandManager.setInputTokenizer(new QuotedSpaceTokenizer());
     }
+
 }

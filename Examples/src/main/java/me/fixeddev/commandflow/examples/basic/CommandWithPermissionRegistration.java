@@ -34,4 +34,5 @@ public class CommandWithPermissionRegistration {
         commandManager.registerCommand(testUserCommand);
         commandManager.execute(namespace, "test"); // Throws NoPermissionException
     }
+
 }

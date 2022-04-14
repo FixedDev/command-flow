@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import java.util.Objects;
 
 public class CommandSenderPart implements CommandPart {
+
     private final String name;
 
     public CommandSenderPart(String name) {
@@ -48,4 +49,5 @@ public class CommandSenderPart implements CommandPart {
     public int hashCode() {
         return Objects.hash(name);
     }
+
 }

@@ -47,4 +47,5 @@ public class CommandExecution {
 
         manager.registerCommand(testUserCommand);
     }
+
 }

@@ -3,7 +3,12 @@ package me.fixeddev.commandflow;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.CommandPart;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class SimpleCommandContext implements CommandContext, Namespace {
 
@@ -162,4 +167,5 @@ public class SimpleCommandContext implements CommandContext, Namespace {
     public <T> void setObject(Class<T> clazz, String name, T object) {
         namespace.setObject(clazz, name, object);
     }
+
 }

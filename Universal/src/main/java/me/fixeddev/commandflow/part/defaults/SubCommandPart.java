@@ -185,6 +185,7 @@ public class SubCommandPart implements CommandPart {
     }
 
     public interface HandlerContext {
+
         /**
          * The {@link SubCommandPart} that's calling this handler.
          *
@@ -205,6 +206,7 @@ public class SubCommandPart implements CommandPart {
          * @return The {@link ArgumentStack} of the {@link SubCommandPart}.
          */
         @NotNull ArgumentStack getStack();
+
     }
 
     private static class DefaultHandlerContext implements HandlerContext {
@@ -233,12 +235,14 @@ public class SubCommandPart implements CommandPart {
         public @NotNull ArgumentStack getStack() {
             return stack;
         }
+
     }
 
     public interface SubCommandHandler {
+
         /**
-         * Handle the context change from the main command into the sub command and handle the start of the parsing for the {@link CommandPart} of the
-         * subcommand.
+         * Handle the context change from the main command into the sub command and handle the start of the parsing
+         * for the {@link CommandPart} of the subcommand.
          *
          * @param context The context for the handler.
          * @param label   The label of the subcommand.
@@ -247,6 +251,7 @@ public class SubCommandPart implements CommandPart {
          * @throws InvalidSubCommandException If the provided label isn't a label for a subcommand of this part.
          */
         void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentException;
+
     }
 
     public static class DefaultSubCommandHandler implements SubCommandHandler {
@@ -289,5 +294,7 @@ public class SubCommandPart implements CommandPart {
 
             command.getPart().parse(commandContext, stack, command.getPart());
         }
+
     }
+
 }

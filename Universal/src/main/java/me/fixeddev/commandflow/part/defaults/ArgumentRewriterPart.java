@@ -73,4 +73,5 @@ public class ArgumentRewriterPart implements CommandPart {
             rewrites.remove(fromStr, to);
         }
     }
+
 }

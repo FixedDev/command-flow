@@ -5,6 +5,7 @@ import me.fixeddev.commandflow.Namespace;
 
 // This class is called to determine if an execution should be authorized
 public class UserAuthorizer implements Authorizer {
+
     @Override
     public boolean isAuthorized(Namespace namespace, String permission) {
         User user = namespace.getObject(User.class, "USER");
@@ -17,6 +18,5 @@ public class UserAuthorizer implements Authorizer {
 
         return user.hasPermission(permission);
     }
-
 
 }

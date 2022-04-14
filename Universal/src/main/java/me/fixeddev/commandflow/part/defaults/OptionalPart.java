@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class OptionalPart implements CommandPart, SinglePartWrapper {
+
     private final CommandPart part;
     private final List<String> defaultValues;
     private final boolean considerInvalidAsEmpty;
@@ -40,7 +41,6 @@ public class OptionalPart implements CommandPart, SinglePartWrapper {
         this.part = part;
         this.defaultValues = defaultValues;
         this.considerInvalidAsEmpty = considerInvalidAsEmpty;
-
     }
 
     @Override

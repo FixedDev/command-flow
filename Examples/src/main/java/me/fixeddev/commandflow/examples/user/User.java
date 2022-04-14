@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow.examples.user;
 
 public class User {
+
     private String name;
     private int age;
 
@@ -25,7 +26,8 @@ public class User {
         this.age = age;
     }
 
-    public boolean hasPermission(String permission){
+    public boolean hasPermission(String permission) {
         return permission.equals("user");
     }
+
 }

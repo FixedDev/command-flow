@@ -7,8 +7,9 @@ import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
  * this is used specifically for a {@link CommandPart} that wraps only one part.
  */
 public interface SinglePartWrapper extends CommandPart {
+
     /**
-     * The {@link CommandPart}  that is wrapped by this wrapper.
+     * The {@link CommandPart} that is wrapped by this wrapper.
      *
      * @return The {@link CommandPart} that is wrapped by this wrapper.
      */
@@ -18,4 +19,5 @@ public interface SinglePartWrapper extends CommandPart {
     default <T> T acceptVisitor(CommandPartVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
 }

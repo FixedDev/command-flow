@@ -12,8 +12,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
 public @interface Usage {
+
     /**
-     * @return An String representing the usage for this command.
+     * @return A string representing the usage for this command.
      */
     String value();
+
 }

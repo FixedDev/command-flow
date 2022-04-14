@@ -4,14 +4,12 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.PartsWrapper;
-import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,11 +68,7 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
     @Override
     public List<String> getSuggestions(CommandContext context, ArgumentStack stack) {
 
-        Iterator<CommandPart> partIterator = parts.iterator();
-
-        while (partIterator.hasNext()) {
-            CommandPart part = partIterator.next();
-
+        for (CommandPart part : parts) {
             List<String> suggestions = part.getSuggestions(context, stack);
 
             if (suggestions == null) {
@@ -112,4 +106,5 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
     public int hashCode() {
         return Objects.hash(name, parts);
     }
+
 }

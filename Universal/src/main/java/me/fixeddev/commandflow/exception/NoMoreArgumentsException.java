@@ -20,4 +20,5 @@ public class NoMoreArgumentsException extends ArgumentException {
     public NoMoreArgumentsException(Component message) {
         super(message);
     }
+
 }

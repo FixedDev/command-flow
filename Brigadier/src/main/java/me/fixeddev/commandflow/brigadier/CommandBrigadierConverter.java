@@ -59,6 +59,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class CommandBrigadierConverter {
+
     private final Commodore commodore;
 
     public CommandBrigadierConverter(Commodore commodore) {
@@ -466,6 +467,7 @@ public class CommandBrigadierConverter {
      * corresponding commands.
      */
     private static final class CommandDataSendListener implements Listener {
+
         private final Set<String> aliases;
         private final Set<String> minecraftPrefixedAliases;
         private final Predicate<? super Player> permissionTest;
@@ -487,5 +489,7 @@ public class CommandBrigadierConverter {
                 e.getCommands().removeAll(this.aliases);
             }
         }
+
     }
+
 }

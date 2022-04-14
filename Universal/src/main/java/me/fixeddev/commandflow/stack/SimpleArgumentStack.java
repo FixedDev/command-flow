@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 public class SimpleArgumentStack implements ArgumentStack {
+
     protected List<String> originalArguments;
     protected SimpleArgumentStack parent;
 
@@ -289,7 +290,7 @@ public class SimpleArgumentStack implements ArgumentStack {
             if (originalArguments.size() < snapshot.backing.size()) {
                 for (String arg : snapshot.backing) {
 
-                    if(originalArguments.size() > index){
+                    if (originalArguments.size() > index) {
                         originalArguments.set(index, arg);
                     } else {
                         originalArguments.add(index, arg);
@@ -315,4 +316,5 @@ public class SimpleArgumentStack implements ArgumentStack {
     public StackSnapshot getSnapshot(boolean useCurrentPos) {
         return new StackSnapshot(this, useCurrentPos ? position : -1);
     }
+
 }

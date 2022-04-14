@@ -10,6 +10,7 @@ import java.lang.reflect.Type;
  * a set of modifiers or factories.
  */
 public interface Module {
+
     /**
      * The configure method, where you add the bindings for {@linkplain PartModifier}s or a set of {@linkplain PartFactory}.
      */
@@ -70,4 +71,5 @@ public interface Module {
 
         getInjector().bindPart(type, part);
     }
+
 }

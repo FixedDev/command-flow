@@ -12,9 +12,9 @@ import java.util.List;
 
 public class ReflectiveAction implements Action {
 
-    private List<ValueGetter> getterList;
-    private CommandClass handler;
-    private Method handlerMethod;
+    private final List<ValueGetter> getterList;
+    private final CommandClass handler;
+    private final Method handlerMethod;
 
     public ReflectiveAction(List<ValueGetter> getterList,
                             CommandClass handler,
@@ -58,4 +58,5 @@ public class ReflectiveAction implements Action {
             throw new CommandException("Internal error.", throwableToThrow);
         }
     }
+
 }
