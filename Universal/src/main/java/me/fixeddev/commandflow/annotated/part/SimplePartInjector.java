@@ -50,9 +50,7 @@ public class SimplePartInjector implements PartInjector {
 
     @Override
     public void install(Module module) {
-        module.setInjector(this);
-        module.configure();
-        module.setInjector(null);
+        module.configure(this);
     }
 
 }
