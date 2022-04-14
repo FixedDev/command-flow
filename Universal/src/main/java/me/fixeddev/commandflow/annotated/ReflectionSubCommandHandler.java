@@ -33,11 +33,9 @@ public class ReflectionSubCommandHandler implements SubCommandPart.SubCommandHan
                 throw (ArgumentException) cause;
             }
 
-            ArgumentParseException exception = new ArgumentParseException("Internal error.", cause);
-            exception.setArgument(context.getPart());
-            exception.setCommand(context.getContext().getCommand());
-
-            throw exception;
+            throw new ArgumentParseException("Internal error.", cause)
+                    .setArgument(context.getPart())
+                    .setCommand(context.getContext().getCommand());
         }
     }
 }

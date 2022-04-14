@@ -46,10 +46,8 @@ public class UserPart implements ArgumentPart {
         }
 
         if (user == null) {
-            ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("unknown.user"));
-            exception.setArgument(this);
-
-            throw exception;
+            throw new ArgumentParseException(TranslatableComponent.of("unknown.user"))
+                    .setArgument(this);
         }
 
         return Collections.singletonList(user);

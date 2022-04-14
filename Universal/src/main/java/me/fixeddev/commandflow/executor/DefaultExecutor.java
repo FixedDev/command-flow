@@ -12,10 +12,8 @@ public class DefaultExecutor implements Executor {
 
         if (toExecute != null) {
             if (!toExecute.getAction().execute(commandContext)) {
-                CommandUsage usage = new CommandUsage(builder.getUsage(commandContext));
-                usage.setCommand(toExecute);
-
-                throw usage;
+                throw new CommandUsage(builder.getUsage(commandContext))
+                        .setCommand(toExecute);
             }
         } else {
             return false;

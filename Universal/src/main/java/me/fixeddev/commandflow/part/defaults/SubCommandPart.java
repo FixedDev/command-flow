@@ -257,21 +257,17 @@ public class SubCommandPart implements CommandPart {
             ArgumentStack stack = context.getStack();
 
             if (command == null) {
-                InvalidSubCommandException commandException = new InvalidSubCommandException(TranslatableComponent.of("command.subcommand.invalid", TextComponent.of(label)));
-                commandException.setArgument(context.getPart());
-                commandException.setCommand(commandContext.getCommand());
-
-                throw commandException;
+                throw new InvalidSubCommandException(TranslatableComponent.of("command.subcommand.invalid", TextComponent.of(label)))
+                        .setArgument(context.getPart())
+                        .setCommand(commandContext.getCommand());
             }
 
             // Should be there
             CommandManager manager = commandContext.getObject(CommandManager.class, "commandManager");
 
             if (!manager.getAuthorizer().isAuthorized(commandContext, command.getPermission())) {
-                NoPermissionsException exception = new NoPermissionsException(command.getPermissionMessage());
-                exception.setCommand(command);
-
-                throw exception;
+                throw new NoPermissionsException(command.getPermissionMessage())
+                        .setCommand(command);
             }
 
             FallbackCommandModifiers fallbackModifiers = manager.getCommandModifiers();

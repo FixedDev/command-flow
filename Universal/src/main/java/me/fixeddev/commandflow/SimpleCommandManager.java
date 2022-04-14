@@ -281,12 +281,9 @@ public class SimpleCommandManager implements CommandManager {
                 CommandContext commandContext = optionalContext.get();
                 ArgumentException e = (ArgumentException) exception;
 
-                CommandUsage usage = new CommandUsage(usageBuilder.getUsage(commandContext));
-                usage.setCommand(commandContext.getCommand());
-
-                usage.initCause(e);
-
-                exception = usage;
+                exception = new CommandUsage(usageBuilder.getUsage(commandContext))
+                        .setCommand(commandContext.getCommand());
+                exception.initCause(e);
             }
 
             try {

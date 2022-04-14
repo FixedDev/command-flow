@@ -52,10 +52,8 @@ public class MemberPart implements ArgumentPart {
         }
 
         if (member == null) {
-            ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("unknown.member"));
-            exception.setArgument(this);
-
-            throw exception;
+            throw new ArgumentParseException(TranslatableComponent.of("unknown.member"))
+                    .setArgument(this);
         }
 
         return Collections.singletonList(member);

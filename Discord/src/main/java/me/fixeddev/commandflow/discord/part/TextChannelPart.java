@@ -48,10 +48,8 @@ public class TextChannelPart implements ArgumentPart {
         }
 
         if (channel == null) {
-            ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("unknown.channel"));
-            exception.setArgument(this);
-
-            throw exception;
+            throw new ArgumentParseException(TranslatableComponent.of("unknown.channel"))
+                    .setArgument(this);
         }
 
         return Collections.singletonList(channel);

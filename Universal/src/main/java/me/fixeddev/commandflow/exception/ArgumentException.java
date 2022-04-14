@@ -35,7 +35,6 @@ public class ArgumentException extends CommandException {
 
     public ArgumentException setArgument(CommandPart argument) {
         this.argument = argument;
-
         return this;
     }
 

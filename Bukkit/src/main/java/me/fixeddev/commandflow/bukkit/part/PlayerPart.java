@@ -62,10 +62,8 @@ public class PlayerPart implements ArgumentPart {
                     return Collections.singletonList(player);
                 }
 
-                ArgumentParseException exception = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
-                exception.setArgument(this);
-
-                throw exception;
+                throw new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)))
+                        .setArgument(this);
             }
         }
 

@@ -49,10 +49,8 @@ public class PlayerPart implements ArgumentPart {
             player = proxyServer.getPlayer(name).orElse(null);
 
             if (player == null) {
-                ArgumentParseException argumentParseException = new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)));
-                argumentParseException.setArgument(this);
-
-                throw exception;
+                throw new ArgumentParseException(TranslatableComponent.of("player.offline", TextComponent.of(target)))
+                        .setArgument(this);
             }
         }
 
