@@ -19,13 +19,7 @@ public class PlayerPartFactory implements PartFactory {
 
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
-        boolean orSource = false;
-
-        for (Annotation modifier : modifiers) {
-            if (modifier.annotationType() == PlayerOrSource.class) {
-                orSource = true;
-            }
-        }
+        boolean orSource = getAnnotation(modifiers, PlayerOrSource.class) != null;
 
         return new PlayerPart(proxyServer, name, orSource);
     }

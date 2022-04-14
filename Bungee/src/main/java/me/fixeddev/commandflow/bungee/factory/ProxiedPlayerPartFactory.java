@@ -12,13 +12,7 @@ public class ProxiedPlayerPartFactory implements PartFactory {
 
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
-        boolean orSource = false;
-
-        for (Annotation modifier : modifiers) {
-            if (modifier.annotationType() == ProxiedPlayerOrSource.class) {
-                orSource = true;
-            }
-        }
+        boolean orSource = getAnnotation(modifiers, ProxiedPlayerOrSource.class) != null;
 
         return new ProxiedPlayerPart(name, orSource);
     }

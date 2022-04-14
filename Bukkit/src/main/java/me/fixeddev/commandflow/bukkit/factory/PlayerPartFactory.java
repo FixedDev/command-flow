@@ -12,18 +12,9 @@ import java.util.List;
 public class PlayerPartFactory implements PartFactory {
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
-        boolean orSource = false;
-        boolean exact = false;
+        boolean orSource = getAnnotation(modifiers, PlayerOrSource.class) != null;
+        boolean exact = getAnnotation(modifiers, Exact.class) != null;
 
-        for (Annotation modifier : modifiers) {
-            if (modifier.annotationType() == Exact.class) {
-                exact = true;
-            }
-
-            if (modifier.annotationType() == PlayerOrSource.class) {
-                orSource = true;
-            }
-        }
         return new PlayerPart(name, exact, orSource);
     }
 }
