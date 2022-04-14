@@ -55,6 +55,6 @@ public interface ArgumentPart extends CommandPart {
         return visitor.visit(this);
     }
 
-    List<? extends Object> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException;
+    List<?> parseValue(CommandContext context, ArgumentStack stack, CommandPart caller) throws ArgumentParseException;
 
 }
