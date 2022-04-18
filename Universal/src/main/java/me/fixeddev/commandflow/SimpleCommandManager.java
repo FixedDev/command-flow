@@ -276,7 +276,7 @@ public class SimpleCommandManager implements CommandManager {
         if (optionalException.isPresent()) {
             CommandException exception = optionalException.get();
 
-            if (exception instanceof ArgumentException) {
+            if (exception instanceof ArgumentException && !(exception instanceof ArgumentParseException)) {
                 // The context is there if the exception is an ArgumentException, ignore the warning
                 CommandContext commandContext = optionalContext.get();
                 ArgumentException e = (ArgumentException) exception;
