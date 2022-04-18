@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class SimpleCommandModifiers implements CommandModifiers {
+
     protected final Map<ModifierPhase, CommandModifier> modifiersByPhase;
 
     protected SimpleCommandModifiers(Map<ModifierPhase, CommandModifier> modifiersByPhase) {
@@ -104,4 +105,5 @@ public class SimpleCommandModifiers implements CommandModifiers {
             return ModifierUtils.getSequential(phase, modifiersByPhase);
         }
     }
+
 }

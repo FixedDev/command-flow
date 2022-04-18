@@ -11,6 +11,7 @@ import java.util.function.Function;
  * {@link net.kyori.text.TextComponent}.
  */
 public interface Translator {
+
     /**
      * Translates the given {@link Component} if it is a {@link net.kyori.text.TranslatableComponent}
      * otherwise returns the same instance.
@@ -29,9 +30,10 @@ public interface Translator {
     void setProvider(TranslationProvider provider);
 
     /**
-     * Changes the Function used by this {@link Translator} to convert an String into a {@link TextComponent}.
+     * Changes the Function used by this {@link Translator} to convert a String into a {@link TextComponent}.
      *
      * @param stringToComponent The new function used by this {@link Translator} instance.
      */
     void setConverterFunction(Function<String, TextComponent> stringToComponent);
+
 }

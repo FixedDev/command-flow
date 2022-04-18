@@ -23,7 +23,13 @@ import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.DefaultUsageBuilder;
 import me.fixeddev.commandflow.usage.UsageBuilder;
 
-import java.util.*;
+import java.util.Map;
+import java.util.List;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Collections;
 
 /**
  * The default implementation for {@link CommandManager} using a HashMap for the internal commandMap
@@ -31,6 +37,7 @@ import java.util.*;
  * This class is not threadsafe, we can't ensure that registering/executing commands on more than 1 thread concurrently works correctly
  */
 public class SimpleCommandManager implements CommandManager {
+
     private final Map<String, Command> commandMap;
 
     private Authorizer authorizer;
@@ -508,5 +515,7 @@ public class SimpleCommandManager implements CommandManager {
         public Optional<CommandException> getException() {
             return Optional.ofNullable(exception);
         }
+
     }
+
 }

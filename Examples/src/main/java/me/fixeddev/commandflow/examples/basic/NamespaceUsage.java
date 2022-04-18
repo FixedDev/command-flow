@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.examples.user.User;
 
 public class NamespaceUsage {
+
     public static void main(String[] args) {
         // The namespace is a mapping/set of the arguments that are injected into the execution.
         // For example, we can inject the user executor of a command and use it later.
@@ -23,4 +24,5 @@ public class NamespaceUsage {
 
         System.out.println(user.getName()); // Fixed
     }
+
 }

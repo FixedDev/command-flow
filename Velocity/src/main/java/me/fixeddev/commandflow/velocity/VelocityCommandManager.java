@@ -22,7 +22,11 @@ import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.UsageBuilder;
 import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 public class VelocityCommandManager implements CommandManager {
 

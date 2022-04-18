@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 
 public interface CommandActionNode extends Buildable {
+
     /**
      * Sets the {@link Action} of this command to a one created based on a {@link Method} with annotations, actually
      * delegating the {@link Action} setting to {@link CommandActionNode#action(Action)}.
@@ -25,4 +26,5 @@ public interface CommandActionNode extends Buildable {
      * @return A {@link SubCommandsNode} instance, which will allow continuing the building process of this command.
      */
     @NotNull SubCommandsNode action(@NotNull Action action);
+
 }

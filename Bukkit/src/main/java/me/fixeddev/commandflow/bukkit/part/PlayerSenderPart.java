@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import java.util.Objects;
 
 public class PlayerSenderPart implements CommandPart {
+
     private final String name;
 
     public PlayerSenderPart(String name) {
@@ -29,7 +30,7 @@ public class PlayerSenderPart implements CommandPart {
         CommandSender sender = context.getObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE);
 
         if (sender != null) {
-            if(sender instanceof Player){
+            if (sender instanceof Player) {
                 context.setValue(this, sender);
 
                 return;
@@ -53,4 +54,5 @@ public class PlayerSenderPart implements CommandPart {
     public int hashCode() {
         return Objects.hash(name);
     }
+
 }

@@ -49,4 +49,5 @@ public class CommandSenderPart implements CommandPart {
     public int hashCode() {
         return Objects.hash(name);
     }
+
 }

@@ -132,5 +132,6 @@ public class ValueFlagPart implements SinglePartWrapper {
     public boolean allowsFullName() {
         return allowFullName;
     }
+
 }
 

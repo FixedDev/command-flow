@@ -29,4 +29,5 @@ public class BasicCommandRegistration {
         // With this we execute a command
         commandManager.execute(new NamespaceImpl(), "test");
     }
+
 }

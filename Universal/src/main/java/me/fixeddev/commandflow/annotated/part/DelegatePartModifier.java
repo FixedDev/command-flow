@@ -7,7 +7,7 @@ import java.util.List;
 
 public class DelegatePartModifier implements PartModifier {
 
-    private List<PartModifier> delegates;
+    private final List<PartModifier> delegates;
 
     public DelegatePartModifier(List<PartModifier> delegates) {
         this.delegates = delegates;
@@ -22,4 +22,5 @@ public class DelegatePartModifier implements PartModifier {
 
         return part;
     }
+
 }

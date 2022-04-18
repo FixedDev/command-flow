@@ -10,6 +10,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class PlayerPartFactory implements PartFactory {
+
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
         boolean orSource = getAnnotation(modifiers, PlayerOrSource.class) != null;
@@ -17,4 +18,5 @@ public class PlayerPartFactory implements PartFactory {
 
         return new PlayerPart(name, exact, orSource);
     }
+
 }

@@ -46,7 +46,7 @@ public interface ValueGetter {
                 commandContext.getRaw(part);
     }
 
-    static ValueGetter ofInstance(Object object){
+    static ValueGetter ofInstance(Object object) {
         return commandContext -> object;
     }
 }

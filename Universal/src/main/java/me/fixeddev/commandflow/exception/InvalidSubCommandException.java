@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.exception;
 import net.kyori.text.Component;
 
 public class InvalidSubCommandException extends ArgumentParseException {
+
     public InvalidSubCommandException() {
         super();
     }
@@ -22,4 +23,5 @@ public class InvalidSubCommandException extends ArgumentParseException {
     public InvalidSubCommandException(Component message) {
         super(message);
     }
+
 }

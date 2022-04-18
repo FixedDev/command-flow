@@ -30,7 +30,7 @@ public class PlayerSenderPart implements CommandPart {
         CommandSource sender = context.getObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE);
 
         if (sender != null) {
-            if(sender instanceof Player){
+            if (sender instanceof Player) {
                 context.setValue(this, sender);
 
                 return;

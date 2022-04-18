@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class ValueFlagModifier implements PartModifier {
+
     @Override
     public CommandPart modify(CommandPart original, List<? extends Annotation> modifiers) {
         Flag flag = getModifier(modifiers, Flag.class);
@@ -17,4 +18,5 @@ public class ValueFlagModifier implements PartModifier {
 
         return new ValueFlagPart(shortName, flag != null && flag.allowFullName(), original);
     }
+
 }

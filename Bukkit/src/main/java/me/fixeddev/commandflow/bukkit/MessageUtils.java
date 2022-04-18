@@ -8,6 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class MessageUtils {
+
     public static void sendMessage(CommandSender sender, BaseComponent[] components) {
         if (sender instanceof Player) {
             ((Player) sender).spigot().sendMessage(components);
@@ -30,4 +31,5 @@ public class MessageUtils {
 
         return components;
     }
+
 }

@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class LimitModifier implements PartModifier {
+
     @Override
     public CommandPart modify(CommandPart original, List<? extends Annotation> modifiers) {
         Limit limit = getModifier(modifiers, Limit.class);
@@ -19,4 +20,5 @@ public class LimitModifier implements PartModifier {
 
         return Parts.limit(original, limit.value());
     }
+
 }

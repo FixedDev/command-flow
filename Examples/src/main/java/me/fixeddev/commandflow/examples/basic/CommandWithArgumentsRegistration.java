@@ -79,4 +79,5 @@ public class CommandWithArgumentsRegistration {
 
         manager.registerCommand(testUserCommand);
     }
+
 }

@@ -70,4 +70,5 @@ public class SwitchArguments {
 
         manager.registerCommand(testUserCommand);
     }
+
 }

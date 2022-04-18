@@ -14,4 +14,5 @@ public class BungeeModule extends AbstractModule {
         bindFactory(ProxiedPlayer.class, new ProxiedPlayerPartFactory());
         bindFactory(new Key(ProxiedPlayer.class, Sender.class), new ProxiedPlayerSenderPartFactory());
     }
+
 }

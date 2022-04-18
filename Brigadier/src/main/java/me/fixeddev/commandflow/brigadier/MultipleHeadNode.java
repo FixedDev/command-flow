@@ -173,4 +173,5 @@ public class MultipleHeadNode<T> {
     public int getTailsSize() {
         return tailPointers.size();
     }
+
 }

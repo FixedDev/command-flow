@@ -5,7 +5,7 @@ import me.fixeddev.commandflow.Namespace;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DefaultMapTranslationProvider implements TranslationProvider{
+public class DefaultMapTranslationProvider implements TranslationProvider {
 
     protected Map<String, String> translations;
 
@@ -29,7 +29,8 @@ public class DefaultMapTranslationProvider implements TranslationProvider{
     }
 
     @Override
-    public String getTranslation(Namespace namespace, String key){
+    public String getTranslation(Namespace namespace, String key) {
         return getTranslation(key);
     }
+
 }

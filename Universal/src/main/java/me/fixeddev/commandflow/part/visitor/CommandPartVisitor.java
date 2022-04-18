@@ -7,6 +7,7 @@ import me.fixeddev.commandflow.part.SinglePartWrapper;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 
 public interface CommandPartVisitor<R> {
+
     R visit(CommandPart part);
 
     R visit(ArgumentPart argumentPart);
@@ -16,4 +17,5 @@ public interface CommandPartVisitor<R> {
     R visit(SinglePartWrapper singlePartWrapper);
 
     R visit(SubCommandPart subCommandPart);
+
 }

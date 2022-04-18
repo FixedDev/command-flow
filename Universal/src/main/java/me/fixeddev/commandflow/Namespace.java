@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow;
 
 public interface Namespace {
+
     /**
      * Gets an injected object from the backing Map
      *
@@ -26,4 +27,5 @@ public interface Namespace {
     static Namespace create() {
         return new NamespaceImpl();
     }
+
 }

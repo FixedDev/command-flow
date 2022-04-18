@@ -117,4 +117,5 @@ public class SwitchPart implements CommandPart {
     public boolean allowsFullName() {
         return allowFullName;
     }
+
 }

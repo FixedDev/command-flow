@@ -8,8 +8,10 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class PlayerSenderFactory implements PartFactory {
+
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
         return new PlayerSenderPart(name);
     }
+
 }

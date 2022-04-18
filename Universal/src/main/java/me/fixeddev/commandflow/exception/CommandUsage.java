@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.exception;
 import net.kyori.text.Component;
 
 public class CommandUsage extends CommandException {
+
     public CommandUsage() {
     }
 
@@ -26,4 +27,5 @@ public class CommandUsage extends CommandException {
     public synchronized Throwable fillInStackTrace() {
         return this;
     }
+
 }

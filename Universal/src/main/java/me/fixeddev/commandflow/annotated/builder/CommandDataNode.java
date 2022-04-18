@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface CommandDataNode extends Buildable {
+
     /**
      * @param aliases The command aliases
      * @return The same {@link CommandDataNode} instance.
@@ -69,4 +70,5 @@ public interface CommandDataNode extends Buildable {
      * @return A {@link CommandPartsNode} instance, which will allow continuing the building process of this command.
      */
     @NotNull CommandPartsNode parts();
+
 }

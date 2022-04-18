@@ -11,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class BukkitModule extends AbstractModule {
+
     @Override
     public void configure() {
         bindFactory(CommandSender.class, new CommandSenderFactory());
@@ -20,4 +21,5 @@ public class BukkitModule extends AbstractModule {
         bindFactory(GameMode.class, new GameModeFactory());
         bindFactory(new Key(Player.class, Sender.class), new PlayerSenderFactory());
     }
+
 }

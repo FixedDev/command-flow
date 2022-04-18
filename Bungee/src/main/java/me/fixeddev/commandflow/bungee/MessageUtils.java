@@ -14,4 +14,5 @@ public class MessageUtils {
 
         return ComponentSerializer.parse(serializedComponent);
     }
+
 }

@@ -6,6 +6,7 @@ import me.fixeddev.commandflow.exception.CommandUsage;
 import me.fixeddev.commandflow.usage.UsageBuilder;
 
 public class DefaultExecutor implements Executor {
+
     @Override
     public boolean execute(CommandContext commandContext, UsageBuilder builder) {
         Command toExecute = commandContext.getCommand();
@@ -21,4 +22,5 @@ public class DefaultExecutor implements Executor {
 
         return true;
     }
+
 }

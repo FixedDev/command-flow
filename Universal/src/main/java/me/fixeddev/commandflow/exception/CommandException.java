@@ -64,4 +64,5 @@ public class CommandException extends RuntimeException {
     public Component getMessageComponent() {
         return message;
     }
+
 }

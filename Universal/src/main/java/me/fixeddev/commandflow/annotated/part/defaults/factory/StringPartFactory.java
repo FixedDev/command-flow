@@ -9,8 +9,10 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public class StringPartFactory implements PartFactory {
+
     @Override
     public CommandPart createPart(String name, List<? extends Annotation> modifiers) {
         return new StringPart(name, getAnnotation(modifiers, ConsumeAll.class) != null);
     }
+
 }

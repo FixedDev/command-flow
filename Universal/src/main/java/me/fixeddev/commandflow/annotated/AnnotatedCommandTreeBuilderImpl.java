@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
 
@@ -137,11 +136,11 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
 
         subCommandsNode.setModifiers(clazz.getAnnotations());
 
-        if(!clazz.isAnnotationPresent(Required.class)) {
+        if (!clazz.isAnnotationPresent(Required.class)) {
             subCommandsNode.optional();
         }
 
-        if(clazz.isAnnotationPresent(ArgOrSub.class)){
+        if (clazz.isAnnotationPresent(ArgOrSub.class)) {
             subCommandsNode.argumentsOrSubCommand(clazz.getAnnotation(ArgOrSub.class).value());
         }
 
@@ -210,4 +209,5 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
             return TextComponent.of(component);
         }
     }
+
 }

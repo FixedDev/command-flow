@@ -86,7 +86,7 @@ public class StringPart extends PrimitivePart {
 
     @Override
     public List<String> getSuggestions(CommandContext commandContext, ArgumentStack stack) {
-        if (stack.hasNext()){
+        if (stack.hasNext()) {
             stack.next();
         }
 

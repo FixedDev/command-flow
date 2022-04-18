@@ -4,10 +4,11 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.CommandException;
 
 public interface Action {
+
     /**
      * A NOP default Action used for {@link Command} instances which action isn't defined
      */
-    static Action NULL_ACTION = context -> false;
+    Action NULL_ACTION = context -> false;
 
     /**
      * The action to execute when the {@link Command} is being called/run by the {@link me.fixeddev.commandflow.CommandManager}.
@@ -17,4 +18,5 @@ public interface Action {
      * @throws CommandException If an error occurs while executing the action.
      */
     boolean execute(CommandContext context) throws CommandException;
+
 }

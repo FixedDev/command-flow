@@ -16,6 +16,7 @@ import java.util.Map;
 public interface CommandModifiers {
 
     CommandModifiers EMPTY = new CommandModifiers() {
+
         @Override
         public boolean callModifiers(ModifierPhase phase, CommandContext context, ArgumentStack stack) {
             return true;
@@ -25,6 +26,7 @@ public interface CommandModifiers {
         public boolean hasModifiers(ModifierPhase phase) {
             return false;
         }
+
     };
 
     /**
@@ -53,6 +55,7 @@ public interface CommandModifiers {
     }
 
     interface Builder {
+
         /**
          * Adds a new modifier at the end of the list of modifiers to the specified phase.
          * <p>
@@ -107,5 +110,7 @@ public interface CommandModifiers {
         void setModifier(CommandModifier modifier, ModifierPhase phase);
 
         CommandModifiers build();
+
     }
+
 }

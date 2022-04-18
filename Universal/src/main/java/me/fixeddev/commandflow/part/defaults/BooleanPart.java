@@ -49,4 +49,5 @@ public class BooleanPart extends PrimitivePart {
 
         return Collections.emptyList();
     }
+
 }

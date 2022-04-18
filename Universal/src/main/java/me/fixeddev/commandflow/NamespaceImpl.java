@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NamespaceImpl implements Namespace {
+
     private final Map<Class<?>, Map<String, Object>> backing;
 
     public NamespaceImpl() {
@@ -36,4 +37,5 @@ public class NamespaceImpl implements Namespace {
     public int hashCode() {
         return Objects.hash(backing);
     }
+
 }

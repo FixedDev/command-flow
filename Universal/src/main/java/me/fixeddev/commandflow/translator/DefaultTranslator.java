@@ -11,6 +11,7 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class DefaultTranslator implements Translator {
+
     private TranslationProvider provider;
     private Function<String, TextComponent> stringToComponent;
 

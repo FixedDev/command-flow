@@ -24,7 +24,6 @@ public class LimitingPart implements CommandPart, SinglePartWrapper {
         if (limit <= 0) {
             throw new IllegalArgumentException("The limit must be a positive number that's more than 0!");
         }
-
     }
 
     @Override
@@ -64,4 +63,5 @@ public class LimitingPart implements CommandPart, SinglePartWrapper {
         CommandPart that = (CommandPart) o;
         return that.equals(part);
     }
+
 }

@@ -16,4 +16,5 @@ public class ProxiedPlayerPartFactory implements PartFactory {
 
         return new ProxiedPlayerPart(name, orSource);
     }
+
 }

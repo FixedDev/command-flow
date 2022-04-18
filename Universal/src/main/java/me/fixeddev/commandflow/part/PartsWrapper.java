@@ -9,6 +9,7 @@ import java.util.List;
  * this is used specifically for a {@link CommandPart} that wraps multiple parts.
  */
 public interface PartsWrapper extends CommandPart {
+
     /**
      * The {@link CommandPart} instances that are wrapped by this wrapper.
      *
@@ -20,4 +21,5 @@ public interface PartsWrapper extends CommandPart {
     default <T> T acceptVisitor(CommandPartVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
 }

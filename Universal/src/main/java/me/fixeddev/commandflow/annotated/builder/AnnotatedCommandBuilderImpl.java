@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.annotated.builder;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
 
 public class AnnotatedCommandBuilderImpl implements AnnotatedCommandBuilder {
+
     private final PartInjector injector;
 
     public AnnotatedCommandBuilderImpl(PartInjector injector) {
@@ -13,4 +14,5 @@ public class AnnotatedCommandBuilderImpl implements AnnotatedCommandBuilder {
     public CommandDataNode newCommand(String name) {
         return new CommandBuilderNodesImpl(name, injector);
     }
+
 }

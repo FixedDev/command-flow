@@ -9,12 +9,13 @@ import java.util.Objects;
 import java.util.Set;
 
 /**
- * An immutable blackbox containing a copy of a {@link CommandContext} at a specific time, being able to restore the state of
- * a {@link CommandContext} to this state.
+ * An immutable blackbox containing a copy of a {@link CommandContext} at a specific time,
+ * being able to restore the state of a {@link CommandContext} to this state.
  *
  * @see CommandContext#applySnapshot(ContextSnapshot)
  */
 public class ContextSnapshot {
+
     final Namespace namespace;
 
     final Command executedCommand;
@@ -65,6 +66,10 @@ public class ContextSnapshot {
 
     @Override
     public int hashCode() {
-        return Objects.hash(namespace, executedCommand, commandExecutionPath, rawArguments, labels, allParts, allPartsByName, rawBindings, valueBindings);
+        return Objects.hash(
+                namespace, executedCommand, commandExecutionPath, rawArguments, labels,
+                allParts, allPartsByName, rawBindings, valueBindings
+        );
     }
+
 }

@@ -6,6 +6,7 @@ import java.lang.annotation.Annotation;
 import java.util.List;
 
 public interface PartFactory {
+
     /**
      * Creates a new {@link CommandPart} with the given name
      *
@@ -28,4 +29,5 @@ public interface PartFactory {
 
         return finalModifier;
     }
+
 }

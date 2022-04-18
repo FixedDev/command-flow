@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Method;
 
 public interface CommandPartsNode extends Buildable {
+
     /**
      * Sets the {@link CommandPart} list of this command to a one created based on a {@link Method} with annotations.
      * The actual {@link CommandPart} instances will be created based on the type and annotations that the parameter has,
@@ -35,4 +36,5 @@ public interface CommandPartsNode extends Buildable {
      * @return A {@link CommandActionNode} instance, which will allow continuing the building process of this command.
      */
     @NotNull CommandActionNode action();
+
 }

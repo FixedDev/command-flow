@@ -3,6 +3,7 @@ package me.fixeddev.commandflow.exception;
 import net.kyori.text.Component;
 
 public class NoPermissionsException extends CommandException {
+
     public NoPermissionsException() {
     }
 
@@ -18,4 +19,5 @@ public class NoPermissionsException extends CommandException {
     public synchronized Throwable fillInStackTrace() {
         return this;
     }
+
 }

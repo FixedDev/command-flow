@@ -8,8 +8,11 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A {@linkplain me.fixeddev.commandflow.part.CommandPart} that allows the parsing of every enum type.

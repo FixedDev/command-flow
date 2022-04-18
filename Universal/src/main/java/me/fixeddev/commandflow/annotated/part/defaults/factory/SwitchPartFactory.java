@@ -18,4 +18,5 @@ public class SwitchPartFactory implements PartFactory {
 
         return new SwitchPart(name, shortName, flag != null && flag.allowFullName());
     }
+
 }

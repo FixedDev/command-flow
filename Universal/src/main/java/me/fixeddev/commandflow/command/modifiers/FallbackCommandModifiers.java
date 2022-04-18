@@ -7,6 +7,7 @@ import java.util.LinkedList;
  * This class contains the fallback modifiers for every command, if no other modifiers are found in the actual command.
  */
 public class FallbackCommandModifiers extends SimpleCommandModifiers {
+
     public FallbackCommandModifiers() {
         super(new HashMap<>());
 
@@ -87,4 +88,5 @@ public class FallbackCommandModifiers extends SimpleCommandModifiers {
     private SequentialCommandModifier getSequential(ModifierPhase phase) {
         return ModifierUtils.getSequential(phase, modifiersByPhase);
     }
+
 }

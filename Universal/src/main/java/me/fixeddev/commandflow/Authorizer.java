@@ -1,6 +1,7 @@
 package me.fixeddev.commandflow;
 
 public interface Authorizer {
+
     /**
      * If an executor has certain permission, meaning that it is authorized.
      *
@@ -9,4 +10,5 @@ public interface Authorizer {
      * @return If the source is authorized to this permission, true if the permission is empty.
      */
     boolean isAuthorized(Namespace namespace, String permission);
+
 }

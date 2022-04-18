@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class WorldPart implements ArgumentPart {
+
     private final String name;
 
     public WorldPart(String name) {
@@ -59,4 +60,5 @@ public class WorldPart implements ArgumentPart {
     public String getName() {
         return name;
     }
+
 }

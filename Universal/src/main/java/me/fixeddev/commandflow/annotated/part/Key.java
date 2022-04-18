@@ -1,6 +1,5 @@
 package me.fixeddev.commandflow.annotated.part;
 
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,8 +8,9 @@ import java.lang.reflect.Type;
 import java.util.Objects;
 
 public class Key {
-    private Type type;
-    private Class<? extends Annotation> annotation;
+
+    private final Type type;
+    private final Class<? extends Annotation> annotation;
 
     public Key(@NotNull Type type, @Nullable Class<? extends Annotation> annotation) {
         this.type = type;
@@ -18,7 +18,7 @@ public class Key {
     }
 
     public Key(@NotNull Type type) {
-        this.type = type;
+        this(type, null);
     }
 
     @NotNull
@@ -44,4 +44,5 @@ public class Key {
     public int hashCode() {
         return Objects.hash(type, annotation);
     }
+
 }

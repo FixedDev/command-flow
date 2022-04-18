@@ -9,6 +9,7 @@ import java.lang.annotation.Annotation;
 
 // TODO: Add documentation for this class.
 public interface SubCommandsNode extends Buildable {
+
     SubCommandsNode addSubCommand(@NotNull Command command);
 
     SubCommandsNode addSubCommand(@NotNull CommandDataNode commandDataNode);
@@ -17,11 +18,12 @@ public interface SubCommandsNode extends Buildable {
 
     SubCommandsNode setModifiers(Annotation... modifiers);
 
-    default SubCommandsNode argumentsOrSubCommand(){
+    default SubCommandsNode argumentsOrSubCommand() {
         return argumentsOrSubCommand(false);
     }
 
     SubCommandsNode argumentsOrSubCommand(boolean reversed);
 
     SubCommandsNode optional();
+
 }

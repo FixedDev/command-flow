@@ -1,12 +1,12 @@
 package me.fixeddev.commandflow.annotated.part;
 
-import me.fixeddev.commandflow.annotated.annotation.OptArg;
 import me.fixeddev.commandflow.part.CommandPart;
 
 import java.lang.annotation.Annotation;
 import java.util.List;
 
 public interface PartModifier {
+
     /**
      * Modifies the given {@link CommandPart} wrapping or changing values of it
      *
@@ -29,4 +29,5 @@ public interface PartModifier {
 
         return finalModifier;
     }
+
 }

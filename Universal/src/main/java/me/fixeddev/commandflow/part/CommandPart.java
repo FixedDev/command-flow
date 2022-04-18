@@ -7,10 +7,10 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.kyori.text.Component;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 
 public interface CommandPart {
+
     String getName();
 
     @Nullable
@@ -37,4 +37,5 @@ public interface CommandPart {
     default <T> T acceptVisitor(CommandPartVisitor<T> visitor) {
         return visitor.visit(this);
     }
+
 }
