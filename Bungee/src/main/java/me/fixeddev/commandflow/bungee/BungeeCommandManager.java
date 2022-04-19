@@ -62,12 +62,6 @@ public class BungeeCommandManager implements CommandManager {
             return false;
         });
 
-        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, e) -> {
-            String label = namespace.getObject(String.class, "label");
-            BungeeCommandWrapper.sendMessageToSender(e, namespace);
-
-            throw new CommandException("An internal parse exception occurred while executing the command " + label, e);
-        });
 
         ErrorHandler.ErrorConsumer<CommandException> commonHandler = (namespace, e) -> {
             BungeeCommandWrapper.sendMessageToSender(e, namespace);
@@ -75,6 +69,7 @@ public class BungeeCommandManager implements CommandManager {
             return true;
         };
 
+        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, commonHandler);
         getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonHandler);
         getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonHandler);
         getErrorHandler().addExceptionHandler(NoPermissionsException.class, commonHandler);
