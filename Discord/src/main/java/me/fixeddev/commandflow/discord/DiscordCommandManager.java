@@ -57,11 +57,6 @@ public class DiscordCommandManager implements CommandManager {
             return true;
         });
 
-        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, e) -> {
-            MessageListener.sendMessage(namespace, e);
-
-            throw new CommandException("An internal parse exception occurred while executing the command", e);
-        });
 
         ErrorHandler.ErrorConsumer<CommandException> commonHandler = (namespace, e) -> {
             MessageListener.sendMessage(namespace, e);
@@ -69,6 +64,7 @@ public class DiscordCommandManager implements CommandManager {
             return true;
         };
 
+        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, commonHandler);
         getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonHandler);
         getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonHandler);
         getErrorHandler().addExceptionHandler(NoPermissionsException.class, commonHandler);
