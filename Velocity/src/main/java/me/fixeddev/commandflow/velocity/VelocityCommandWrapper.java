@@ -1,23 +1,19 @@
 package me.fixeddev.commandflow.velocity;
 
 import com.velocitypowered.api.command.CommandSource;
-import com.velocitypowered.api.command.RawCommand;
+import com.velocitypowered.api.command.SimpleCommand;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
-import me.fixeddev.commandflow.exception.CommandUsage;
-import me.fixeddev.commandflow.exception.InvalidSubCommandException;
-import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
-import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class VelocityCommandWrapper implements RawCommand {
+public class VelocityCommandWrapper implements SimpleCommand {
 
     protected final CommandManager commandManager;
     protected final Translator translator;
@@ -41,14 +37,14 @@ public class VelocityCommandWrapper implements RawCommand {
     @Override
     public void execute(Invocation invocation) {
         CommandSource commandSource = invocation.source();
-        String argumentLine = invocation.alias() + invocation.arguments();
+        String[] arguments = ArrayUtils.addElementAtStart(invocation.arguments(), invocation.alias());
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
         namespace.setObject(String.class, "label", invocation.alias());
 
         try {
-            commandManager.execute(namespace, argumentLine);
+            commandManager.execute(namespace, Arrays.asList(arguments));
          } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
@@ -73,12 +69,11 @@ public class VelocityCommandWrapper implements RawCommand {
     @Override
     public List<String> suggest(Invocation invocation) {
         CommandSource commandSource = invocation.source();
-        String argumentLine = invocation.arguments();
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
 
-        return commandManager.getSuggestions(namespace, argumentLine);
+        return commandManager.getSuggestions(namespace, Arrays.asList(invocation.arguments()));
     }
 
     protected static void sendMessageToSender(CommandException exception, Namespace namespace) {
