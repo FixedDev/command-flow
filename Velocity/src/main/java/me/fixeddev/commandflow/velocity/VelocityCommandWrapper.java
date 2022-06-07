@@ -76,6 +76,16 @@ public class VelocityCommandWrapper implements RawCommand {
         return commandManager.getSuggestions(namespace, argumentLine);
     }
 
+    @Override
+    public boolean hasPermission(Invocation invocation) {
+        CommandSource commandSource = invocation.source();
+
+        Namespace namespace = new NamespaceImpl();
+        namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
+
+        return commandManager.getAuthorizer().isAuthorized(namespace, getPermission());
+    }
+
     protected static void sendMessageToSender(CommandException exception, Namespace namespace) {
         CommandManager commandManager = namespace.getObject(CommandManager.class, "commandManager");
         CommandSource sender = namespace.getObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE);
