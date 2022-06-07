@@ -6,12 +6,7 @@ import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.command.Command;
-import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
-import me.fixeddev.commandflow.exception.CommandUsage;
-import me.fixeddev.commandflow.exception.InvalidSubCommandException;
-import me.fixeddev.commandflow.exception.NoMoreArgumentsException;
-import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.text.Component;
 
@@ -49,7 +44,7 @@ public class VelocityCommandWrapper implements RawCommand {
 
         try {
             commandManager.execute(namespace, argumentLine);
-         } catch (CommandException e) {
+        } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
             if (e.getCause() instanceof CommandException) {
@@ -73,7 +68,7 @@ public class VelocityCommandWrapper implements RawCommand {
     @Override
     public List<String> suggest(Invocation invocation) {
         CommandSource commandSource = invocation.source();
-        String argumentLine = invocation.arguments();
+        String argumentLine = invocation.alias() + invocation.arguments();
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
