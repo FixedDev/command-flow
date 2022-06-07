@@ -64,11 +64,6 @@ public class VelocityCommandManager implements CommandManager {
             return true;
         });
 
-        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, e) -> {
-            VelocityCommandWrapper.sendMessageToSender(e, namespace);
-
-            throw new CommandException("An internal parse exception occurred while executing the command", e);
-        });
 
         ErrorHandler.ErrorConsumer<CommandException> commonHandler = (namespace, e) -> {
             VelocityCommandWrapper.sendMessageToSender(e, namespace);
@@ -76,6 +71,7 @@ public class VelocityCommandManager implements CommandManager {
             return true;
         };
 
+        getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, commonHandler);
         getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonHandler);
         getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonHandler);
         getErrorHandler().addExceptionHandler(NoPermissionsException.class, commonHandler);

@@ -67,20 +67,13 @@ public class BukkitCommandManager implements CommandManager {
             return true;
         });
 
-        this.getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, (namespace, ex) -> {
-            BukkitCommandWrapper.sendMessageToSender(ex, namespace);
-
-            String label = namespace.getObject(String.class, "label");
-
-            throw new org.bukkit.command.CommandException("An internal parse exception occurred while executing the command " + label, ex);
-        });
-
         ErrorHandler.ErrorConsumer<ArgumentException> commonArgumentExceptionConsumer = (namespace, ex) -> {
             BukkitCommandWrapper.sendMessageToSender(ex, namespace);
 
             return false;
         };
 
+        this.getErrorHandler().addExceptionHandler(InvalidSubCommandException.class, commonArgumentExceptionConsumer);
         this.getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonArgumentExceptionConsumer);
         this.getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonArgumentExceptionConsumer);
         this.getErrorHandler().addExceptionHandler(NoPermissionsException.class, (namespace, throwable) -> {
