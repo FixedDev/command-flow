@@ -27,7 +27,7 @@ Those are created using the `Command.builder(String)` method, which returns an `
 <dependency>
   <groupId>me.fixeddev</groupId>
   <artifactId>commandflow-universal</artifactId>
-  <version>0.5.0</version>
+  <version>0.5.3</version>
 </dependency>
 ```
 
