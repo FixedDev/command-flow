@@ -135,13 +135,15 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     private PartFactory getFactory(Parameter parameter) {
         PartFactory factory = null;
 
-        Class<?> type = parameter.getType();
+        Type type = parameter.getType();
 
         if (parameter.getParameterizedType() instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) parameter.getParameterizedType();
 
             if (parameterizedType.getRawType() == List.class || parameterizedType.getRawType() == Optional.class) {
-                type = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                type = parameterizedType.getActualTypeArguments()[0];
+            } else {
+                type = parameterizedType;
             }
         }
 
