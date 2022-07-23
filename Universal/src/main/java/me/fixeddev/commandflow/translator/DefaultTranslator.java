@@ -6,6 +6,7 @@ import net.kyori.text.Component;
 import net.kyori.text.TextComponent;
 import net.kyori.text.TranslatableComponent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
@@ -29,7 +30,17 @@ public class DefaultTranslator implements Translator {
     @Override
     public Component translate(Component component, Namespace namespace) {
         if (!(component instanceof TranslatableComponent)) {
-            return component;
+            if (component.children().isEmpty()) {
+                return component;
+            }
+
+            List<Component> children = new ArrayList<>(component.children().size());
+
+            for (Component child : component.children()) {
+                children.add(translate(child, namespace));
+            }
+
+            return component.children(children);
         }
 
         TranslatableComponent translatableComponent = (TranslatableComponent) component;
