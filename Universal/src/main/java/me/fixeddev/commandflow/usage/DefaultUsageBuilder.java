@@ -21,7 +21,7 @@ public class DefaultUsageBuilder implements UsageBuilder {
         TextComponent labelComponent = TextComponent.of(label);
 
         if (usage != null) {
-            return ComponentUtil.basicReplace(usage, Pattern.compile("<command>", Pattern.LITERAL), labelComponent);
+            return labelComponent.append(TextComponent.of(" ")).append(usage);
         }
 
         Component partComponents = toExecute.getPart().getLineRepresentation();
