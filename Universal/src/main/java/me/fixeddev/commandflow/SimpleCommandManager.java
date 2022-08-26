@@ -6,12 +6,12 @@ import me.fixeddev.commandflow.command.modifiers.FallbackCommandModifiers;
 import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
 import me.fixeddev.commandflow.exception.ArgumentException;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
+import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.exception.CommandUsage;
 import me.fixeddev.commandflow.exception.NoPermissionsException;
 import me.fixeddev.commandflow.exception.StopParseException;
 import me.fixeddev.commandflow.executor.DefaultExecutor;
 import me.fixeddev.commandflow.executor.Executor;
-import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.input.StringSpaceTokenizer;
 import me.fixeddev.commandflow.part.CommandPart;
@@ -23,13 +23,13 @@ import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.DefaultUsageBuilder;
 import me.fixeddev.commandflow.usage.UsageBuilder;
 
-import java.util.Map;
-import java.util.List;
-import java.util.Set;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Collections;
+import java.util.Set;
 
 /**
  * The default implementation for {@link CommandManager} using a HashMap for the internal commandMap
@@ -376,7 +376,9 @@ public class SimpleCommandManager implements CommandManager {
 
         ArgumentStack stack = new SimpleArgumentStack(arguments);
 
-        return command.getPart().getSuggestions(commandContext, stack);
+        List<String> suggestions = command.getPart().getSuggestions(commandContext, stack);
+
+        return suggestions == null ? Collections.emptyList() : suggestions;
     }
 
     /**

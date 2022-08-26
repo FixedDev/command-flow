@@ -185,7 +185,7 @@ public interface CommandManager {
      *
      * @param accessor  The {@link Namespace} used to inject objects
      * @param arguments A {@link List} of arguments including the command used to parse the actual command used and the parameters of that command
-     * @return A {@link List} of {@link String} representing the suggestions for the next argument, empty if the player doesn't has permissions
+     * @return A non-null {@link List} of {@link String} representing the suggestions for the next argument, empty if the player doesn't has permissions
      */
     List<String> getSuggestions(Namespace accessor, List<String> arguments);
 
@@ -207,7 +207,7 @@ public interface CommandManager {
      *
      * @param accessor The {@link Namespace} used to inject objects
      * @param line     A String representing the command line to tokenize
-     * @return A {@link List} of {@link String} representing the suggestions for the next argument, empty if the player doesn't has permissions
+     * @return A non-null {@link List} of {@link String} representing the suggestions for the next argument, empty if the player doesn't has permissions
      * @see CommandManager#getSuggestions(Namespace, List)
      */
     List<String> getSuggestions(Namespace accessor, String line);
