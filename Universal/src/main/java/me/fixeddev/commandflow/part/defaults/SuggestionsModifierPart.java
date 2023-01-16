@@ -4,6 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
+import net.kyori.text.Component;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -26,6 +27,11 @@ public class SuggestionsModifierPart implements CommandPart {
     }
 
     @Override
+    public @Nullable Component getLineRepresentation() {
+        return part.getLineRepresentation();
+    }
+
+    @Override
     public void parse(CommandContext context, ArgumentStack stack, @Nullable CommandPart caller) throws ArgumentParseException {
         part.parse(context, stack, caller);
     }
@@ -39,12 +45,21 @@ public class SuggestionsModifierPart implements CommandPart {
         List<String> suggestions = new ArrayList<>();
         String prefix = stack.next().toLowerCase();
 
-        for (String suggestion : suggestions) {
+        for (String suggestion : this.suggestions) {
             if (suggestion.toLowerCase().startsWith(prefix)) {
                 suggestions.add(suggestion);
             }
         }
 
         return suggestions;
+    }
+
+    @Override
+    public boolean isAsync() {
+        return part.isAsync();
+    }
+
+    public CommandPart getPart() {
+        return part;
     }
 }
