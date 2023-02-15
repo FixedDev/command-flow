@@ -118,7 +118,7 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
 
         Usage usage = clazz.getAnnotation(Usage.class);
 
-        if (usage == null) {
+        if (usage == null && rootCommandMethod != null) {
             usage = rootCommandMethod.getAnnotation(Usage.class);
         }
 
