@@ -116,12 +116,20 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
                                             Method rootCommandMethod) {
         String[] names = rootCommandAnnotation.names();
 
+        Usage usage = clazz.getAnnotation(Usage.class);
+
+        if (usage == null) {
+            usage = rootCommandMethod.getAnnotation(Usage.class);
+        }
+
         CommandPartsNode partsNode = builder.newCommand(names[0])
                 .aliases(Arrays.asList(Arrays.copyOfRange(names, 1, names.length)))
                 .permission(rootCommandAnnotation.permission())
                 .permissionMessage(fromString(rootCommandAnnotation.permissionMessage()))
                 .description(fromString(rootCommandAnnotation.desc()))
+                .usage(usage)
                 .parts();
+
 
         SubCommandsNode subCommandsNode;
 
