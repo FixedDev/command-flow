@@ -5,5 +5,5 @@
 
 A flexible command framework which removes lots of boilerplate code used in commands
 
-Check the [documentation](https://unnamed.team/docs/creative) for installation and
+Check the [documentation](https://unnamed.team/docs/command-flow) for installation and
 usage information for this project
