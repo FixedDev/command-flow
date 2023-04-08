@@ -68,7 +68,7 @@ public class VelocityCommandWrapper implements RawCommand {
     @Override
     public List<String> suggest(Invocation invocation) {
         CommandSource commandSource = invocation.source();
-        String argumentLine = invocation.alias() + invocation.arguments();
+        String argumentLine = invocation.alias() + " "+ invocation.arguments();
 
         Namespace namespace = new NamespaceImpl();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
