@@ -245,7 +245,7 @@ public class CommandBrigadierConverter {
                 return true;
             }
 
-            return isFirstPartOptional(part);
+            return isFirstPartOptional(((SinglePartWrapper) part).getPart());
         }
 
         if (part instanceof SubCommandPart) {
