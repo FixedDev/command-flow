@@ -1,9 +1,9 @@
 package me.fixeddev.commandflow.exception;
 
 import me.fixeddev.commandflow.command.Command;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 
 public class CommandException extends RuntimeException {
 
@@ -31,9 +31,9 @@ public class CommandException extends RuntimeException {
         }
 
         if (message.startsWith("%translatable:") && message.endsWith("%")) {
-            this.message = TranslatableComponent.of(message.substring(14, message.length() - 1));
+            this.message = Component.translatable(message.substring(14, message.length() - 1));
         } else {
-            this.message = TextComponent.of(message);
+            this.message = Component.text(message);
         }
     }
 
@@ -41,9 +41,9 @@ public class CommandException extends RuntimeException {
         super(message, cause);
 
         if (message.startsWith("%translatable:") && message.endsWith("%")) {
-            this.message = TranslatableComponent.of(message.substring(14, message.length() - 1));
+            this.message = Component.translatable(message.substring(14, message.length() - 1));
         } else {
-            this.message = TextComponent.of(message);
+            this.message = Component.text(message);
         }
     }
 

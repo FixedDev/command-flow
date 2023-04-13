@@ -8,7 +8,7 @@ import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.translator.Translator;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 
@@ -93,7 +93,6 @@ public class VelocityCommandWrapper implements RawCommand {
         Component component = exception.getMessageComponent();
         Component translatedComponent = commandManager.getTranslator().translate(component, namespace);
 
-        sender.sendMessage(MessageUtils.kyoriToVelocityKyori(translatedComponent));
+        sender.sendMessage(translatedComponent);
     }
-
 }

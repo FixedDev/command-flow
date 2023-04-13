@@ -7,7 +7,7 @@ import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.dv8tion.jda.api.entities.Member;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.Objects;
 
@@ -33,7 +33,7 @@ public class MemberSenderPart implements CommandPart {
             return;
         }
 
-        throw new CommandException(TranslatableComponent.of("unknown.member"));
+        throw new CommandException(Component.translatable("unknown.member"));
     }
 
     @Override

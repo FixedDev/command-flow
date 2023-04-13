@@ -7,7 +7,7 @@ import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.velocity.VelocityCommandManager;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.Objects;
 
@@ -34,7 +34,7 @@ public class CommandSenderPart implements CommandPart {
             return;
         }
 
-        throw new CommandException(TranslatableComponent.of("sender.unknown"));
+        throw new CommandException(Component.translatable("sender.unknown"));
     }
 
     @Override

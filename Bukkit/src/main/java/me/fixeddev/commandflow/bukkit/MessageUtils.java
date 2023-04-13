@@ -1,7 +1,7 @@
 package me.fixeddev.commandflow.bukkit;
 
-import net.kyori.text.Component;
-import net.kyori.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 import org.bukkit.command.CommandSender;
@@ -24,12 +24,11 @@ public class MessageUtils {
     }
 
     public static BaseComponent[] kyoriToBungee(Component component) {
-        GsonComponentSerializer componentSerializer = GsonComponentSerializer.INSTANCE;
+        GsonComponentSerializer componentSerializer = GsonComponentSerializer.gson();
 
         String serializedComponent = componentSerializer.serialize(component);
-        BaseComponent[] components = ComponentSerializer.parse(serializedComponent);
 
-        return components;
+        return ComponentSerializer.parse(serializedComponent);
     }
 
 }

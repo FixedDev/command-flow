@@ -1,10 +1,12 @@
 package me.fixeddev.commandflow.translator;
 
 import me.fixeddev.commandflow.Namespace;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.renderer.ComponentRenderer;
-import net.kyori.text.renderer.FriendlyComponentRenderer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.renderer.ComponentRenderer;
+import net.kyori.adventure.text.renderer.TranslatableComponentRenderer;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.text.MessageFormat;
 import java.util.function.Function;
@@ -21,7 +23,12 @@ public class ComponentRendererTranslator implements Translator {
 
     public ComponentRendererTranslator(TranslationProvider translationProvider) {
         provider = translationProvider;
-        renderer = FriendlyComponentRenderer.from((namespace, key) -> new MessageFormat(provider.getTranslation(namespace, key)));
+        renderer = new TranslatableComponentRenderer<Namespace>() {
+            @Override
+            protected @Nullable MessageFormat translate(@NotNull String key, @NotNull Namespace context) {
+                return new MessageFormat(provider.getTranslation(context, key));
+            }
+        };
     }
 
     @Override

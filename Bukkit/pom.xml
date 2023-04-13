@@ -34,17 +34,5 @@
             <version>${version.universal}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>net.kyori</groupId>
-            <artifactId>text-serializer-gson</artifactId>
-            <version>3.0.0-stripped</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
     </dependencies>
 </project>

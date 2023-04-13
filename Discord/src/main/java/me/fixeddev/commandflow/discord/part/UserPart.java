@@ -10,7 +10,7 @@ import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +46,7 @@ public class UserPart implements ArgumentPart {
         }
 
         if (user == null) {
-            throw new ArgumentParseException(TranslatableComponent.of("unknown.user"))
+            throw new ArgumentParseException(Component.translatable("unknown.user"))
                     .setArgument(this);
         }
 

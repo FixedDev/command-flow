@@ -1,10 +1,9 @@
 package me.fixeddev.commandflow.translator;
 
-import me.fixeddev.commandflow.ComponentUtil;
 import me.fixeddev.commandflow.Namespace;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +11,13 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 
 public class DefaultTranslator implements Translator {
-
     private TranslationProvider provider;
     private Function<String, TextComponent> stringToComponent;
 
     private static final Pattern FORMAT = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
     public DefaultTranslator(TranslationProvider provider) {
-        this(provider, TextComponent::of);
+        this(provider, Component::text);
     }
 
     public DefaultTranslator(TranslationProvider provider, Function<String, TextComponent> stringTextComponentFunction) {
@@ -43,9 +41,14 @@ public class DefaultTranslator implements Translator {
             return component.children(children);
         }
 
-        TranslatableComponent translatableComponent = (TranslatableComponent) component;
+        String key = ((TranslatableComponent) component).key();
+        String trans = provider.getTranslation(namespace, key); //translate
 
-        return newConvert(translatableComponent, namespace);
+        if (trans == null || trans.isEmpty()) {
+            return Component.text(key);
+        }
+
+        return _translate((TranslatableComponent) component, namespace);
     }
 
     @Override
@@ -63,44 +66,47 @@ public class DefaultTranslator implements Translator {
         this.stringToComponent = stringToComponent;
     }
 
-
-    // Taken from BungeeCord-Chat TranslatableComponent and modified to allow the conversion of a TranslatableComponent into a Text Component
-    // instead of it being converted into plain text
-    private TextComponent newConvert(TranslatableComponent component, Namespace namespace) {
-        String trans = provider.getTranslation(namespace, component.key()); //translate
+    private Component _translate(TranslatableComponent component, Namespace namespace) {
+        String key = component.key();
+        String trans = provider.getTranslation(namespace, key); //translate
 
         if (trans == null || trans.isEmpty()) {
-            return TextComponent.of(component.key());
+            return Component.text(key);
         }
 
-        TextComponent translated = TextComponent.builder(trans).style(component.style()).build();
+       Component newComponent = stringToComponent.apply(trans);
 
         // don't do this please.
         int[] iw = new int[]{0};
-        return (TextComponent) ComponentUtil.recursiveDynamicReplace(translated, FORMAT, (s, matcher) -> {
-            String formatCode = matcher.group(2);
-            switch (formatCode.charAt(0)) {
-                case 's':
-                case 'd':
-                    String withIndex = matcher.group(1);
+        newComponent = newComponent.replaceText(builder -> {
+            builder.match(FORMAT)
+                    .replacement((matcher, builder1) -> {
+                        String formatCode = matcher.group(2);
+                        List<Component> args = component.args();
 
-                    List<Component> args = component.args();
+                        switch (formatCode.charAt(0)) {
+                            case 's':
+                            case 'd':
+                                String withIndex = matcher.group(1);
 
-                    int withIndexInt = withIndex != null ? Integer.parseInt(withIndex) - 1 : iw[0]++;
+                                int withIndexInt = withIndex != null ? Integer.parseInt(withIndex) - 1 : iw[0]++;
 
-                    if (args.size() > withIndexInt) {
-                        Component component1 = component.args().get(withIndexInt);
+                                if (args.size() > withIndexInt) {
+                                    Component component1 = args.get(withIndexInt);
 
-                        return component1 instanceof TextComponent ? (TextComponent) component1 : newConvert(component, namespace);
-                    } else {
-                        return stringToComponent.apply("%" + formatCode.charAt(0));
-                    }
-                case '%':
-                    return stringToComponent.apply("%");
-                default:
-                    return TextComponent.of(s);
-            }
+                                    return component1 instanceof TextComponent ? component1 : _translate(component, namespace);
+                                } else {
+                                    return Component.text("%" + formatCode.charAt(0));
+                                }
+                            case '%':
+                                return Component.text("%");
+                            default:
+                                return builder1.asComponent();
+                        }
+                    });
         });
-    }
 
+
+        return newComponent;
+    }
 }
