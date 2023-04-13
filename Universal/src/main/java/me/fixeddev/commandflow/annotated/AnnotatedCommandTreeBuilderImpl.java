@@ -7,6 +7,7 @@ import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
 import me.fixeddev.commandflow.annotated.annotation.Usage;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilderImpl;
+import me.fixeddev.commandflow.annotated.builder.CommandModifiersNode;
 import me.fixeddev.commandflow.annotated.builder.CommandPartsNode;
 import me.fixeddev.commandflow.annotated.builder.SubCommandsNode;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
@@ -102,6 +103,8 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
                 .permissionMessage(fromString(commandAnnotation.permissionMessage()))
                 .description(fromString(commandAnnotation.desc()))
                 .usage(usage)
+                .modifiers()
+                .ofMethod(method, commandClass)
                 .parts()
                 .ofMethodParameters(method, commandClass)
                 .action(method, commandClass)
@@ -122,14 +125,22 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
             usage = rootCommandMethod.getAnnotation(Usage.class);
         }
 
-        CommandPartsNode partsNode = builder.newCommand(names[0])
+        CommandModifiersNode modifiersNode = builder.newCommand(names[0])
                 .aliases(Arrays.asList(Arrays.copyOfRange(names, 1, names.length)))
                 .permission(rootCommandAnnotation.permission())
                 .permissionMessage(fromString(rootCommandAnnotation.permissionMessage()))
                 .description(fromString(rootCommandAnnotation.desc()))
                 .usage(usage)
-                .parts();
+                .modifiers();
 
+        if (rootCommandMethod != null) {
+            modifiersNode = modifiersNode
+                    .ofMethod(rootCommandMethod, commandClass);
+        } else {
+            modifiersNode = modifiersNode.addModifiers(Arrays.asList(clazz.getAnnotations()));
+        }
+
+        CommandPartsNode partsNode = modifiersNode.parts();
 
         SubCommandsNode subCommandsNode;
 

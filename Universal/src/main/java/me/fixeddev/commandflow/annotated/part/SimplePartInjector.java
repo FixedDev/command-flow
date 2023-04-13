@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.annotated.part;
 
+import me.fixeddev.commandflow.annotated.modifier.CommandModifierFactory;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
@@ -10,10 +11,12 @@ public class SimplePartInjector implements PartInjector {
 
     private final Map<Key, PartFactory> factoryBindings;
     private final Map<Class<? extends Annotation>, PartModifier> modifiers;
+    private final Map<Class<? extends Annotation>, CommandModifierFactory> commandModifiers;
 
     public SimplePartInjector() {
         this.factoryBindings = new ConcurrentHashMap<>();
         this.modifiers = new ConcurrentHashMap<>();
+        this.commandModifiers = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -46,6 +49,16 @@ public class SimplePartInjector implements PartInjector {
 
             throw new IllegalArgumentException("A factory with the key " + key.toString() + " is already present!");
         }
+    }
+
+    @Override
+    public CommandModifierFactory getCommandModifierFactory(Class<? extends Annotation> annotation) {
+        return commandModifiers.get(annotation);
+    }
+
+    @Override
+    public void bindCommandModifierFactory(Class<? extends Annotation> type, CommandModifierFactory factory) {
+        commandModifiers.put(type, factory);
     }
 
     @Override

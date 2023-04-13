@@ -1,5 +1,7 @@
 package me.fixeddev.commandflow.annotated.part;
 
+import me.fixeddev.commandflow.annotated.modifier.CommandModifierFactory;
+import me.fixeddev.commandflow.command.modifiers.CommandModifier;
 import me.fixeddev.commandflow.part.CommandPart;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,8 +31,7 @@ public interface PartInjector {
      * @param key The type of {@link me.fixeddev.commandflow.part.CommandPart} to generate.
      * @return An {@link PartFactory} for a specific {@link Type} of CommandPart.
      */
-    @Nullable
-    PartFactory getFactory(Key key);
+    @Nullable PartFactory getFactory(Key key);
 
     /**
      * Gets a {@link PartFactory} for a given {@link Key}.
@@ -38,8 +39,7 @@ public interface PartInjector {
      * @param annotation The type of {@link me.fixeddev.commandflow.part.CommandPart} to generate.
      * @return An {@link PartFactory} for a specific {@link Type} of CommandPart.
      */
-    @Nullable
-    PartModifier getModifier(Class<? extends Annotation> annotation);
+    @Nullable PartModifier getModifier(Class<? extends Annotation> annotation);
 
     /**
      * Gets a {@link DelegatePartModifier} for a given list of {@link Annotation}.
@@ -117,6 +117,32 @@ public interface PartInjector {
      */
     default void bindPart(Key key, CommandPart part) {
         bindFactory(key, (name, modifiers) -> part);
+    }
+
+    /**
+     * Gets a {@link CommandModifierFactory} for a given {@link Annotation}.
+     *
+     * @param annotation The annotation type to search modifier for.
+     * @return An {@link CommandModifierFactory} for a specific {@link Type} of CommandModifier.
+     */
+    CommandModifierFactory getCommandModifierFactory(Class<? extends Annotation> annotation);
+
+    /**
+     * Binds a {@link CommandModifierFactory} to a specific {@link Class} anotation type.
+     *
+     * @param type  The {@link Class} annotation type used to identify the {@link CommandModifier}.
+     * @param factory The {@link CommandModifierFactory} that's going to be bound.
+     */
+    void bindCommandModifierFactory(Class<? extends Annotation> type, CommandModifierFactory factory);
+
+    /**
+     * Creates a constant binding from a Type to a {@link CommandModifierFactory}.
+     *
+     * @param type  The {@link Class} annotation type used to identify the {@link CommandModifier}.
+     * @param modifier The {@link CommandModifier} that's going to be constantly bound to an annotation.
+     */
+    default void bindCommandModifier(Class<? extends Annotation> type, CommandModifier modifier) {
+        bindCommandModifierFactory(type, (command, annotations) -> modifier);
     }
 
     void install(Module module);

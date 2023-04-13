@@ -58,7 +58,7 @@ public interface CommandDataNode extends Buildable {
     @NotNull CommandDataNode permission(@NotNull String permission);
 
     /**
-     * @param permissionMessage The component to be send when the user doesn't have permissions4.
+     * @param permissionMessage The component to be sent when the user doesn't have permissions4.
      * @return The same {@link CommandDataNode} instance.
      * @see me.fixeddev.commandflow.command.Command.Builder#permissionMessage(Component)
      */
@@ -67,8 +67,8 @@ public interface CommandDataNode extends Buildable {
     /**
      * This method gives you the next step of the process of building a {@link me.fixeddev.commandflow.command.Command}.
      *
-     * @return A {@link CommandPartsNode} instance, which will allow continuing the building process of this command.
+     * @return A {@link CommandModifiersNode} instance, which will allow continuing the building process of this command.
      */
-    @NotNull CommandPartsNode parts();
+    @NotNull CommandModifiersNode modifiers();
 
 }

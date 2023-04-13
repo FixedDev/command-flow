@@ -12,6 +12,9 @@ import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.annotated.part.PartModifier;
 import me.fixeddev.commandflow.command.Action;
 import me.fixeddev.commandflow.command.Command;
+import me.fixeddev.commandflow.command.modifiers.CommandModifier;
+import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
+import me.fixeddev.commandflow.command.modifiers.ModifierPhase;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.Parts;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
@@ -32,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNode, CommandPartsNode, SubCommandsNode {
+public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNode, CommandPartsNode, SubCommandsNode, CommandModifiersNode {
 
     private final Command.Builder builder;
     private final List<Command> subCommands;
@@ -44,6 +47,8 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     private boolean argumentsOrSubcommandReversed = false;
     private Function<CommandPart, CommandPart> modifierFunction = Function.identity();
 
+    private final CommandModifiers.Builder commandModifiersBuilder = CommandModifiers.builder();
+
     public CommandBuilderNodesImpl(String name, PartInjector injector) {
         this.builder = Command.builder(name);
         this.subCommands = new ArrayList<>();
@@ -51,8 +56,14 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
         this.injector = injector;
     }
 
+
     @Override
     public @NotNull CommandPartsNode parts() {
+        return this;
+    }
+
+    @Override
+    public @NotNull CommandModifiersNode modifiers() {
         return this;
     }
 
@@ -64,6 +75,34 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
     @Override
     public @NotNull SubCommandsNode action(@NotNull Method method, @NotNull CommandClass commandClass) {
         return action(new ReflectiveAction(partGetters, commandClass, method));
+    }
+
+    @Override
+    public @NotNull CommandModifiersNode ofMethod(@NotNull Method method, @NotNull CommandClass handler) {
+        List<Annotation> annotations = Arrays.asList(method.getAnnotations());
+
+        for (Annotation annotation : method.getAnnotations()) {
+            injector.getCommandModifierFactory(annotation.getClass()).modify(commandModifiersBuilder, annotations);
+        }
+
+        return this;
+    }
+
+    @Override
+    public @NotNull CommandModifiersNode addModifiers(List<Annotation> annotations) {
+
+        for (Annotation annotation : annotations) {
+            injector.getCommandModifierFactory(annotation.getClass()).modify(commandModifiersBuilder, annotations);
+        }
+
+        return this;
+    }
+
+    @Override
+    public @NotNull CommandModifiersNode addModifier(@NotNull ModifierPhase phase, @NotNull CommandModifier modifier) {
+        commandModifiersBuilder.addModifier(modifier, phase);
+
+        return this;
     }
 
     @Override
@@ -315,6 +354,8 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
             }
 
         }
+
+        builder.modifiers(commandModifiersBuilder.build());
 
         return builder.build();
     }
