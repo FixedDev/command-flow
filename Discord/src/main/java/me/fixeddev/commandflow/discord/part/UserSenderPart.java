@@ -7,7 +7,7 @@ import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import net.dv8tion.jda.api.entities.User;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 public class UserSenderPart implements CommandPart {
 
@@ -32,6 +32,6 @@ public class UserSenderPart implements CommandPart {
             return;
         }
 
-        throw new CommandException(TranslatableComponent.of("unknown.user"));
+        throw new CommandException(Component.translatable("unknown.user"));
     }
 }

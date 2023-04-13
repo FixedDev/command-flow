@@ -19,7 +19,7 @@ import me.fixeddev.commandflow.executor.Executor;
 import me.fixeddev.commandflow.input.InputTokenizer;
 import me.fixeddev.commandflow.translator.Translator;
 import me.fixeddev.commandflow.usage.UsageBuilder;
-import net.kyori.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.HashMap;
@@ -49,7 +49,7 @@ public class BungeeCommandManager implements CommandManager {
 
         setAuthorizer(new BungeeAuthorizer());
         getTranslator().setProvider(new BungeeDefaultTranslationProvider());
-        getTranslator().setConverterFunction(LegacyComponentSerializer.INSTANCE::deserialize);
+        getTranslator().setConverterFunction(LegacyComponentSerializer.legacyAmpersand()::deserialize);
 
         getErrorHandler().addExceptionHandler(CommandUsage.class, (namespace, e) -> {
             CommandException exceptionToSend = e;
@@ -251,5 +251,4 @@ public class BungeeCommandManager implements CommandManager {
     public ParseResult parse(Namespace accessor, String line) throws CommandException {
         return commandManager.parse(accessor, line);
     }
-
 }

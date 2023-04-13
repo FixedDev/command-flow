@@ -5,7 +5,7 @@
     <parent>
         <artifactId>commandflow</artifactId>
         <groupId>me.fixeddev</groupId>
-        <version>0.5.0</version>
+        <version>0.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,8 +16,8 @@
     <dependencies>
         <dependency>
             <groupId>net.kyori</groupId>
-            <artifactId>text-api</artifactId>
-            <version>3.0.0-stripped</version>
+            <artifactId>adventure-api</artifactId>
+            <version>4.9.1</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -28,25 +28,28 @@
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
-            <artifactId>text-serializer-plain</artifactId>
-            <version>3.0.0-stripped</version>
-            <scope>compile</scope>
+            <artifactId>adventure-text-serializer-legacy</artifactId>
+            <version>4.11.0</version>
         </dependency>
         <dependency>
             <groupId>net.kyori</groupId>
-            <artifactId>text-serializer-legacy</artifactId>
-            <version>3.0.0-stripped</version>
-            <scope>compile</scope>
+            <artifactId>adventure-text-serializer-gson</artifactId>
+            <version>4.11.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-text-serializer-plain</artifactId>
+            <version>4.11.0</version>
         </dependency>
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>16.0.2</version>
+            <version>24.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
-            <version>5.7.0-RC1</version>
+            <version>5.9.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

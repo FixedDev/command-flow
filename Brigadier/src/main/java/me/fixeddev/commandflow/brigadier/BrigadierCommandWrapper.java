@@ -4,7 +4,7 @@ import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.bukkit.BukkitCommandWrapper;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.translator.Translator;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 
 public class BrigadierCommandWrapper extends BukkitCommandWrapper {
 

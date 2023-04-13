@@ -4,13 +4,12 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
-import net.kyori.text.Component;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.Collections;
 import java.util.List;
 
-import static net.kyori.text.TextComponent.of;
+import static net.kyori.adventure.text.Component.text;
 
 public class IntegerPart extends PrimitivePart {
 
@@ -40,7 +39,9 @@ public class IntegerPart extends PrimitivePart {
     public List<Integer> parseValue(CommandContext context, ArgumentStack stack, CommandPart parent) throws ArgumentParseException {
         int next = stack.nextInt();
         if (ranged && (next > max || next < min)) {
-            throw new ArgumentParseException(TranslatableComponent.of("number.out-range", of(next), of(min), of(max)));
+            Component message = Component.translatable("number.out-range", text(next), text(min), text(max));
+
+            throw new ArgumentParseException(message);
         }
 
         return Collections.singletonList(next);

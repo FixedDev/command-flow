@@ -1,7 +1,7 @@
 package me.fixeddev.commandflow.usage;
 
 import me.fixeddev.commandflow.CommandContext;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 
 /**
  * Creates a usage based on the CommandContext that you give to this class.

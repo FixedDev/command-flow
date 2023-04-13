@@ -5,7 +5,7 @@
     <parent>
         <groupId>me.fixeddev</groupId>
         <artifactId>commandflow</artifactId>
-        <version>0.5.0</version>
+        <version>0.6.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -31,18 +31,6 @@
             <artifactId>velocity-api</artifactId>
             <version>3.0.0</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.kyori</groupId>
-            <artifactId>text-serializer-gson</artifactId>
-            <version>3.0.0-stripped</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.code.gson</groupId>
-                    <artifactId>gson</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
     </dependencies>
 
