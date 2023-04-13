@@ -1,15 +1,10 @@
 package me.fixeddev.commandflow.usage;
 
 import me.fixeddev.commandflow.CommandContext;
-import me.fixeddev.commandflow.ComponentUtil;
 import me.fixeddev.commandflow.command.Command;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-
-import java.util.regex.Pattern;
+import net.kyori.adventure.text.Component;
 
 public class DefaultUsageBuilder implements UsageBuilder {
-
     @Override
     public Component getUsage(CommandContext commandContext) {
         Command toExecute = commandContext.getCommand();
@@ -18,19 +13,18 @@ public class DefaultUsageBuilder implements UsageBuilder {
 
         String label = String.join(" ", commandContext.getLabels());
 
-        TextComponent labelComponent = TextComponent.of(label);
+        Component labelComponent = Component.text(label);
 
         if (usage != null) {
-            return labelComponent.append(TextComponent.of(" ")).append(usage);
+            return labelComponent.append(Component.text(" ")).append(usage);
         }
 
         Component partComponents = toExecute.getPart().getLineRepresentation();
 
         if (partComponents != null) {
-            labelComponent = labelComponent.append(TextComponent.of(" ")).append(partComponents);
+            labelComponent = labelComponent.append(Component.text(" ")).append(partComponents);
         }
 
         return labelComponent;
     }
-
 }

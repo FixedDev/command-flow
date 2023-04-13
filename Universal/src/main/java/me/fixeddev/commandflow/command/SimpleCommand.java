@@ -4,7 +4,7 @@ import me.fixeddev.commandflow.command.modifiers.CommandModifiers;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.defaults.EmptyPart;
 import me.fixeddev.commandflow.part.Parts;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

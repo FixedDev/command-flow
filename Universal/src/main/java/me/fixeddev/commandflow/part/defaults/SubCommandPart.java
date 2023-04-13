@@ -18,9 +18,9 @@ import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.visitor.CommandPartVisitor;
 import me.fixeddev.commandflow.stack.ArgumentStack;
 import me.fixeddev.commandflow.stack.StackSnapshot;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,15 +75,15 @@ public class SubCommandPart implements CommandPart {
 
     @Override
     public @Nullable Component getLineRepresentation() {
-        TextComponent.Builder builder;
+        Component component;
 
         if (isOptional()) {
-            builder = TextComponent.builder().content("[" + getName() + "]");
+            component = Component.text("[" + getName() + "]");
         } else {
-            builder = TextComponent.builder().content("<" + getName() + ">");
+            component = Component.text("<" + getName() + ">");
         }
 
-        return builder.build();
+        return component;
     }
 
     @Override
@@ -206,7 +206,6 @@ public class SubCommandPart implements CommandPart {
          * @return The {@link ArgumentStack} of the {@link SubCommandPart}.
          */
         @NotNull ArgumentStack getStack();
-
     }
 
     private static class DefaultHandlerContext implements HandlerContext {
@@ -235,14 +234,13 @@ public class SubCommandPart implements CommandPart {
         public @NotNull ArgumentStack getStack() {
             return stack;
         }
-
     }
 
     public interface SubCommandHandler {
 
         /**
-         * Handle the context change from the main command into the sub command and handle the start of the parsing
-         * for the {@link CommandPart} of the subcommand.
+         * Handle the context change from the main command into the sub command and handle the start of the parsing for the {@link CommandPart} of the
+         * subcommand.
          *
          * @param context The context for the handler.
          * @param label   The label of the subcommand.
@@ -251,7 +249,6 @@ public class SubCommandPart implements CommandPart {
          * @throws InvalidSubCommandException If the provided label isn't a label for a subcommand of this part.
          */
         void handle(@NotNull HandlerContext context, @NotNull String label, @Nullable Command command) throws ArgumentException;
-
     }
 
     public static class DefaultSubCommandHandler implements SubCommandHandler {
@@ -262,7 +259,7 @@ public class SubCommandPart implements CommandPart {
             ArgumentStack stack = context.getStack();
 
             if (command == null) {
-                throw new InvalidSubCommandException(TranslatableComponent.of("command.subcommand.invalid", TextComponent.of(label)))
+                throw new InvalidSubCommandException(Component.translatable("command.subcommand.invalid", Component.text(label)))
                         .setArgument(context.getPart())
                         .setCommand(commandContext.getCommand());
             }
@@ -274,6 +271,7 @@ public class SubCommandPart implements CommandPart {
                 throw new NoPermissionsException(command.getPermissionMessage())
                         .setCommand(command);
             }
+
 
             FallbackCommandModifiers fallbackModifiers = manager.getCommandModifiers();
 
@@ -294,7 +292,5 @@ public class SubCommandPart implements CommandPart {
 
             command.getPart().parse(commandContext, stack, command.getPart());
         }
-
     }
-
 }

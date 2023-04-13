@@ -4,9 +4,7 @@ import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.stack.ArgumentStack;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,9 +68,11 @@ public class EnumPart extends PrimitivePart {
         Object value = enumConstants.get(name);
 
         if (value == null) {
-            Component message = TranslatableComponent.of("invalid.enum-value",
-                    TextComponent.of(name),
-                    TextComponent.of(joinedEnumConstants));
+            Component message = Component.translatable("invalid.enum-value")
+                    .args(
+                            Component.text(name),
+                            Component.text(joinedEnumConstants)
+                    );
 
             throw new ArgumentParseException(message)
                     .setCommand(context.getCommand())

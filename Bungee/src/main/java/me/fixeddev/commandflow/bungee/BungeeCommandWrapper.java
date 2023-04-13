@@ -5,7 +5,7 @@ import me.fixeddev.commandflow.Namespace;
 import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.translator.Translator;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.plugin.Command;

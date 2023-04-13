@@ -13,10 +13,9 @@ import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.exception.CommandUsage;
 import me.lucko.commodore.Commodore;
 import me.lucko.commodore.CommodoreProvider;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -210,7 +209,7 @@ public class BrigadierCommandManager extends BukkitCommandManager {
                     }
 
                     if (matchedPlayers.size() > 1) {
-                        Component component = getTranslator().translate(TranslatableComponent.of("selector.ambiguous", TextComponent.of(argument)), accessor);
+                        Component component = getTranslator().translate(Component.translatable("selector.ambiguous", Component.text(argument)), accessor);
                         BaseComponent[] components = MessageUtils.kyoriToBungee(component);
 
                         MessageUtils.sendMessage(sender, components);
@@ -228,7 +227,7 @@ public class BrigadierCommandManager extends BukkitCommandManager {
                         }
                     }
 
-                    Component component = TranslatableComponent.of("selector.parse-error", TextComponent.of(argument), TextComponent.of(message));
+                    Component component = Component.translatable("selector.parse-error", Component.text(argument), Component.text(message));
                     throw new CommandUsage(component);
                 }
             }

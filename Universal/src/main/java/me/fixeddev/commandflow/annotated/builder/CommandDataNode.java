@@ -1,7 +1,7 @@
 package me.fixeddev.commandflow.annotated.builder;
 
 import me.fixeddev.commandflow.annotated.annotation.Usage;
-import net.kyori.text.Component;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

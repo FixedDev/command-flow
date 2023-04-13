@@ -5,8 +5,8 @@ import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.part.CommandPart;
 import me.fixeddev.commandflow.part.PartsWrapper;
 import me.fixeddev.commandflow.stack.ArgumentStack;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -39,14 +39,14 @@ public class SequentialCommandPart implements CommandPart, PartsWrapper {
 
     @Override
     public @Nullable Component getLineRepresentation() {
-        TextComponent.Builder builder = TextComponent.builder("");
+        TextComponent.Builder builder = Component.text();
         boolean nonNull = false;
 
         for (CommandPart part : parts) {
             Component lineRepresentation = part.getLineRepresentation();
             if (lineRepresentation != null) {
                 if (nonNull) {
-                    builder.append(TextComponent.of(" "));
+                    builder.append(Component.text(" "));
                 }
                 builder.append(lineRepresentation);
 

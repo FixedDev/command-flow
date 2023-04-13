@@ -1,10 +1,6 @@
 package me.fixeddev.commandflow.annotated;
 
-import me.fixeddev.commandflow.annotated.annotation.ArgOrSub;
-import me.fixeddev.commandflow.annotated.annotation.Handler;
-import me.fixeddev.commandflow.annotated.annotation.Required;
-import me.fixeddev.commandflow.annotated.annotation.SubCommandClasses;
-import me.fixeddev.commandflow.annotated.annotation.Usage;
+import me.fixeddev.commandflow.annotated.annotation.*;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilderImpl;
 import me.fixeddev.commandflow.annotated.builder.CommandPartsNode;
@@ -13,9 +9,7 @@ import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.command.Action;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
-import net.kyori.text.Component;
-import net.kyori.text.TextComponent;
-import net.kyori.text.TranslatableComponent;
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Method;
@@ -212,9 +206,9 @@ public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuil
 
     private Component fromString(String component) {
         if (component.startsWith("%translatable:") && component.endsWith("%")) {
-            return TranslatableComponent.of(component.substring(14, component.length() - 1));
+            return Component.translatable(component.substring(14, component.length() - 1));
         } else {
-            return TextComponent.of(component);
+            return Component.text(component);
         }
     }
 
