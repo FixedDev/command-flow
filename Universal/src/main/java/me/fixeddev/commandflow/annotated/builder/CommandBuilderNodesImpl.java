@@ -6,6 +6,7 @@ import me.fixeddev.commandflow.annotated.action.ValueGetter;
 import me.fixeddev.commandflow.annotated.annotation.Named;
 import me.fixeddev.commandflow.annotated.annotation.ParentArg;
 import me.fixeddev.commandflow.annotated.annotation.Usage;
+import me.fixeddev.commandflow.annotated.modifier.CommandModifierFactory;
 import me.fixeddev.commandflow.annotated.part.Key;
 import me.fixeddev.commandflow.annotated.part.PartFactory;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
@@ -80,7 +81,11 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
         List<Annotation> annotations = Arrays.asList(method.getAnnotations());
 
         for (Annotation annotation : method.getAnnotations()) {
-            injector.getCommandModifierFactory(annotation.getClass()).modify(commandModifiersBuilder, annotations);
+            CommandModifierFactory modifierFactory = injector.getCommandModifierFactory(annotation.getClass());
+
+            if (modifierFactory != null) {
+                modifierFactory.modify(commandModifiersBuilder, annotations);
+            }
         }
 
         return this;
