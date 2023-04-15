@@ -1,5 +1,6 @@
 package me.fixeddev.commandflow.velocity;
 
+import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.proxy.ProxyServer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
@@ -98,7 +99,12 @@ public class VelocityCommandManager implements CommandManager {
         VelocityCommandWrapper velocityCommandWrapper = new VelocityCommandWrapper(command, commandManager, getTranslator());
         wrapperMap.put(command.getName(), velocityCommandWrapper);
 
-        proxyServer.getCommandManager().register(command.getName(), velocityCommandWrapper, command.getAliases().toArray(new String[0]));
+        final CommandMeta commandMeta = proxyServer.getCommandManager().metaBuilder(command.getName())
+                        .aliases(command.getAliases().toArray(new String[0]))
+                        .plugin(plugin)
+                        .build();
+
+        proxyServer.getCommandManager().register(commandMeta, velocityCommandWrapper);
     }
 
     @Override
@@ -119,7 +125,8 @@ public class VelocityCommandManager implements CommandManager {
 
         VelocityCommandWrapper velocityCommandWrapper = wrapperMap.get(command.getName());
         if (velocityCommandWrapper != null) {
-            proxyServer.getCommandManager().unregister(command.getName());
+            final CommandMeta commandMeta = proxyServer.getCommandManager().getCommandMeta(command.getName());
+            proxyServer.getCommandManager().unregister(commandMeta);
         }
     }
 
