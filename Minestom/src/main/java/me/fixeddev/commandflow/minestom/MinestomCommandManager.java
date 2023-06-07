@@ -81,6 +81,7 @@ public class MinestomCommandManager implements CommandManager {
     @Override
     public void registerCommand(Command command) {
         MinestomCommandWrapper commandWrapper = new MinestomCommandWrapper(
+                command,
                 this,
                 command.getName(),
                 command.getAliases().toArray(new String[0])
