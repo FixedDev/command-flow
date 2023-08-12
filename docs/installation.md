@@ -11,7 +11,7 @@ repositories {
 ```
 ```kotlin
 dependencies {
-    implementation("me.fixeddev:commandflow-universal:0.5.3")
+    implementation("me.fixeddev:commandflow-universal:0.6.0")
 }
 ```
 
