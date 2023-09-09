@@ -11,7 +11,7 @@ repositories {
 ```
 ```kotlin
 dependencies {
-    implementation("me.fixeddev:commandflow-universal:0.6.0")
+    implementation("me.fixeddev:commandflow-universal:%%REPLACE_latestReleaseOrSnapshot{me.fixeddev:commandflow-universal}%%")
 }
 ```
 
@@ -26,6 +26,6 @@ dependencies {
 <dependency>
   <groupId>me.fixeddev</groupId>
   <artifactId>commandflow-universal</artifactId>
-  <version>0.5.3</version>
+  <version>%%REPLACE_latestReleaseOrSnapshot{me.fixeddev:commandflow-universal}%%</version>
 </dependency>
 ```
