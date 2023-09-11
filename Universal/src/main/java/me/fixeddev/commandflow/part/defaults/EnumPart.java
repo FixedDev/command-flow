@@ -102,4 +102,7 @@ public class EnumPart extends PrimitivePart {
         return suggestions;
     }
 
+    public Class<?> enumClass() {
+        return enumClass;
+    }
 }

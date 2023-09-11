@@ -14,6 +14,7 @@
         <module>Bungee</module>
         <module>Velocity</module>
         <module>Brigadier</module>
+        <module>Minestom</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -50,6 +51,7 @@
         <version.bungee>0.6.0</version.bungee>
         <version.velocity>0.6.0</version.velocity>
         <version.brigadier>0.6.0</version.brigadier>
+        <version.minestom>0.6.0</version.minestom>
     </properties>
 
     <build>
