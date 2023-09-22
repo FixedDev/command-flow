@@ -27,6 +27,10 @@ public class DefaultTranslator implements Translator {
 
     @Override
     public Component translate(Component component, Namespace namespace) {
+        if (component == null) {
+            return Component.empty();
+        }
+
         if (!(component instanceof TranslatableComponent)) {
             if (component.children().isEmpty()) {
                 return component;
@@ -74,7 +78,7 @@ public class DefaultTranslator implements Translator {
             return Component.text(key);
         }
 
-       Component newComponent = stringToComponent.apply(trans);
+        Component newComponent = stringToComponent.apply(trans);
 
         // don't do this please.
         int[] iw = new int[]{0};
