@@ -1,0 +1,5 @@
+annotated.md
+command-class.md
+command-tree-builder.md
+part-injector.md
+subcommand-instance-creator.md

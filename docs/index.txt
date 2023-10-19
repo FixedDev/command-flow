@@ -1,2 +1,5 @@
 getting-started.md
 installation.md
+concepts
+annotated
+platforms
