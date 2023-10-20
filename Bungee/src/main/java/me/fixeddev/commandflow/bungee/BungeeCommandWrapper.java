@@ -2,7 +2,6 @@ package me.fixeddev.commandflow.bungee;
 
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.translator.Translator;
 import net.kyori.adventure.text.Component;
@@ -40,7 +39,7 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
         argumentLine.add(getName());
         argumentLine.addAll(Arrays.asList(args));
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
         namespace.setObject(CommandSender.class, BungeeCommandManager.SENDER_NAMESPACE, commandSender);
         namespace.setObject(String.class, "label", getName());
 
@@ -72,7 +71,7 @@ public class BungeeCommandWrapper extends Command implements TabExecutor {
         List<String> argumentList = new ArrayList<>(Arrays.asList(strings));
         argumentList.add(0, getName());
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
         namespace.setObject(CommandSender.class, BungeeCommandManager.SENDER_NAMESPACE, commandSender);
 
         return commandManager.getSuggestions(namespace, argumentList);
