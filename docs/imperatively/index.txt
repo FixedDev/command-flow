@@ -3,3 +3,6 @@ basic.md
 argument.md
 multiple-arguments.md
 optional-arguments.md
+with-permission.md
+with-switches.md
+with-value-flags.md
