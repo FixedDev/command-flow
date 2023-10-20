@@ -7,13 +7,13 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SimplePartInjector implements PartInjector {
+final class SimplePartInjector implements PartInjector {
 
     private final Map<Key, PartFactory> factoryBindings;
     private final Map<Class<? extends Annotation>, PartModifier> modifiers;
     private final Map<Class<? extends Annotation>, CommandModifierFactory> commandModifiers;
 
-    public SimplePartInjector() {
+    SimplePartInjector() {
         this.factoryBindings = new ConcurrentHashMap<>();
         this.modifiers = new ConcurrentHashMap<>();
         this.commandModifiers = new ConcurrentHashMap<>();
