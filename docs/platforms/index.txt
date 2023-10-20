@@ -1,1 +1,6 @@
 platforms.md
+bukkit.md
+brigadier.md
+velocity.md
+bungeecord.md
+discord-jda.md

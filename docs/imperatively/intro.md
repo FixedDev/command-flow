@@ -1,10 +1,9 @@
-## Annotated Commands
+## Imperative Command Creation
 
-`command-flow` allows developers to create full command trees in a declarative way
-using annotated classes and methods.
+We can imperatively create commands using the command builder interface. This
+way to create commands is the most flexible one, but also the most verbose.
 
-The annotated command API is just an alternative way to create `Command` instances,
-we use this instead of the classic `Command.builder(String)` method.
+An alternative to this approach is to use the [annotation-based command creation](../annotated/annotated.md).
 
 ### Comparison
 
@@ -17,9 +16,3 @@ and links:
 | [Command with single Argument](../imperatively/argument.md)                | [Command with single Argument](../annotated/argument.md)                |
 | [Command with multiple Arguments](../imperatively/multiple-arguments.md)   | [Command with multiple Arguments](../annotated/multiple-arguments.md)   |
 | [Command with optional Arguments](../imperatively/optional-arguments.md)   | [Command with optional Arguments](../annotated/optional-arguments.md)   |
-
-### Elements of the Annotated Command API
-
-The annotated command API is composed of:
-- The `@Command` annotation and others.
-- The `AnnotatedCommandTreeBuilder` interface

@@ -1,5 +1,6 @@
 getting-started.md
 installation.md
 concepts
+configuration
 annotated
 platforms
