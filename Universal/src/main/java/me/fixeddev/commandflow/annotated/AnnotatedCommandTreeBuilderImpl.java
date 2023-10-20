@@ -20,17 +20,17 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
+final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
 
     private final AnnotatedCommandBuilder builder;
     private final SubCommandInstanceCreator instanceCreator;
 
-    public AnnotatedCommandTreeBuilderImpl(AnnotatedCommandBuilder builder, SubCommandInstanceCreator instanceCreator) {
+    AnnotatedCommandTreeBuilderImpl(AnnotatedCommandBuilder builder, SubCommandInstanceCreator instanceCreator) {
         this.builder = builder;
         this.instanceCreator = instanceCreator;
     }
 
-    public AnnotatedCommandTreeBuilderImpl(PartInjector injector) {
+    AnnotatedCommandTreeBuilderImpl(PartInjector injector) {
         builder = new AnnotatedCommandBuilderImpl(injector);
         instanceCreator = new ReflectionInstanceCreator();
     }
