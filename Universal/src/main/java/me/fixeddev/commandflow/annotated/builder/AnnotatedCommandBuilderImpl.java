@@ -2,11 +2,11 @@ package me.fixeddev.commandflow.annotated.builder;
 
 import me.fixeddev.commandflow.annotated.part.PartInjector;
 
-public class AnnotatedCommandBuilderImpl implements AnnotatedCommandBuilder {
+final class AnnotatedCommandBuilderImpl implements AnnotatedCommandBuilder {
 
     private final PartInjector injector;
 
-    public AnnotatedCommandBuilderImpl(PartInjector injector) {
+    AnnotatedCommandBuilderImpl(PartInjector injector) {
         this.injector = injector;
     }
 

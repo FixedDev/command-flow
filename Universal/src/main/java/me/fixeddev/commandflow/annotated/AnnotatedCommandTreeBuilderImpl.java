@@ -2,7 +2,6 @@ package me.fixeddev.commandflow.annotated;
 
 import me.fixeddev.commandflow.annotated.annotation.*;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
-import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilderImpl;
 import me.fixeddev.commandflow.annotated.builder.CommandModifiersNode;
 import me.fixeddev.commandflow.annotated.builder.CommandPartsNode;
 import me.fixeddev.commandflow.annotated.builder.SubCommandsNode;
@@ -31,7 +30,7 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
     }
 
     AnnotatedCommandTreeBuilderImpl(PartInjector injector) {
-        builder = new AnnotatedCommandBuilderImpl(injector);
+        builder = AnnotatedCommandBuilder.create(injector);
         instanceCreator = new ReflectionInstanceCreator();
     }
 
