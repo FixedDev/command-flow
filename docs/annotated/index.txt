@@ -1,0 +1,12 @@
+annotated.md
+command-class.md
+command-tree-builder.md
+part-injector.md
+subcommand-instance-creator.md
+basic.md
+argument.md
+multiple-arguments.md
+optional-arguments.md
+with-permission.md
+with-switches.md
+with-value-flags.md
