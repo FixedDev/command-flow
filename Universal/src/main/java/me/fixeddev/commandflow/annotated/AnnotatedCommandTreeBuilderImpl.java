@@ -2,7 +2,6 @@ package me.fixeddev.commandflow.annotated;
 
 import me.fixeddev.commandflow.annotated.annotation.*;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
-import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilderImpl;
 import me.fixeddev.commandflow.annotated.builder.CommandModifiersNode;
 import me.fixeddev.commandflow.annotated.builder.CommandPartsNode;
 import me.fixeddev.commandflow.annotated.builder.SubCommandsNode;
@@ -20,18 +19,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
+final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
 
     private final AnnotatedCommandBuilder builder;
     private final SubCommandInstanceCreator instanceCreator;
 
-    public AnnotatedCommandTreeBuilderImpl(AnnotatedCommandBuilder builder, SubCommandInstanceCreator instanceCreator) {
+    AnnotatedCommandTreeBuilderImpl(AnnotatedCommandBuilder builder, SubCommandInstanceCreator instanceCreator) {
         this.builder = builder;
         this.instanceCreator = instanceCreator;
     }
 
-    public AnnotatedCommandTreeBuilderImpl(PartInjector injector) {
-        builder = new AnnotatedCommandBuilderImpl(injector);
+    AnnotatedCommandTreeBuilderImpl(PartInjector injector) {
+        builder = AnnotatedCommandBuilder.create(injector);
         instanceCreator = new ReflectionInstanceCreator();
     }
 

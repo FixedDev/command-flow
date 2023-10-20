@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNode, CommandPartsNode, SubCommandsNode, CommandModifiersNode {
+final class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNode, CommandPartsNode, SubCommandsNode, CommandModifiersNode {
 
     private final Command.Builder builder;
     private final List<Command> subCommands;
@@ -48,7 +48,7 @@ public class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNo
 
     private final CommandModifiers.Builder commandModifiersBuilder = CommandModifiers.builder();
 
-    public CommandBuilderNodesImpl(String name, PartInjector injector) {
+    CommandBuilderNodesImpl(String name, PartInjector injector) {
         this.builder = Command.builder(name);
         this.subCommands = new ArrayList<>();
         partGetters = new ArrayList<>();

@@ -4,7 +4,6 @@ import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.command.RawCommand;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.command.Command;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.translator.Translator;
@@ -38,7 +37,7 @@ public class VelocityCommandWrapper implements RawCommand {
         CommandSource commandSource = invocation.source();
         String argumentLine = invocation.alias() + " " + invocation.arguments();
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
         namespace.setObject(String.class, "label", invocation.alias());
 
@@ -70,7 +69,7 @@ public class VelocityCommandWrapper implements RawCommand {
         CommandSource commandSource = invocation.source();
         String argumentLine = invocation.alias() + " "+ invocation.arguments();
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
 
         return commandManager.getSuggestions(namespace, argumentLine);
@@ -80,7 +79,7 @@ public class VelocityCommandWrapper implements RawCommand {
     public boolean hasPermission(Invocation invocation) {
         CommandSource commandSource = invocation.source();
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
         namespace.setObject(CommandSource.class, VelocityCommandManager.SENDER_NAMESPACE, commandSource);
 
         return commandManager.getAuthorizer().isAuthorized(namespace, getPermission());

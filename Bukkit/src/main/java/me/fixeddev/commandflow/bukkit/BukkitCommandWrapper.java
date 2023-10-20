@@ -5,7 +5,6 @@ import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.CommandContext;
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.SimpleCommandContext;
 import me.fixeddev.commandflow.exception.CommandException;
 import me.fixeddev.commandflow.translator.Translator;
@@ -32,13 +31,13 @@ public class BukkitCommandWrapper extends Command {
 
         this.setAliases(command.getAliases());
 
-        CommandContext fakeContext = new SimpleCommandContext(new NamespaceImpl(), new ArrayList<>());
+        CommandContext fakeContext = new SimpleCommandContext(Namespace.create(), new ArrayList<>());
         fakeContext.setCommand(command, "<command>");
 
         this.setUsage(LegacyComponentSerializer.legacyAmpersand().serialize(dispatcher.getUsageBuilder().getUsage(fakeContext)));
 
         if (command.getDescription() != null) {
-            Component translatedDescription = translator.translate(command.getDescription(), new NamespaceImpl());
+            Component translatedDescription = translator.translate(command.getDescription(), Namespace.create());
 
             this.setDescription(LegacyComponentSerializer.legacyAmpersand().serialize(translatedDescription));
         }
@@ -59,7 +58,7 @@ public class BukkitCommandWrapper extends Command {
         argumentLine.add(label);
         argumentLine.addAll(Arrays.asList(args));
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
 
         namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, commandSender);
         namespace.setObject(String.class, "label", label);
@@ -89,7 +88,7 @@ public class BukkitCommandWrapper extends Command {
         List<String> argumentLine = new ArrayList<>(Arrays.asList(args));
         argumentLine.add(0, alias);
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
         namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, sender);
 
         return commandManager.getSuggestions(namespace, argumentLine);
@@ -98,7 +97,7 @@ public class BukkitCommandWrapper extends Command {
     @Override
     public boolean testPermission(@NotNull CommandSender target) {
         if (!testPermissionSilent(target)) {
-            Namespace namespace = new NamespaceImpl();
+            Namespace namespace = Namespace.create();
             namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, target);
 
             Component translatedPermissionMessage = translator.translate(permissionMessage, namespace);
@@ -117,7 +116,7 @@ public class BukkitCommandWrapper extends Command {
     public boolean testPermissionSilent(CommandSender target) {
         Authorizer authorizer = commandManager.getAuthorizer();
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
         namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, target);
 
         return authorizer.isAuthorized(namespace, getPermission());

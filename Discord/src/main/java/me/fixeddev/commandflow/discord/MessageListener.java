@@ -2,7 +2,6 @@ package me.fixeddev.commandflow.discord;
 
 import me.fixeddev.commandflow.CommandManager;
 import me.fixeddev.commandflow.Namespace;
-import me.fixeddev.commandflow.NamespaceImpl;
 import me.fixeddev.commandflow.discord.utils.MessageUtils;
 import me.fixeddev.commandflow.exception.ArgumentParseException;
 import me.fixeddev.commandflow.exception.CommandException;
@@ -45,7 +44,7 @@ public class MessageListener extends ListenerAdapter {
 
         String label = rawMessage.substring(0, rawMessage.indexOf(" "));
 
-        Namespace namespace = new NamespaceImpl();
+        Namespace namespace = Namespace.create();
 
         namespace.setObject(Message.class, DiscordCommandManager.MESSAGE_NAMESPACE, message);
         namespace.setObject(Member.class, DiscordCommandManager.MEMBER_NAMESPACE, member);
