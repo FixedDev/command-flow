@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 public class DefaultTranslator implements Translator {
     private TranslationProvider provider;
-    private Function<String, TextComponent> stringToComponent;
+    private Function<String, Component> stringToComponent;
 
     private static final Pattern FORMAT = Pattern.compile("%(?:(\\d+)\\$)?([A-Za-z%]|$)");
 
@@ -20,7 +20,7 @@ public class DefaultTranslator implements Translator {
         this(provider, Component::text);
     }
 
-    public DefaultTranslator(TranslationProvider provider, Function<String, TextComponent> stringTextComponentFunction) {
+    public DefaultTranslator(TranslationProvider provider, Function<String, Component> stringTextComponentFunction) {
         this.provider = provider;
         stringToComponent = stringTextComponentFunction;
     }
@@ -66,7 +66,7 @@ public class DefaultTranslator implements Translator {
 
 
     @Override
-    public void setConverterFunction(Function<String, TextComponent> stringToComponent) {
+    public void setConverterFunction(Function<String, Component> stringToComponent) {
         this.stringToComponent = stringToComponent;
     }
 

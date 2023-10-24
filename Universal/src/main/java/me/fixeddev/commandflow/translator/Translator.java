@@ -34,6 +34,6 @@ public interface Translator {
      *
      * @param stringToComponent The new function used by this {@link Translator} instance.
      */
-    void setConverterFunction(Function<String, TextComponent> stringToComponent);
+    void setConverterFunction(Function<String, Component> stringToComponent);
 
 }

@@ -42,7 +42,7 @@ public class ComponentRendererTranslator implements Translator {
     }
 
     @Override
-    public void setConverterFunction(Function<String, TextComponent> stringToComponent) {
+    public void setConverterFunction(Function<String, Component> stringToComponent) {
         // NOP, this translator doesn't allow this
     }
 
