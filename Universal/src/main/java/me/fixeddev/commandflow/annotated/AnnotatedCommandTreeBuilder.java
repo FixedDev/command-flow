@@ -39,6 +39,10 @@ public interface AnnotatedCommandTreeBuilder {
         return new AnnotatedCommandTreeBuilderImpl(builder, instanceCreator);
     }
 
+    static AnnotatedCommandTreeBuilder create(PartInjector injector, SubCommandInstanceCreator instanceCreator) {
+        return create(AnnotatedCommandBuilder.create(injector), instanceCreator);
+    }
+
     static AnnotatedCommandTreeBuilder create(PartInjector injector) {
         return new AnnotatedCommandTreeBuilderImpl(injector);
     }
