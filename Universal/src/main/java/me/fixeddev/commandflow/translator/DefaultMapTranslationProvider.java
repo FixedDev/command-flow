@@ -11,7 +11,7 @@ public class DefaultMapTranslationProvider implements TranslationProvider {
 
     public DefaultMapTranslationProvider() {
         translations = new HashMap<>();
-        translations.put("command.subcommand.invalid", "The subcommand %s doesn't exists!");
+        translations.put("command.subcommand.invalid", "The subcommand %s doesn't exist!");
         translations.put("command.no-permission", "No permission.");
         translations.put("argument.no-more","No more arguments were found, size: %s position: %s");
         translations.put("number.out-range", "The number %s is not within the range min: %s max: %s");
