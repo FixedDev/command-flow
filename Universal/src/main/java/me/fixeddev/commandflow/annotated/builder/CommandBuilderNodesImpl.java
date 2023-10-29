@@ -5,7 +5,6 @@ import me.fixeddev.commandflow.annotated.action.ReflectiveAction;
 import me.fixeddev.commandflow.annotated.action.ValueGetter;
 import me.fixeddev.commandflow.annotated.annotation.Named;
 import me.fixeddev.commandflow.annotated.annotation.ParentArg;
-import me.fixeddev.commandflow.annotated.annotation.Usage;
 import me.fixeddev.commandflow.annotated.modifier.CommandModifierFactory;
 import me.fixeddev.commandflow.annotated.part.Key;
 import me.fixeddev.commandflow.annotated.part.PartFactory;
@@ -21,7 +20,6 @@ import me.fixeddev.commandflow.part.Parts;
 import me.fixeddev.commandflow.part.defaults.SubCommandPart;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -236,24 +234,6 @@ final class CommandBuilderNodesImpl implements CommandActionNode, CommandDataNod
     public @NotNull CommandDataNode usage(@NotNull Component component) {
         builder.usage(component);
         return this;
-    }
-
-    @Override
-    public @NotNull CommandDataNode usage(@Nullable Usage usageAnnotation) {
-        if (usageAnnotation != null) {
-            builder.usage(fromString(usageAnnotation.value()));
-        }
-
-        return this;
-    }
-
-
-    private Component fromString(String component) {
-        if (component.startsWith("%translatable:") && component.endsWith("%")) {
-            return Component.translatable(component.substring(14, component.length() - 1));
-        } else {
-            return Component.text(component);
-        }
     }
 
     @Override

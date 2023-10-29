@@ -111,7 +111,7 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
                 .permission(commandAnnotation.permission())
                 .permissionMessage(componentParser.apply(commandAnnotation.permissionMessage()))
                 .description(componentParser.apply(commandAnnotation.desc()))
-                .usage(usage)
+                .usage(componentParser.apply(usage.value()))
                 .modifiers()
                 .ofMethod(method, commandClass)
                 .parts()
@@ -139,7 +139,7 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
                 .permission(rootCommandAnnotation.permission())
                 .permissionMessage(componentParser.apply(rootCommandAnnotation.permissionMessage()))
                 .description(componentParser.apply(rootCommandAnnotation.desc()))
-                .usage(usage)
+                .usage(componentParser.apply(usage.value()))
                 .modifiers();
 
         if (rootCommandMethod != null) {

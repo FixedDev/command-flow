@@ -1,9 +1,7 @@
 package me.fixeddev.commandflow.annotated.builder;
 
-import me.fixeddev.commandflow.annotated.annotation.Usage;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,8 +45,6 @@ public interface CommandDataNode extends Buildable {
      * @see me.fixeddev.commandflow.command.Command.Builder#usage(Component)
      */
     @NotNull CommandDataNode usage(@NotNull Component component);
-
-    @NotNull CommandDataNode usage(@Nullable Usage usageAnnotation);
 
     /**
      * @param permission The permission string for the command.
