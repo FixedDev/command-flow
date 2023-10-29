@@ -3,8 +3,10 @@ package me.fixeddev.commandflow.annotated;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
 import me.fixeddev.commandflow.annotated.part.PartInjector;
 import me.fixeddev.commandflow.command.Command;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * This class has the purpose of creating entire {@linkplain Command} trees based completely on annotations
@@ -34,6 +36,17 @@ public interface AnnotatedCommandTreeBuilder {
      * @return A not null list of {@link Command} containing the main level commands which are on this class.
      */
     List<Command> fromClass(CommandClass commandClass);
+
+    /**
+     * Sets the function responsible for converting from string to {@link Component}.
+     *
+     * <p>The function is used to convert values provided in the annotations, to values
+     * that the {@link Command} interface accepts.</p>
+     *
+     * @param parser The parser function
+     * @since 1.0.0
+     */
+    void setComponentParser(Function<String, Component> parser);
 
     static AnnotatedCommandTreeBuilder create(AnnotatedCommandBuilder builder, SubCommandInstanceCreator instanceCreator) {
         return new AnnotatedCommandTreeBuilderImpl(builder, instanceCreator);

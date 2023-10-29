@@ -18,11 +18,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+
+import static java.util.Objects.requireNonNull;
 
 final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuilder {
 
     private final AnnotatedCommandBuilder builder;
     private final SubCommandInstanceCreator instanceCreator;
+    private Function<String, Component> componentParser = component -> {
+        // default impl
+        if (component.startsWith("%translatable:") && component.endsWith("%")) {
+            return Component.translatable(component.substring(14, component.length() - 1));
+        } else {
+            return Component.text(component);
+        }
+    };
 
     AnnotatedCommandTreeBuilderImpl(AnnotatedCommandBuilder builder, SubCommandInstanceCreator instanceCreator) {
         this.builder = builder;
@@ -32,6 +43,11 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
     AnnotatedCommandTreeBuilderImpl(PartInjector injector) {
         builder = AnnotatedCommandBuilder.create(injector);
         instanceCreator = new ReflectionInstanceCreator();
+    }
+
+    @Override
+    public void setComponentParser(Function<String, Component> componentParser) {
+        this.componentParser = requireNonNull(componentParser, "componentParser");
     }
 
     @Override
@@ -93,8 +109,8 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
         return builder.newCommand(names[0])
                 .aliases(Arrays.asList(Arrays.copyOfRange(names, 1, names.length)))
                 .permission(commandAnnotation.permission())
-                .permissionMessage(fromString(commandAnnotation.permissionMessage()))
-                .description(fromString(commandAnnotation.desc()))
+                .permissionMessage(componentParser.apply(commandAnnotation.permissionMessage()))
+                .description(componentParser.apply(commandAnnotation.desc()))
                 .usage(usage)
                 .modifiers()
                 .ofMethod(method, commandClass)
@@ -121,8 +137,8 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
         CommandModifiersNode modifiersNode = builder.newCommand(names[0])
                 .aliases(Arrays.asList(Arrays.copyOfRange(names, 1, names.length)))
                 .permission(rootCommandAnnotation.permission())
-                .permissionMessage(fromString(rootCommandAnnotation.permissionMessage()))
-                .description(fromString(rootCommandAnnotation.desc()))
+                .permissionMessage(componentParser.apply(rootCommandAnnotation.permissionMessage()))
+                .description(componentParser.apply(rootCommandAnnotation.desc()))
                 .usage(usage)
                 .modifiers();
 
@@ -213,13 +229,4 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
                 parameterTypes[1] == String.class &&
                 parameterTypes[2] == Command.class;
     }
-
-    private Component fromString(String component) {
-        if (component.startsWith("%translatable:") && component.endsWith("%")) {
-            return Component.translatable(component.substring(14, component.length() - 1));
-        } else {
-            return Component.text(component);
-        }
-    }
-
 }
