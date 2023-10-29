@@ -1,8 +1,8 @@
 package me.fixeddev.commandflow.discord.factory;
 
+import me.fixeddev.commandflow.annotated.annotation.Sender;
 import me.fixeddev.commandflow.annotated.part.AbstractModule;
 import me.fixeddev.commandflow.annotated.part.Key;
-import me.fixeddev.commandflow.discord.annotation.Sender;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;

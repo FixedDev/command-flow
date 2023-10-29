@@ -3,9 +3,9 @@ package me.fixeddev.commandflow.velocity.factory;
 import com.velocitypowered.api.command.CommandSource;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
+import me.fixeddev.commandflow.annotated.annotation.Sender;
 import me.fixeddev.commandflow.annotated.part.AbstractModule;
 import me.fixeddev.commandflow.annotated.part.Key;
-import me.fixeddev.commandflow.velocity.annotation.Sender;
 
 public class VelocityModule extends AbstractModule {
 

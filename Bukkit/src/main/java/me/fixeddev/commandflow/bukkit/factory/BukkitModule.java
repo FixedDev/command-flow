@@ -2,7 +2,7 @@ package me.fixeddev.commandflow.bukkit.factory;
 
 import me.fixeddev.commandflow.annotated.part.AbstractModule;
 import me.fixeddev.commandflow.annotated.part.Key;
-import me.fixeddev.commandflow.bukkit.annotation.Sender;
+import me.fixeddev.commandflow.annotated.annotation.Sender;
 
 import org.bukkit.GameMode;
 import org.bukkit.OfflinePlayer;

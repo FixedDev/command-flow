@@ -1,8 +1,8 @@
 package me.fixeddev.commandflow.bungee.factory;
 
+import me.fixeddev.commandflow.annotated.annotation.Sender;
 import me.fixeddev.commandflow.annotated.part.AbstractModule;
 import me.fixeddev.commandflow.annotated.part.Key;
-import me.fixeddev.commandflow.bungee.annotation.Sender;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
