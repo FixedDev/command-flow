@@ -2,6 +2,7 @@ package me.fixeddev.commandflow.annotated;
 
 import me.fixeddev.commandflow.annotated.annotation.*;
 import me.fixeddev.commandflow.annotated.builder.AnnotatedCommandBuilder;
+import me.fixeddev.commandflow.annotated.builder.CommandDataNode;
 import me.fixeddev.commandflow.annotated.builder.CommandModifiersNode;
 import me.fixeddev.commandflow.annotated.builder.CommandPartsNode;
 import me.fixeddev.commandflow.annotated.builder.SubCommandsNode;
@@ -106,13 +107,17 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
 
         String[] names = commandAnnotation.names();
 
-        return builder.newCommand(names[0])
+        CommandDataNode dataNode = builder.newCommand(names[0])
                 .aliases(Arrays.asList(Arrays.copyOfRange(names, 1, names.length)))
                 .permission(commandAnnotation.permission())
                 .permissionMessage(componentParser.apply(commandAnnotation.permissionMessage()))
-                .description(componentParser.apply(commandAnnotation.desc()))
-                .usage(componentParser.apply(usage.value()))
-                .modifiers()
+                .description(componentParser.apply(commandAnnotation.desc()));
+
+        if (usage != null) {
+            dataNode.usage(componentParser.apply(usage.value()));
+        }
+
+        return dataNode.modifiers()
                 .ofMethod(method, commandClass)
                 .parts()
                 .ofMethodParameters(method, commandClass)
@@ -134,13 +139,17 @@ final class AnnotatedCommandTreeBuilderImpl implements AnnotatedCommandTreeBuild
             usage = rootCommandMethod.getAnnotation(Usage.class);
         }
 
-        CommandModifiersNode modifiersNode = builder.newCommand(names[0])
+        CommandDataNode dataNode = builder.newCommand(names[0])
                 .aliases(Arrays.asList(Arrays.copyOfRange(names, 1, names.length)))
                 .permission(rootCommandAnnotation.permission())
                 .permissionMessage(componentParser.apply(rootCommandAnnotation.permissionMessage()))
-                .description(componentParser.apply(rootCommandAnnotation.desc()))
-                .usage(componentParser.apply(usage.value()))
-                .modifiers();
+                .description(componentParser.apply(rootCommandAnnotation.desc()));
+
+        if (usage != null) {
+            dataNode.usage(componentParser.apply(usage.value()));
+        }
+
+        CommandModifiersNode modifiersNode = dataNode.modifiers();
 
         if (rootCommandMethod != null) {
             modifiersNode = modifiersNode
