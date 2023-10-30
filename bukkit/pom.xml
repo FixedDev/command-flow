@@ -30,8 +30,8 @@
         </dependency>
         <dependency>
             <groupId>me.fixeddev</groupId>
-            <artifactId>commandflow-universal</artifactId>
-            <version>${version.universal}</version>
+            <artifactId>commandflow-api</artifactId>
+            <version>${version.api}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

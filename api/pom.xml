@@ -9,8 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <version>${version.universal}</version>
-    <artifactId>commandflow-universal</artifactId>
+    <version>${version.api}</version>
+    <artifactId>commandflow-api</artifactId>
     <packaging>jar</packaging>
 
     <dependencies>

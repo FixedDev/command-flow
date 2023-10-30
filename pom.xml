@@ -8,12 +8,12 @@
     <artifactId>commandflow</artifactId>
     <version>0.6.0</version>
     <modules>
-        <module>Universal</module>
-        <module>Bukkit</module>
-        <module>Discord</module>
-        <module>Bungee</module>
-        <module>Velocity</module>
-        <module>Brigadier</module>
+        <module>api</module>
+        <module>bukkit</module>
+        <module>discord</module>
+        <module>bungee</module>
+        <module>velocity</module>
+        <module>brigadier</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -43,8 +43,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <version.universal>0.6.0</version.universal>
-        <version.examples>0.6.0</version.examples>
+        <version.api>0.6.0</version.api>
         <version.bukkit>0.6.0</version.bukkit>
         <version.discord>0.6.0</version.discord>
         <version.bungee>0.6.0</version.bungee>
