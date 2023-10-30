@@ -1,6 +1,5 @@
 package team.unnamed.commandflow.annotated;
 
-import me.fixeddev.commandflow.annotated.annotation.*;
 import team.unnamed.commandflow.annotated.builder.AnnotatedCommandBuilder;
 import team.unnamed.commandflow.annotated.builder.CommandDataNode;
 import team.unnamed.commandflow.annotated.builder.CommandModifiersNode;

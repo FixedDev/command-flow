@@ -10,7 +10,6 @@ import team.unnamed.commandflow.annotated.annotation.Switch;
 import team.unnamed.commandflow.annotated.annotation.Text;
 import team.unnamed.commandflow.annotated.part.AbstractModule;
 import team.unnamed.commandflow.annotated.part.Key;
-import me.fixeddev.commandflow.annotated.part.defaults.factory.*;
 import team.unnamed.commandflow.annotated.part.defaults.modifier.LimitModifier;
 import team.unnamed.commandflow.annotated.part.defaults.modifier.OptionalModifier;
 import team.unnamed.commandflow.annotated.part.defaults.modifier.RewritesModifier;
