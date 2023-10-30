@@ -6,7 +6,7 @@
 
     <groupId>me.fixeddev</groupId>
     <artifactId>commandflow</artifactId>
-    <version>0.6.0</version>
+    <version>${revision}</version>
     <modules>
         <module>api</module>
         <module>bukkit</module>
@@ -42,13 +42,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <version.api>0.6.0</version.api>
-        <version.bukkit>0.6.0</version.bukkit>
-        <version.discord>0.6.0</version.discord>
-        <version.bungee>0.6.0</version.bungee>
-        <version.velocity>0.6.0</version.velocity>
-        <version.brigadier>0.6.0</version.brigadier>
+        <revision>0.6.0</revision>
     </properties>
 
     <build>
