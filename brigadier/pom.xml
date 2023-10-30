@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
+        <groupId>team.unnamed</groupId>
         <artifactId>commandflow</artifactId>
-        <groupId>me.fixeddev</groupId>
         <version>${revision}</version>
     </parent>
     <artifactId>commandflow-brigadier</artifactId>
@@ -24,13 +24,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>me.fixeddev</groupId>
+            <groupId>team.unnamed</groupId>
             <artifactId>commandflow-api</artifactId>
             <version>${revision}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>me.fixeddev</groupId>
+            <groupId>team.unnamed</groupId>
             <artifactId>commandflow-bukkit</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
