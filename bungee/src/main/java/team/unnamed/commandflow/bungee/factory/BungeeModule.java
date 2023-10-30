@@ -2,7 +2,7 @@ package team.unnamed.commandflow.bungee.factory;
 
 import team.unnamed.commandflow.annotated.part.AbstractModule;
 import team.unnamed.commandflow.annotated.part.Key;
-import team.unnamed.commandflow.bungee.annotation.Sender;
+import team.unnamed.commandflow.annotated.annotation.Sender;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 

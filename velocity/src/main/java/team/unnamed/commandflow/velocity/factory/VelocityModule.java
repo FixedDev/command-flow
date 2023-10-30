@@ -5,7 +5,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.ProxyServer;
 import team.unnamed.commandflow.annotated.part.AbstractModule;
 import team.unnamed.commandflow.annotated.part.Key;
-import team.unnamed.commandflow.velocity.annotation.Sender;
+import team.unnamed.commandflow.annotated.annotation.Sender;
 
 public class VelocityModule extends AbstractModule {
 

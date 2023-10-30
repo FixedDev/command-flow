@@ -2,7 +2,7 @@ package team.unnamed.commandflow.discord.factory;
 
 import team.unnamed.commandflow.annotated.part.AbstractModule;
 import team.unnamed.commandflow.annotated.part.Key;
-import team.unnamed.commandflow.discord.annotation.Sender;
+import team.unnamed.commandflow.annotated.annotation.Sender;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;

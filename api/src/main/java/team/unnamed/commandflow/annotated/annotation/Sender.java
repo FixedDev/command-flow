@@ -1,4 +1,4 @@
-package team.unnamed.commandflow.discord.annotation;
+package team.unnamed.commandflow.annotated.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
