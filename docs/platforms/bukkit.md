@@ -8,7 +8,7 @@ subproject that can be included in your project by doing the following:
 ```kotlin
 dependencies {
     // ...
-    implementation("me.fixeddev:commandflow-bukkit:%%REPLACE_latestReleaseOrSnapshot{me.fixeddev:commandflow-bukkit}%%")
+    implementation("team.unnamed:commandflow-bukkit:%%REPLACE_latestReleaseOrSnapshot{team.unnamed:commandflow-bukkit}%%")
 }
 ```
 
@@ -17,9 +17,9 @@ dependencies {
 <dependencies>
     <!-- ... -->
     <dependency>
-        <groupId>me.fixeddev</groupId>
+        <groupId>team.unnamed</groupId>
         <artifactId>commandflow-bukkit</artifactId>
-        <version>%%REPLACE_latestReleaseOrSnapshot{me.fixeddev:commandflow-bukkit}%%</version>
+        <version>%%REPLACE_latestReleaseOrSnapshot{team.unnamed:commandflow-bukkit}%%</version>
     </dependency>
 </dependencies>
 ```
