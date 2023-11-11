@@ -3,7 +3,7 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](license.txt)
 [![Discord](https://img.shields.io/discord/683899335405994062)](https://discord.gg/xbba2fy)
 
-A flexible command framework which removes lots of boilerplate code used in commands
+A flexible and platform-agnostic command framework for Java 8+
 
 Check the [documentation](https://unnamed.team/docs/command-flow) for installation and
 usage information for this project
