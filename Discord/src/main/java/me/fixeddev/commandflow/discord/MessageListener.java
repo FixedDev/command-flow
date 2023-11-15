@@ -42,7 +42,11 @@ public class MessageListener extends ListenerAdapter {
 
         rawMessage = rawMessage.substring(commandPrefix.length());
 
-        String label = rawMessage.substring(0, rawMessage.indexOf(" "));
+        String label = rawMessage;
+
+        if(label.indexOf(" ") > 0){
+            label = rawMessage.substring(0, rawMessage.indexOf(" "));
+        }
 
         Namespace namespace = Namespace.create();
 
