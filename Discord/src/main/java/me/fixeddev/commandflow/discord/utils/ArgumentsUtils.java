@@ -36,7 +36,7 @@ public final class ArgumentsUtils {
 
     private static boolean isMention(String argument, String mentionTypeIdentifier) {
         return argument.startsWith("<" + mentionTypeIdentifier) && argument.endsWith(">")
-                && argument.length() == (20 + mentionTypeIdentifier.length());
+                && argument.length() >= (20 + mentionTypeIdentifier.length());
     }
 
 }
