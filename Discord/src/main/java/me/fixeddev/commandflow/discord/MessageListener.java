@@ -12,6 +12,7 @@ import me.fixeddev.commandflow.exception.NoPermissionsException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -29,6 +30,11 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
+
+        if(!(event.getChannel() instanceof TextChannel)){
+            return;
+        }
+
         Member member = event.getMember();
         User user = event.getAuthor();
         Message message = event.getMessage();
@@ -57,7 +63,7 @@ public class MessageListener extends ListenerAdapter {
         namespace.setObject(String.class, "label", label);
 
         try {
-            commandManager.execute(namespace, rawMessage.substring(commandPrefix.length()));
+            commandManager.execute(namespace, rawMessage);
         } catch (CommandException e) {
             CommandException exceptionToSend = e;
 
