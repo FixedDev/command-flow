@@ -3,9 +3,9 @@ package me.fixeddev.commandflow.discord;
 import me.fixeddev.commandflow.Authorizer;
 import me.fixeddev.commandflow.Namespace;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 
 public class DiscordAuthorizer implements Authorizer {
 
@@ -22,7 +22,7 @@ public class DiscordAuthorizer implements Authorizer {
             return true;
         }
 
-        GuildChannel channel =  message.getTextChannel();
+        GuildChannel channel =  message.getGuildChannel();
         Permission permissionValue;
 
         try {
