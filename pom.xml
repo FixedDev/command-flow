@@ -9,11 +9,11 @@
     <version>${revision}</version>
     <modules>
         <module>api</module>
-        <module>bukkit</module>
         <module>discord</module>
         <module>bungee</module>
         <module>velocity</module>
-        <module>brigadier</module>
+       <!-- <module>brigadier</module>-->
+        <module>bukkit</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -42,7 +42,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>0.6.0</revision>
+        <revision>0.7.0</revision>
     </properties>
 
     <build>

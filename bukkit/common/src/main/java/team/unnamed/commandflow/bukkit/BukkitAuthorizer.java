@@ -12,7 +12,7 @@ public class BukkitAuthorizer implements Authorizer {
             return true;
         }
 
-        CommandSender sender = namespace.getObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE);
+        CommandSender sender = namespace.getObject(CommandSender.class, BukkitCommonConstants.SENDER_NAMESPACE);
 
         return sender.hasPermission(permission);
     }

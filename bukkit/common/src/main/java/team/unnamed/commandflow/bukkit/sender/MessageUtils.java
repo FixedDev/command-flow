@@ -1,4 +1,4 @@
-package team.unnamed.commandflow.bukkit;
+package team.unnamed.commandflow.bukkit.sender;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;

@@ -1,7 +1,7 @@
 package team.unnamed.commandflow.bukkit.part;
 
 import team.unnamed.commandflow.CommandContext;
-import team.unnamed.commandflow.bukkit.BukkitCommandManager;
+import team.unnamed.commandflow.bukkit.BukkitCommonConstants;
 import team.unnamed.commandflow.exception.ArgumentParseException;
 import team.unnamed.commandflow.part.ArgumentPart;
 import team.unnamed.commandflow.part.CommandPart;
@@ -64,7 +64,7 @@ public class OfflinePlayerPart implements ArgumentPart {
     }
 
     private Player tryGetSender(CommandContext context) {
-        CommandSender sender = context.getObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE);
+        CommandSender sender = context.getObject(CommandSender.class, BukkitCommonConstants.SENDER_NAMESPACE);
 
         if (sender instanceof Player) {
             return (Player) sender;

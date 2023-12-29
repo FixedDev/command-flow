@@ -1,12 +1,16 @@
 package team.unnamed.commandflow.bukkit;
 
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.chat.BaseComponent;
+import org.bukkit.command.CommandSender;
 import team.unnamed.commandflow.Authorizer;
 import team.unnamed.commandflow.CommandContext;
 import team.unnamed.commandflow.CommandManager;
 import team.unnamed.commandflow.ErrorHandler;
 import team.unnamed.commandflow.Namespace;
 import team.unnamed.commandflow.ParseResult;
-import team.unnamed.commandflow.SimpleCommandManager;
+import team.unnamed.commandflow.bukkit.sender.DefaultMessageSender;
+import team.unnamed.commandflow.bukkit.sender.MessageSender;
 import team.unnamed.commandflow.command.Command;
 import team.unnamed.commandflow.command.modifiers.FallbackCommandModifiers;
 import team.unnamed.commandflow.exception.ArgumentException;
@@ -20,41 +24,20 @@ import team.unnamed.commandflow.executor.Executor;
 import team.unnamed.commandflow.input.InputTokenizer;
 import team.unnamed.commandflow.translator.Translator;
 import team.unnamed.commandflow.usage.UsageBuilder;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.logging.Level;
 
-public class BukkitCommandManager implements CommandManager {
+import static team.unnamed.commandflow.bukkit.BukkitCommonConstants.COMMAND_MANAGER_NAMESPACE;
 
-    public static final String SENDER_NAMESPACE = "SENDER";
-
+public abstract class BukkitCommandManager implements CommandManager {
     protected CommandManager manager;
-    protected CommandMap bukkitCommandMap;
-    protected final String fallbackPrefix;
+    private MessageSender messageSender;
 
-    protected final Map<String, BukkitCommandWrapper> wrapperMap;
-
-    public BukkitCommandManager(CommandManager delegate, String fallbackPrefix) {
+    public BukkitCommandManager(CommandManager delegate) {
         this.manager = delegate;
-        this.fallbackPrefix = fallbackPrefix;
-        wrapperMap = new HashMap<>();
-
-        try {
-            Field commandMapField = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            commandMapField.setAccessible(true);
-
-            bukkitCommandMap = (CommandMap) commandMapField.get(Bukkit.getServer());
-        } catch (NoSuchFieldException | IllegalAccessException ex) {
-            Bukkit.getLogger().log(Level.SEVERE, "Failed to get command map: ", ex);
-        }
+        this.messageSender = new DefaultMessageSender();
 
         this.getErrorHandler().addExceptionHandler(CommandUsage.class, (namespace, ex) -> {
             CommandException exceptionToSend = ex;
@@ -62,13 +45,13 @@ public class BukkitCommandManager implements CommandManager {
                 exceptionToSend = (ArgumentParseException) ex.getCause();
             }
 
-            BukkitCommandWrapper.sendMessageToSender(exceptionToSend, namespace);
+            sendMessageToSender(exceptionToSend, namespace);
 
             return true;
         });
 
         ErrorHandler.ErrorConsumer<ArgumentException> commonArgumentExceptionConsumer = (namespace, ex) -> {
-            BukkitCommandWrapper.sendMessageToSender(ex, namespace);
+            sendMessageToSender(ex, namespace);
 
             return false;
         };
@@ -77,7 +60,7 @@ public class BukkitCommandManager implements CommandManager {
         this.getErrorHandler().addExceptionHandler(ArgumentParseException.class, commonArgumentExceptionConsumer);
         this.getErrorHandler().addExceptionHandler(NoMoreArgumentsException.class, commonArgumentExceptionConsumer);
         this.getErrorHandler().addExceptionHandler(NoPermissionsException.class, (namespace, throwable) -> {
-            BukkitCommandWrapper.sendMessageToSender(throwable, namespace);
+            sendMessageToSender(throwable, namespace);
 
             return true;
         });
@@ -91,7 +74,7 @@ public class BukkitCommandManager implements CommandManager {
                 exceptionToSend = throwable.getCause();
             }
 
-            BukkitCommandWrapper.sendMessageToSender(throwable, namespace);
+            sendMessageToSender(throwable, namespace);
             String label = namespace.getObject(String.class, "label");
 
             throw new org.bukkit.command.CommandException("An unexpected exception occurred while executing the command " + label, exceptionToSend);
@@ -105,28 +88,14 @@ public class BukkitCommandManager implements CommandManager {
         });
     }
 
-    public BukkitCommandManager(String fallbackPrefix) {
-        this(new SimpleCommandManager(), fallbackPrefix);
+    protected abstract void _register(Command command);
 
-        setAuthorizer(new BukkitAuthorizer());
-        getTranslator().setProvider(new BukkitDefaultTranslationProvider());
-        getTranslator().setConverterFunction(LegacyComponentSerializer.legacyAmpersand()::deserialize);
-    }
+    protected abstract void _unregister(Command command);
 
     public void registerCommand(Command command) {
         manager.registerCommand(command);
 
-        BukkitCommandWrapper bukkitCommand = new BukkitCommandWrapper(command,
-                this, getTranslator());
-
-        for (String alias : command.getAliases()) {
-            registerCommand(fallbackPrefix + ":" + alias, command);
-        }
-
-        registerCommand(fallbackPrefix + ":" + command.getName(), command);
-
-        wrapperMap.put(command.getName(), bukkitCommand);
-        bukkitCommandMap.register(fallbackPrefix, bukkitCommand);
+        _register(command);
     }
 
     @Override
@@ -144,11 +113,9 @@ public class BukkitCommandManager implements CommandManager {
     public void unregisterCommand(Command command) {
         manager.unregisterCommand(command);
 
-        BukkitCommandWrapper wrapper = wrapperMap.get(command.getName());
-        if (wrapper != null) {
-            wrapper.unregister(bukkitCommandMap);
-        }
+        _unregister(command);
     }
+
 
     @Override
     public void unregisterCommands(List<Command> commands) {
@@ -241,6 +208,14 @@ public class BukkitCommandManager implements CommandManager {
         return manager.getCommandModifiers();
     }
 
+    public MessageSender getMessageSender() {
+        return this.messageSender;
+    }
+
+    public void setMessageSender(MessageSender messageSender) {
+        this.messageSender = messageSender;
+    }
+
     @Override
     public Optional<Command> getCommand(String commandName) {
         return manager.getCommand(commandName);
@@ -248,6 +223,8 @@ public class BukkitCommandManager implements CommandManager {
 
     @Override
     public boolean execute(Namespace accessor, List<String> arguments) throws CommandException {
+        accessor.setObject(BukkitCommandManager.class, COMMAND_MANAGER_NAMESPACE, this);
+
         return manager.execute(accessor, arguments);
     }
 
@@ -258,27 +235,46 @@ public class BukkitCommandManager implements CommandManager {
 
     @Override
     public boolean execute(Namespace accessor, String line) throws CommandException {
+        accessor.setObject(BukkitCommandManager.class, COMMAND_MANAGER_NAMESPACE, this);
+
         return manager.execute(accessor, line);
     }
 
     @Override
     public List<String> getSuggestions(Namespace accessor, String line) {
+        accessor.setObject(BukkitCommandManager.class, COMMAND_MANAGER_NAMESPACE, this);
+
         return manager.getSuggestions(accessor, line);
     }
 
     @Override
     public boolean execute(CommandContext commandContext) throws CommandException {
+        commandContext.setObject(BukkitCommandManager.class, COMMAND_MANAGER_NAMESPACE, this);
+
         return manager.execute(commandContext);
     }
 
     @Override
     public ParseResult parse(Namespace accessor, List<String> arguments) throws CommandException {
+        accessor.setObject(BukkitCommandManager.class, COMMAND_MANAGER_NAMESPACE, this);
+
         return manager.parse(accessor, arguments);
     }
 
     @Override
     public ParseResult parse(Namespace accessor, String line) throws CommandException {
+        accessor.setObject(BukkitCommandManager.class, COMMAND_MANAGER_NAMESPACE, this);
+
         return manager.parse(accessor, line);
     }
 
+    public static void sendMessageToSender(CommandException exception, Namespace namespace) {
+        BukkitCommandManager commandManager = namespace.getObject(BukkitCommandManager.class, COMMAND_MANAGER_NAMESPACE); // should be, lol
+        CommandSender sender = namespace.getObject(CommandSender.class, BukkitCommonConstants.SENDER_NAMESPACE);
+
+        Component component = exception.getMessageComponent();
+        Component translatedComponent = commandManager.getTranslator().translate(component, namespace);
+
+        commandManager.getMessageSender().sendMessage(sender, translatedComponent);
+    }
 }
