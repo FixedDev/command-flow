@@ -7,7 +7,9 @@
         <groupId>team.unnamed</groupId>
         <artifactId>commandflow</artifactId>
         <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>commandflow-bukkit</artifactId>
     <packaging>pom</packaging>
 

@@ -8,6 +8,7 @@
         <artifactId>commandflow</artifactId>
         <version>${revision}</version>
     </parent>
+
     <artifactId>commandflow-bungee</artifactId>
     <packaging>jar</packaging>
 
