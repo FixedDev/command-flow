@@ -17,6 +17,7 @@
         <module>commandmap</module>
         <module>common</module>
         <module>paper</module>
+        <module>plugin</module>
     </modules>
 
     <repositories>
