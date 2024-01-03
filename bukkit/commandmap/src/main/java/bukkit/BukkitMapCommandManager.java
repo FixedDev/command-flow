@@ -17,8 +17,6 @@ import java.util.logging.Level;
 
 public class BukkitMapCommandManager extends BukkitCommandManager {
 
-    public static final String SENDER_NAMESPACE = "SENDER";
-
     protected CommandMap bukkitCommandMap;
     protected final String fallbackPrefix;
 

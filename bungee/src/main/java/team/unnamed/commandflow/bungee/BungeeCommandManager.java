@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class BungeeCommandManager implements CommandManager {
 
-    public static final String SENDER_NAMESPACE = "SENDER";
+    public static final String SENDER_NAMESPACE = "sender";
 
     protected final CommandManager commandManager;
     protected final Plugin plugin;

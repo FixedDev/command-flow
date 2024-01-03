@@ -27,7 +27,7 @@ import java.util.*;
 
 public class VelocityCommandManager implements CommandManager {
 
-    public static final String SENDER_NAMESPACE = "SENDER";
+    public static final String SENDER_NAMESPACE = "sender";
 
     protected final ProxyServer proxyServer;
     protected final CommandManager commandManager;
