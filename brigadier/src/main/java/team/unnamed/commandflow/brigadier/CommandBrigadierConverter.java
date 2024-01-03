@@ -1,106 +1,104 @@
 package team.unnamed.commandflow.brigadier;
 
-import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
-import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.LongArgumentType;
+import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import me.lucko.commodore.Commodore;
+
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import team.unnamed.commandflow.Authorizer;
-import team.unnamed.commandflow.CommandContext;
-import team.unnamed.commandflow.Namespace;
-import team.unnamed.commandflow.SimpleCommandContext;
-import team.unnamed.commandflow.bukkit.BukkitCommandManager;
-import team.unnamed.commandflow.bukkit.part.OfflinePlayerPart;
-import team.unnamed.commandflow.bukkit.part.PlayerPart;
+import team.unnamed.commandflow.brigadier.mappings.BrigadierCommandNodeMappings;
 import team.unnamed.commandflow.command.Command;
 import team.unnamed.commandflow.part.ArgumentPart;
 import team.unnamed.commandflow.part.CommandPart;
 import team.unnamed.commandflow.part.PartsWrapper;
 import team.unnamed.commandflow.part.SinglePartWrapper;
-import team.unnamed.commandflow.part.defaults.BooleanPart;
-import team.unnamed.commandflow.part.defaults.DoublePart;
 import team.unnamed.commandflow.part.defaults.FirstMatchPart;
-import team.unnamed.commandflow.part.defaults.IntegerPart;
-import team.unnamed.commandflow.part.defaults.LongPart;
 import team.unnamed.commandflow.part.defaults.OptionalPart;
-import team.unnamed.commandflow.part.defaults.StringPart;
 import team.unnamed.commandflow.part.defaults.SubCommandPart;
 import team.unnamed.commandflow.part.defaults.SwitchPart;
 import team.unnamed.commandflow.part.defaults.ValueFlagPart;
 import team.unnamed.commandflow.part.visitor.CommandPartVisitor;
-import team.unnamed.commandflow.stack.SimpleArgumentStack;
-import me.lucko.commodore.Commodore;
-import me.lucko.commodore.MinecraftArgumentTypes;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandSendEvent;
-import org.bukkit.plugin.Plugin;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class CommandBrigadierConverter {
+public class CommandBrigadierConverter<T, V> {
 
-    private final Commodore commodore;
+    private final CommandDispatcher<T> brigadierDispatcher;
+    private final BrigadierCommandNodeMappings<T> commandNodeMappings;
+    private final Authorizer authorizer;
 
-    public CommandBrigadierConverter(Commodore commodore) {
-        this.commodore = commodore;
+    private final Function<T, V> senderMapping;
+
+    public CommandBrigadierConverter(CommandDispatcher<T> dispatcher,
+                                     Function<T, V> senderMapping,
+                                     BrigadierCommandNodeMappings<T> commandNodeMappings,
+                                     Authorizer authorizer) {
+        this.commandNodeMappings = commandNodeMappings;
+        this.brigadierDispatcher = dispatcher;
+        this.senderMapping = senderMapping;
+        this.authorizer = authorizer;
     }
 
-    public List<LiteralCommandNode<Object>> registerCommand(Command command, Plugin plugin, BrigadierCommandWrapper bukkitCommand) {
-        List<LiteralCommandNode<Object>> nodes = getCommodoreCommand(command, bukkitCommand.getCommandManager().getAuthorizer());
+    public List<LiteralCommandNode<T>> registerCommand(Command command) {
+        List<LiteralCommandNode<T>> nodes = getBrigadierCommand(command, authorizer);
 
-        nodes.forEach(commodore::register);
+        nodes.forEach(this::register);
 
-        Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
+        // Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
 
         return nodes;
     }
 
-    public void unregisterCommand(List<LiteralCommandNode<Object>> nodes) {
-        Collection<CommandNode<Object>> rootNodes = commodore.getDispatcher().getRoot().getChildren();
+    private void register(LiteralCommandNode<T> node) {
+        brigadierDispatcher.getRoot().getChildren().removeIf(tCommandNode ->
+                tCommandNode.getName().equals(node.getName())
+        ); // remove the original
+
+        brigadierDispatcher.getRoot().addChild(node); // register
+    }
+
+    public void unregisterCommand(List<LiteralCommandNode<T>> nodes) {
+        Collection<CommandNode<T>> rootNodes = brigadierDispatcher.getRoot().getChildren();
 
         rootNodes.removeAll(nodes);
     }
 
-    public List<LiteralCommandNode<Object>> getCommodoreCommand(Command command, Authorizer authorizer) {
-        return getCommodoreCommand(command, false, authorizer);
+    public List<LiteralCommandNode<T>> getBrigadierCommand(Command command, Authorizer authorizer) {
+        return getBrigadierCommand(command, false, authorizer);
     }
 
-    public List<LiteralCommandNode<Object>> getCommodoreCommand(Command command, boolean optional, Authorizer authorizer) {
-        LiteralArgumentBuilder<Object> argumentBuilder = LiteralArgumentBuilder.literal(command.getName())
-                .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
+    public List<LiteralCommandNode<T>> getBrigadierCommand(Command command, boolean optional, Authorizer authorizer) {
+        LiteralArgumentBuilder<T> argumentBuilder = LiteralArgumentBuilder.<T>literal(command.getName())
+                .requires(new PermissionRequirement<>(command.getPermission(), authorizer, senderMapping));
 
         if (isFirstPartOptional(command.getPart())) {
             argumentBuilder.executes(context -> 1);
         }
 
-        LiteralCommandNode<Object> mainNode = argumentBuilder.build();
+        LiteralCommandNode<T> mainNode = argumentBuilder.build();
 
-        CommandNode<Object> node = convertToNodes(command, authorizer);
+        CommandNode<T> node = convertToNodes(command, authorizer);
 
         if (node != null) {
             if (node instanceof LiteralCommandNode && (node.getName().equals("valueFlag") || node.getName().equals("Wrapper"))) {
-                for (CommandNode<Object> child : node.getChildren()) {
+                for (CommandNode<T> child : node.getChildren()) {
                     mainNode.addChild(child);
                 }
             } else {
@@ -109,15 +107,15 @@ public class CommandBrigadierConverter {
         }
 
 
-        List<LiteralCommandNode<Object>> argumentBuilders = new ArrayList<>();
+        List<LiteralCommandNode<T>> argumentBuilders = new ArrayList<>();
 
         argumentBuilders.add(mainNode);
 
         for (String alias : command.getAliases()) {
-            LiteralArgumentBuilder<Object> aliasBuilder = LiteralArgumentBuilder
-                    .literal(alias)
+            LiteralArgumentBuilder<T> aliasBuilder = LiteralArgumentBuilder
+                    .<T>literal(alias)
                     .redirect(mainNode)
-                    .requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
+                    .requires(new PermissionRequirement<>(command.getPermission(), authorizer, senderMapping));
 
             if (optional) {
                 aliasBuilder = aliasBuilder.executes(context -> 1);
@@ -129,17 +127,17 @@ public class CommandBrigadierConverter {
         return argumentBuilders;
     }
 
-    private CommandNode<Object> convertToNodes(Command command, Authorizer authorizer) {
-        return command.getPart().acceptVisitor(new CommandPartVisitor<CommandNode<Object>>() {
+    private CommandNode<T> convertToNodes(Command command, Authorizer authorizer) {
+        return command.getPart().acceptVisitor(new CommandPartVisitor<CommandNode<T>>() {
             @Override
-            public CommandNode<Object> visit(CommandPart part) {
+            public CommandNode<T> visit(CommandPart part) {
                 if (part instanceof SwitchPart) {
                     SwitchPart switchPart = (SwitchPart) part;
 
-                    LiteralCommandNode<Object> shortName = LiteralArgumentBuilder.literal("-" + switchPart.getShortName()).build();
-                    LiteralCommandNode<Object> fullName = LiteralArgumentBuilder.literal("--" + switchPart.getName()).build();
+                    LiteralCommandNode<T> shortName = LiteralArgumentBuilder.<T>literal("-" + switchPart.getShortName()).build();
+                    LiteralCommandNode<T> fullName = LiteralArgumentBuilder.<T>literal("--" + switchPart.getName()).build();
 
-                    LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("valueFlag");
+                    LiteralArgumentBuilder<T> builder = LiteralArgumentBuilder.literal("valueFlag");
 
                     builder.then(shortName);
 
@@ -154,31 +152,31 @@ public class CommandBrigadierConverter {
             }
 
             @Override
-            public CommandNode<Object> visit(ArgumentPart argumentPart) {
+            public CommandNode<T> visit(ArgumentPart argumentPart) {
                 return CommandBrigadierConverter.this.visit(argumentPart);
             }
 
             @Override
-            public CommandNode<Object> visit(PartsWrapper partsWrapper) {
+            public CommandNode<T> visit(PartsWrapper partsWrapper) {
                 return CommandBrigadierConverter.this.visit(partsWrapper, this);
             }
 
             @Override
-            public CommandNode<Object> visit(SinglePartWrapper singlePartWrapper) {
+            public CommandNode<T> visit(SinglePartWrapper singlePartWrapper) {
                 return CommandBrigadierConverter.this.visit(singlePartWrapper, this);
             }
 
             @Override
-            public CommandNode<Object> visit(SubCommandPart subCommand) {
+            public CommandNode<T> visit(SubCommandPart subCommand) {
                 return CommandBrigadierConverter.this.visit(subCommand, this, authorizer);
             }
         });
     }
 
-    private void handleSimpleWrapperAdd(MultipleHeadNode<Object> nodeBuilder, CommandNode<Object> node, boolean nextOptional) {
+    private void handleSimpleWrapperAdd(MultipleHeadNode<T> nodeBuilder, CommandNode<T> node, boolean nextOptional) {
         if (nextOptional) {
-            for (CommandNode<Object> child : node.getChildren()) {
-                ArgumentBuilder<Object, ?> childBuilder = child.createBuilder();
+            for (CommandNode<T> child : node.getChildren()) {
+                ArgumentBuilder<T, ?> childBuilder = child.createBuilder();
                 childBuilder.executes(context -> 1);
 
                 nodeBuilder.addChild(childBuilder.build());
@@ -188,19 +186,19 @@ public class CommandBrigadierConverter {
         }
     }
 
-    private boolean handleValueFlagAdd(MultipleHeadNode<Object> nodeBuilder, CommandNode<Object> node, boolean shouldAddNextToTail) {
+    private boolean handleValueFlagAdd(MultipleHeadNode<T> nodeBuilder, CommandNode<T> node, boolean shouldAddNextToTail) {
         nodeBuilder.addChild(node.getChildren());
 
         if (shouldAddNextToTail) {
-            for (CommandNode<Object> child : node.getChildren()) {
+            for (CommandNode<T> child : node.getChildren()) {
                 nodeBuilder.addTailPointer(child);
             }
         }
 
-        Iterator<CommandNode<Object>> iterator = node.getChildren().iterator();
+        Iterator<CommandNode<T>> iterator = node.getChildren().iterator();
 
         // at least one is present
-        CommandNode<Object> mainNode = iterator.next();
+        CommandNode<T> mainNode = iterator.next();
         shouldAddNextToTail = true;
 
         // check if it is a SwitchPart, lol
@@ -212,9 +210,9 @@ public class CommandBrigadierConverter {
         return shouldAddNextToTail;
     }
 
-    private boolean handleSimplePartAdding(MultipleHeadNode<Object> nodeBuilder, boolean shouldAddNextToTail, CommandNode<Object> node, boolean nextOptional) {
+    private boolean handleSimplePartAdding(MultipleHeadNode<T> nodeBuilder, boolean shouldAddNextToTail, CommandNode<T> node, boolean nextOptional) {
         if (nextOptional) {
-            ArgumentBuilder<Object, ?> childBuilder = node.createBuilder();
+            ArgumentBuilder<T, ?> childBuilder = node.createBuilder();
 
             childBuilder.executes(context -> 1);
             node = childBuilder.build();
@@ -255,75 +253,30 @@ public class CommandBrigadierConverter {
         return false;
     }
 
-    // Taken from https://github.com/lucko/commodore/blob/master/src/main/java/me/lucko/commodore/file/MinecraftArgumentTypeParser.java#L117
-    private static ArgumentType<?> constructMinecraftArgumentType(NamespacedKey key, Class<?>[] argTypes, Object... args) {
-        try {
-            final Constructor<? extends ArgumentType<?>> constructor = MinecraftArgumentTypes.getClassByKey(key).getDeclaredConstructor(argTypes);
-            constructor.setAccessible(true);
-            return constructor.newInstance(args);
-        } catch (ReflectiveOperationException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private CommandNode<T> toArgumentBuilder(ArgumentPart part) {
 
-    private CommandNode<Object> toArgumentBuilder(ArgumentPart part) {
-        if (part instanceof PlayerPart || part instanceof OfflinePlayerPart) {
+        return commandNodeMappings.getMapping(part.getClass())
+                .map(map -> map.convert(part)).orElse(RequiredArgumentBuilder.<T, String>argument(part.getName(), StringArgumentType.word()).build());
+
+        /*if (part instanceof PlayerPart || part instanceof OfflinePlayerPart) {
             return RequiredArgumentBuilder.argument(part.getName(),
                     constructMinecraftArgumentType(NamespacedKey.minecraft("entity"),
                             new Class[]{boolean.class, boolean.class}, true, true)).build();
-        } else if (part instanceof BooleanPart) {
-            return RequiredArgumentBuilder.argument(part.getName(), BoolArgumentType.bool()).build();
-        } else if (part instanceof IntegerPart) {
-            return RequiredArgumentBuilder.argument(part.getName(), IntegerArgumentType.integer()).build();
-        } else if (part instanceof DoublePart) {
-            return RequiredArgumentBuilder.argument(part.getName(), DoubleArgumentType.doubleArg()).build();
-        } else if (part instanceof LongPart) {
-            return RequiredArgumentBuilder.argument(part.getName(), LongArgumentType.longArg()).build();
-        } else {
-            if (part instanceof StringPart) {
-                StringPart stringPart = (StringPart) part;
-
-                if (stringPart.isConsumeAll()) {
-                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.greedyString()).build();
-                } else {
-                    return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word()).build();
-                }
-            }
-
-            return RequiredArgumentBuilder.argument(part.getName(), StringArgumentType.word())
-                    .suggests((context, builder) -> {
-                        CommandSender sender = commodore.getBukkitSender(context.getSource());
-
-                        Namespace namespace = Namespace.create();
-                        namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, sender);
-
-                        CommandContext commandContext = new SimpleCommandContext(namespace, new ArrayList<>());
-
-                        List<String> suggestions = part.getSuggestions(commandContext, new SimpleArgumentStack(Collections.singletonList("")));
-
-                        if (suggestions != null) {
-                            for (String suggestion : suggestions) {
-                                builder.suggest(suggestion);
-                            }
-                        }
-
-                        return builder.buildFuture();
-                    }).build();
-        }
+        }*/
     }
 
-    public CommandNode<Object> visit(ArgumentPart argumentPart) {
+    public CommandNode<T> visit(ArgumentPart argumentPart) {
         return toArgumentBuilder(argumentPart);
     }
 
-    public CommandNode<Object> visit(PartsWrapper partsWrapper, CommandPartVisitor<CommandNode<Object>> visitor) {
+    public CommandNode<T> visit(PartsWrapper partsWrapper, CommandPartVisitor<CommandNode<T>> visitor) {
         if (partsWrapper instanceof FirstMatchPart) {
-            LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("Wrapper");
+            LiteralArgumentBuilder<T> builder = LiteralArgumentBuilder.literal("Wrapper");
 
             FirstMatchPart firstMatchPart = (FirstMatchPart) partsWrapper;
 
             for (CommandPart part : firstMatchPart.getParts()) {
-                CommandNode<Object> argumentNode = part.acceptVisitor(visitor);
+                CommandNode<T> argumentNode = part.acceptVisitor(visitor);
 
                 if (argumentNode == null) {
                     continue; // not available for brigadier completition.
@@ -344,7 +297,7 @@ public class CommandBrigadierConverter {
             return builder.build();
         }
 
-        MultipleHeadNode<Object> nodeBuilder = new MultipleHeadNode<>();
+        MultipleHeadNode<T> nodeBuilder = new MultipleHeadNode<>();
         boolean shouldAddNextToTail = false;
 
         ListIterator<CommandPart> partsIterator = partsWrapper.getParts().listIterator();
@@ -352,7 +305,7 @@ public class CommandBrigadierConverter {
         while (partsIterator.hasNext()) {
             CommandPart part = partsIterator.next();
 
-            CommandNode<Object> node = part.acceptVisitor(visitor);
+            CommandNode<T> node = part.acceptVisitor(visitor);
 
             if (node == null) {
                 continue; // ignore this part, it's not available to be completed in brigadier.
@@ -378,7 +331,7 @@ public class CommandBrigadierConverter {
                         shouldAddNextToTail = handleValueFlagAdd(nodeBuilder, node, shouldAddNextToTail);
                     } else {
                         if (nextOptional) {
-                            ArgumentBuilder<Object, ?> childBuilder = node.createBuilder();
+                            ArgumentBuilder<T, ?> childBuilder = node.createBuilder();
 
                             childBuilder.executes(context -> 1);
                             node = childBuilder.build();
@@ -403,15 +356,15 @@ public class CommandBrigadierConverter {
         return nodeBuilder.getWrappedTail("Wrapper");
     }
 
-    public CommandNode<Object> visit(SinglePartWrapper singlePartWrapper, CommandPartVisitor<CommandNode<Object>> visitor) {
+    public CommandNode<T> visit(SinglePartWrapper singlePartWrapper, CommandPartVisitor<CommandNode<T>> visitor) {
         if (singlePartWrapper instanceof ValueFlagPart) {
             ValueFlagPart valueFlagPart = (ValueFlagPart) singlePartWrapper;
-            CommandNode<Object> node = singlePartWrapper.getPart().acceptVisitor(visitor);
+            CommandNode<T> node = singlePartWrapper.getPart().acceptVisitor(visitor);
 
-            LiteralCommandNode<Object> shortName = LiteralArgumentBuilder.literal("-" + valueFlagPart.getShortName()).then(node).build();
-            LiteralCommandNode<Object> fullName = LiteralArgumentBuilder.literal("--" + valueFlagPart.getName()).redirect(shortName).build();
+            LiteralCommandNode<T> shortName = LiteralArgumentBuilder.<T>literal("-" + valueFlagPart.getShortName()).then(node).build();
+            LiteralCommandNode<T> fullName = LiteralArgumentBuilder.<T>literal("--" + valueFlagPart.getName()).redirect(shortName).build();
 
-            LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("valueFlag");
+            LiteralArgumentBuilder<T> builder = LiteralArgumentBuilder.literal("valueFlag");
 
             builder.then(shortName);
 
@@ -425,21 +378,21 @@ public class CommandBrigadierConverter {
         return singlePartWrapper.getPart().acceptVisitor(visitor);
     }
 
-    public CommandNode<Object> visit(SubCommandPart subCommand, CommandPartVisitor<CommandNode<Object>> visitor, Authorizer authorizer) {
-        LiteralArgumentBuilder<Object> builder = LiteralArgumentBuilder.literal("Wrapper");
+    public CommandNode<T> visit(SubCommandPart subCommand, CommandPartVisitor<CommandNode<T>> visitor, Authorizer authorizer) {
+        LiteralArgumentBuilder<T> builder = LiteralArgumentBuilder.literal("Wrapper");
 
         for (Command command : subCommand.getSubCommands()) {
-            CommandNode<Object> node = command.getPart().acceptVisitor(visitor);
+            CommandNode<T> node = command.getPart().acceptVisitor(visitor);
 
-            LiteralArgumentBuilder<Object> literalNodeBuilder = LiteralArgumentBuilder.literal(command.getName());
+            LiteralArgumentBuilder<T> literalNodeBuilder = LiteralArgumentBuilder.literal(command.getName());
 
             if (command.getPermission() != null) {
-                literalNodeBuilder.requires(new PermissionRequirement(command.getPermission(), authorizer, commodore));
+                literalNodeBuilder.requires(new PermissionRequirement<>(command.getPermission(), authorizer, senderMapping));
             }
 
             if (node != null) {
                 if (node instanceof LiteralCommandNode && (node.getName().equals("valueFlag") || node.getName().equals("Wrapper"))) {
-                    for (CommandNode<Object> child : node.getChildren()) {
+                    for (CommandNode<T> child : node.getChildren()) {
                         literalNodeBuilder.then(child);
                     }
                 } else {
@@ -447,12 +400,12 @@ public class CommandBrigadierConverter {
                 }
             }
 
-            LiteralCommandNode<Object> literalNode = literalNodeBuilder.build();
+            LiteralCommandNode<T> literalNode = literalNodeBuilder.build();
 
             builder = builder.then(literalNode);
 
             for (String alias : command.getAliases()) {
-                LiteralCommandNode<Object> aliasNode = LiteralArgumentBuilder.literal(alias).redirect(literalNode).build();
+                LiteralCommandNode<T> aliasNode = LiteralArgumentBuilder.<T>literal(alias).redirect(literalNode).build();
 
                 builder = builder.then(aliasNode);
             }

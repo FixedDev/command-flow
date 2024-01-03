@@ -6,26 +6,28 @@ import team.unnamed.commandflow.bukkit.BukkitCommandManager;
 import me.lucko.commodore.Commodore;
 import org.bukkit.command.CommandSender;
 
+import java.util.function.Function;
 import java.util.function.Predicate;
 
-public class PermissionRequirement implements Predicate<Object> {
+public class PermissionRequirement<T, V> implements Predicate<T> {
 
     private final String permission;
     private final Authorizer authorizer;
-    private final Commodore commodore;
+    private final Function<T, V> senderMapping;
 
-    public PermissionRequirement(String permission, Authorizer authorizer, Commodore commodore) {
+    public PermissionRequirement(String permission, Authorizer authorizer, Function<T, V> senderMapping) {
         this.permission = permission;
         this.authorizer = authorizer;
-        this.commodore = commodore;
+        this.senderMapping = senderMapping;
     }
 
     @Override
-    public boolean test(Object o) {
-        CommandSender sender = commodore.getBukkitSender(o);
+    public boolean test(T o) {
+        V sender = senderMapping.apply(o);
 
         Namespace namespace = Namespace.create();
-        namespace.setObject(CommandSender.class, BukkitCommandManager.SENDER_NAMESPACE, sender);
+        //noinspection unchecked
+        namespace.setObject((Class<V>) sender.getClass(), "sender", sender);
 
         return authorizer.isAuthorized(namespace, permission);
     }
