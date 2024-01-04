@@ -23,7 +23,7 @@ public interface BrigadierCommandNodeMappings<T> {
      * @return A {@link CommandNodeMapping}, if it exists, suitable for converting a {@linkplain team.unnamed.commandflow.part.ArgumentPart} of the specified type.
      */
     default Optional<CommandNodeMapping<T>> getMapping(Class<?> type) {
-        return getMapping(type);
+        return getMapping((Type) type);
     }
 
     /**
