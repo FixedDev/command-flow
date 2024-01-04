@@ -6,6 +6,7 @@ import team.unnamed.commandflow.CommandContext;
 import team.unnamed.commandflow.Namespace;
 import team.unnamed.commandflow.SimpleCommandContext;
 import team.unnamed.commandflow.bukkit.BukkitCommandManager;
+import team.unnamed.commandflow.bukkit.BukkitCommonConstants;
 import team.unnamed.commandflow.exception.CommandException;
 import team.unnamed.commandflow.translator.Translator;
 import net.kyori.adventure.text.Component;
@@ -59,7 +60,7 @@ public class BukkitCommandWrapper extends Command {
 
         Namespace namespace = Namespace.create();
 
-        namespace.setObject(CommandSender.class, BukkitMapCommandManager.SENDER_NAMESPACE, commandSender);
+        namespace.setObject(CommandSender.class, BukkitCommonConstants.SENDER_NAMESPACE, commandSender);
         namespace.setObject(String.class, "label", label);
 
 
@@ -88,7 +89,7 @@ public class BukkitCommandWrapper extends Command {
         argumentLine.add(0, alias);
 
         Namespace namespace = Namespace.create();
-        namespace.setObject(CommandSender.class, BukkitMapCommandManager.SENDER_NAMESPACE, sender);
+        namespace.setObject(CommandSender.class, BukkitCommonConstants.SENDER_NAMESPACE, sender);
 
         return commandManager.getSuggestions(namespace, argumentLine);
     }
@@ -97,7 +98,7 @@ public class BukkitCommandWrapper extends Command {
     public boolean testPermission(@NotNull CommandSender target) {
         if (!testPermissionSilent(target)) {
             Namespace namespace = Namespace.create();
-            namespace.setObject(CommandSender.class, BukkitMapCommandManager.SENDER_NAMESPACE, target);
+            namespace.setObject(CommandSender.class, BukkitCommonConstants.SENDER_NAMESPACE, target);
 
             Component translatedPermissionMessage = translator.translate(permissionMessage, namespace);
 
@@ -115,7 +116,7 @@ public class BukkitCommandWrapper extends Command {
         Authorizer authorizer = commandManager.getAuthorizer();
 
         Namespace namespace = Namespace.create();
-        namespace.setObject(CommandSender.class, BukkitMapCommandManager.SENDER_NAMESPACE, target);
+        namespace.setObject(CommandSender.class, BukkitCommonConstants.SENDER_NAMESPACE, target);
 
         return authorizer.isAuthorized(namespace, getPermission());
     }
