@@ -216,7 +216,7 @@ public class CommandBrigadierConverter<T, V> {
 
         return commandNodeMappings.getMapping(part.getClass())
                 .map(map -> map.convert(part))
-                .orElseGet(() -> new GeneralMapping<T, V>(senderMapping).convert(part));
+                .orElseGet(() -> new GeneralMapping<>(senderMapping).convert(part));
 
         /*if (part instanceof PlayerPart || part instanceof OfflinePlayerPart) {
             return RequiredArgumentBuilder.argument(part.getName(),
@@ -373,36 +373,4 @@ public class CommandBrigadierConverter<T, V> {
 
         return builder.build();
     }
-
- /*
-    /**
-     * Taken from CommodoreImpl, since we can't use the register method that registers this listener
-     * Removes minecraft namespaced argument data, & data for players without permission to view the
-     * corresponding commands.
-   private static final class CommandDataSendListener implements Listener {
-
-        private final Set<String> aliases;
-        private final Set<String> minecraftPrefixedAliases;
-        private final Predicate<? super Player> permissionTest;
-
-        CommandDataSendListener(org.bukkit.command.Command pluginCommand, Predicate<? super Player> permissionTest) {
-            this.aliases = new HashSet<>(Commodore.getAliases(pluginCommand));
-            this.minecraftPrefixedAliases = this.aliases.stream().map(alias -> "minecraft:" + alias).collect(Collectors.toSet());
-            this.permissionTest = permissionTest;
-        }
-
-        @EventHandler
-        public void onCommandSend(PlayerCommandSendEvent e) {
-            // always remove 'minecraft:' prefixed aliases added by craftbukkit.
-            // this happens because bukkit thinks our injected commands are vanilla commands.
-            e.getCommands().removeAll(this.minecraftPrefixedAliases);
-
-            // remove the actual aliases if the player doesn't pass the permission test
-            if (!this.permissionTest.test(e.getPlayer())) {
-                e.getCommands().removeAll(this.aliases);
-            }
-        }
-
-    }
-*/
 }
