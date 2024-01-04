@@ -32,7 +32,6 @@ public abstract class BrigaderProvider {
 
     public static Map.Entry<BrigadierCommandManager<BukkitBrigadierCommandSource, CommandSender>, SendDataListener> obtain(
             BukkitCommandManager delegate,
-            Plugin plugin,
             Authorizer authorizer) {
 
         BiConsumer<List<LiteralCommandNode<BukkitBrigadierCommandSource>>, Command> empty = (literalCommandNodes, command) -> {
@@ -42,9 +41,20 @@ public abstract class BrigaderProvider {
                 new BrigadierCommandManager<>(delegate, obtain(authorizer), empty, empty);
 
         SendDataListener listener = new SendDataListener(commandManager);
-        Bukkit.getPluginManager().registerEvents(listener, plugin);
 
         return new AbstractMap.SimpleEntry<>(commandManager, listener);
+    }
+
+    public static Map.Entry<BrigadierCommandManager<BukkitBrigadierCommandSource, CommandSender>, SendDataListener> obtainAndRegister(
+            BukkitCommandManager delegate,
+            Plugin plugin,
+            Authorizer authorizer) {
+
+        Map.Entry<BrigadierCommandManager<BukkitBrigadierCommandSource, CommandSender>, SendDataListener> entry = obtain(delegate, authorizer);
+
+        Bukkit.getPluginManager().registerEvents(entry.getValue(), plugin);
+
+        return entry;
     }
 
     public static class SendDataListener implements Listener {
