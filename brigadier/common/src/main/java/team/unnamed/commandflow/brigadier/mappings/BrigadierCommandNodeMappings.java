@@ -22,8 +22,8 @@ public interface BrigadierCommandNodeMappings<T> {
      * @param type The type to get a conversion mapping for.
      * @return A {@link CommandNodeMapping}, if it exists, suitable for converting a {@linkplain team.unnamed.commandflow.part.ArgumentPart} of the specified type.
      */
-    default Optional<CommandNodeMapping<T>> getMapping(Class<?> type) {
-        return getMapping((Type) type);
+    default Optional<CommandNodeMapping<T>> getMappingByClass(Class<?> type) {
+        return getMapping(type);
     }
 
     /**
@@ -43,11 +43,11 @@ public interface BrigadierCommandNodeMappings<T> {
 
     static <T> BrigadierCommandNodeMappings.Builder<T> defaultMappings() {
         return BrigadierCommandNodeMappings.<T>builder()
-                .addMapping(BooleanPart.class, new BooleanMapping<>())
-                .addMapping(DoublePart.class, new DoubleMapping<>())
-                .addMapping(IntegerPart.class, new IntegerMapping<>())
-                .addMapping(LongPart.class, new LongMapping<>())
-                .addMapping(StringPart.class, new StringMapping<>());
+                .addMappingByClass(BooleanPart.class, new BooleanMapping<>())
+                .addMappingByClass(DoublePart.class, new DoubleMapping<>())
+                .addMappingByClass(IntegerPart.class, new IntegerMapping<>())
+                .addMappingByClass(LongPart.class, new LongMapping<>())
+                .addMappingByClass(StringPart.class, new StringMapping<>());
     }
 
 
@@ -56,7 +56,7 @@ public interface BrigadierCommandNodeMappings<T> {
     }
 
     interface Builder<T> {
-        default Builder<T> addMapping(Class<?> type, CommandNodeMapping<T> mapping) {
+        default Builder<T> addMappingByClass(Class<?> type, CommandNodeMapping<T> mapping) {
             return addMapping(type, mapping);
         }
 

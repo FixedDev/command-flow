@@ -214,7 +214,7 @@ public class CommandBrigadierConverter<T, V> {
 
     private CommandNode<T> toArgumentBuilder(ArgumentPart part) {
 
-        return commandNodeMappings.getMapping(part.getClass())
+        return commandNodeMappings.getMappingByClass(part.getClass())
                 .map(map -> map.convert(part))
                 .orElseGet(() -> new GeneralMapping<>(senderMapping).convert(part));
 
