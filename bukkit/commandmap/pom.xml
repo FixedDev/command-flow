@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>commandflow-bukkit-commandmap</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

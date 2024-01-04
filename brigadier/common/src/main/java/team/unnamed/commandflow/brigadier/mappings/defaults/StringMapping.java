@@ -1,9 +1,9 @@
 package team.unnamed.commandflow.brigadier.mappings.defaults;
 
+import team.unnamed.commandflow.brigadier.mappings.CommandNodeMapping;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
-import team.unnamed.commandflow.brigadier.mappings.CommandNodeMapping;
 import team.unnamed.commandflow.part.ArgumentPart;
 import team.unnamed.commandflow.part.defaults.StringPart;
 

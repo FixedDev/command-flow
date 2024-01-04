@@ -2,9 +2,6 @@ package team.unnamed.commandflow.brigadier;
 
 import team.unnamed.commandflow.Authorizer;
 import team.unnamed.commandflow.Namespace;
-import team.unnamed.commandflow.bukkit.BukkitCommandManager;
-import me.lucko.commodore.Commodore;
-import org.bukkit.command.CommandSender;
 
 import java.util.function.Function;
 import java.util.function.Predicate;

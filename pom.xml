@@ -12,8 +12,8 @@
         <module>discord</module>
         <module>bungee</module>
         <module>velocity</module>
-       <!-- <module>brigadier</module>-->
         <module>bukkit</module>
+        <module>brigadier</module>
     </modules>
 
     <packaging>pom</packaging>

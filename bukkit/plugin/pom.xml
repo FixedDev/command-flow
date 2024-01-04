@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>commandflow-bukkit-plugin</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
         <dependency>

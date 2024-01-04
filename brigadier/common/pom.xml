@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>team.unnamed</groupId>
-        <artifactId>commandflow-bukkit</artifactId>
+        <artifactId>commandflow-brigadier</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>commandflow-bukkit-common</artifactId>
+    <artifactId>commandflow-brigadier-common</artifactId>
     <packaging>jar</packaging>
 
 </project>

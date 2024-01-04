@@ -1,20 +1,12 @@
 package team.unnamed.commandflow.brigadier;
 
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import me.lucko.commodore.Commodore;
-
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerCommandSendEvent;
 import team.unnamed.commandflow.Authorizer;
 import team.unnamed.commandflow.brigadier.mappings.BrigadierCommandNodeMappings;
+import team.unnamed.commandflow.brigadier.mappings.defaults.GeneralMapping;
 import team.unnamed.commandflow.command.Command;
 import team.unnamed.commandflow.part.ArgumentPart;
 import team.unnamed.commandflow.part.CommandPart;
@@ -28,63 +20,30 @@ import team.unnamed.commandflow.part.defaults.ValueFlagPart;
 import team.unnamed.commandflow.part.visitor.CommandPartVisitor;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class CommandBrigadierConverter<T, V> {
 
-    private final CommandDispatcher<T> brigadierDispatcher;
     private final BrigadierCommandNodeMappings<T> commandNodeMappings;
     private final Authorizer authorizer;
-
     private final Function<T, V> senderMapping;
 
-    public CommandBrigadierConverter(CommandDispatcher<T> dispatcher,
-                                     Function<T, V> senderMapping,
+    public CommandBrigadierConverter(Function<T, V> senderMapping,
                                      BrigadierCommandNodeMappings<T> commandNodeMappings,
                                      Authorizer authorizer) {
         this.commandNodeMappings = commandNodeMappings;
-        this.brigadierDispatcher = dispatcher;
         this.senderMapping = senderMapping;
         this.authorizer = authorizer;
     }
 
-    public List<LiteralCommandNode<T>> registerCommand(Command command) {
-        List<LiteralCommandNode<T>> nodes = getBrigadierCommand(command, authorizer);
-
-        nodes.forEach(this::register);
-
-        // Bukkit.getPluginManager().registerEvents(new CommandDataSendListener(bukkitCommand, bukkitCommand::testPermissionSilent), plugin);
-
-        return nodes;
+    public List<LiteralCommandNode<T>> getBrigadierCommand(Command command) {
+        return getBrigadierCommand(command, false);
     }
 
-    private void register(LiteralCommandNode<T> node) {
-        brigadierDispatcher.getRoot().getChildren().removeIf(tCommandNode ->
-                tCommandNode.getName().equals(node.getName())
-        ); // remove the original
-
-        brigadierDispatcher.getRoot().addChild(node); // register
-    }
-
-    public void unregisterCommand(List<LiteralCommandNode<T>> nodes) {
-        Collection<CommandNode<T>> rootNodes = brigadierDispatcher.getRoot().getChildren();
-
-        rootNodes.removeAll(nodes);
-    }
-
-    public List<LiteralCommandNode<T>> getBrigadierCommand(Command command, Authorizer authorizer) {
-        return getBrigadierCommand(command, false, authorizer);
-    }
-
-    public List<LiteralCommandNode<T>> getBrigadierCommand(Command command, boolean optional, Authorizer authorizer) {
+    public List<LiteralCommandNode<T>> getBrigadierCommand(Command command, boolean optional) {
         LiteralArgumentBuilder<T> argumentBuilder = LiteralArgumentBuilder.<T>literal(command.getName())
                 .requires(new PermissionRequirement<>(command.getPermission(), authorizer, senderMapping));
 
@@ -94,7 +53,7 @@ public class CommandBrigadierConverter<T, V> {
 
         LiteralCommandNode<T> mainNode = argumentBuilder.build();
 
-        CommandNode<T> node = convertToNodes(command, authorizer);
+        CommandNode<T> node = convertToNodes(command);
 
         if (node != null) {
             if (node instanceof LiteralCommandNode && (node.getName().equals("valueFlag") || node.getName().equals("Wrapper"))) {
@@ -127,7 +86,7 @@ public class CommandBrigadierConverter<T, V> {
         return argumentBuilders;
     }
 
-    private CommandNode<T> convertToNodes(Command command, Authorizer authorizer) {
+    private CommandNode<T> convertToNodes(Command command) {
         return command.getPart().acceptVisitor(new CommandPartVisitor<CommandNode<T>>() {
             @Override
             public CommandNode<T> visit(CommandPart part) {
@@ -168,7 +127,7 @@ public class CommandBrigadierConverter<T, V> {
 
             @Override
             public CommandNode<T> visit(SubCommandPart subCommand) {
-                return CommandBrigadierConverter.this.visit(subCommand, this, authorizer);
+                return CommandBrigadierConverter.this.visit(subCommand, this);
             }
         });
     }
@@ -256,7 +215,8 @@ public class CommandBrigadierConverter<T, V> {
     private CommandNode<T> toArgumentBuilder(ArgumentPart part) {
 
         return commandNodeMappings.getMapping(part.getClass())
-                .map(map -> map.convert(part)).orElse(RequiredArgumentBuilder.<T, String>argument(part.getName(), StringArgumentType.word()).build());
+                .map(map -> map.convert(part))
+                .orElseGet(() -> new GeneralMapping<T, V>(senderMapping).convert(part));
 
         /*if (part instanceof PlayerPart || part instanceof OfflinePlayerPart) {
             return RequiredArgumentBuilder.argument(part.getName(),
@@ -378,7 +338,7 @@ public class CommandBrigadierConverter<T, V> {
         return singlePartWrapper.getPart().acceptVisitor(visitor);
     }
 
-    public CommandNode<T> visit(SubCommandPart subCommand, CommandPartVisitor<CommandNode<T>> visitor, Authorizer authorizer) {
+    public CommandNode<T> visit(SubCommandPart subCommand, CommandPartVisitor<CommandNode<T>> visitor) {
         LiteralArgumentBuilder<T> builder = LiteralArgumentBuilder.literal("Wrapper");
 
         for (Command command : subCommand.getSubCommands()) {
@@ -414,12 +374,12 @@ public class CommandBrigadierConverter<T, V> {
         return builder.build();
     }
 
+ /*
     /**
      * Taken from CommodoreImpl, since we can't use the register method that registers this listener
      * Removes minecraft namespaced argument data, & data for players without permission to view the
      * corresponding commands.
-     */
-    private static final class CommandDataSendListener implements Listener {
+   private static final class CommandDataSendListener implements Listener {
 
         private final Set<String> aliases;
         private final Set<String> minecraftPrefixedAliases;
@@ -444,5 +404,5 @@ public class CommandBrigadierConverter<T, V> {
         }
 
     }
-
+*/
 }
