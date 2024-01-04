@@ -6,7 +6,7 @@
     <parent>
         <groupId>team.unnamed</groupId>
         <artifactId>commandflow-brigadier</artifactId>
-        <version>${revision}</version>
+        <version>0.7.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
