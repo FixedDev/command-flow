@@ -4,16 +4,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.fixeddev</groupId>
+    <groupId>team.unnamed</groupId>
     <artifactId>commandflow</artifactId>
-    <version>0.6.0</version>
+    <version>0.7.0</version>
     <modules>
-        <module>Universal</module>
-        <module>Bukkit</module>
-        <module>Discord</module>
-        <module>Bungee</module>
-        <module>Velocity</module>
-        <module>Brigadier</module>
+        <module>api</module>
+        <module>discord</module>
+        <module>bungee</module>
+        <module>velocity</module>
+        <module>bukkit</module>
+        <module>brigadier</module>
     </modules>
 
     <packaging>pom</packaging>
@@ -42,14 +42,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
-        <version.universal>0.6.0</version.universal>
-        <version.examples>0.6.0</version.examples>
-        <version.bukkit>0.6.0</version.bukkit>
-        <version.discord>0.6.0</version.discord>
-        <version.bungee>0.6.0</version.bungee>
-        <version.velocity>0.6.0</version.velocity>
-        <version.brigadier>0.6.0</version.brigadier>
+        <revision>0.7.0</revision>
     </properties>
 
     <build>

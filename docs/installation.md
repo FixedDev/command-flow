@@ -11,7 +11,7 @@ repositories {
 ```
 ```kotlin
 dependencies {
-    implementation("me.fixeddev:commandflow-universal:%%REPLACE_latestReleaseOrSnapshot{me.fixeddev:commandflow-universal}%%")
+    implementation("team.unnamed:commandflow-api:%%REPLACE_latestReleaseOrSnapshot{team.unnamed:commandflow-api}%%")
 }
 ```
 
@@ -24,8 +24,8 @@ dependencies {
 ```
 ```xml
 <dependency>
-  <groupId>me.fixeddev</groupId>
-  <artifactId>commandflow-universal</artifactId>
-  <version>%%REPLACE_latestReleaseOrSnapshot{me.fixeddev:commandflow-universal}%%</version>
+  <groupId>team.unnamed</groupId>
+  <artifactId>commandflow-api</artifactId>
+  <version>%%REPLACE_latestReleaseOrSnapshot{team.unnamed:commandflow-api}%%</version>
 </dependency>
 ```

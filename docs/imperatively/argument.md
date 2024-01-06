@@ -4,7 +4,7 @@ Check this command example with a single argument:
 
 <!--@formatter:off-->
 ```java
-import static me.fixeddev.commandflow.part.Parts.*;
+
 
 //...
 
