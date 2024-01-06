@@ -24,7 +24,7 @@
         <dependency>
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
-            <version>4.2.0_208</version>
+            <version>5.0.0-beta.17</version>
         </dependency>
         <dependency>
             <groupId>team.unnamed</groupId>

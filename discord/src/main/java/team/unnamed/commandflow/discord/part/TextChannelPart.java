@@ -8,7 +8,7 @@ import team.unnamed.commandflow.part.ArgumentPart;
 import team.unnamed.commandflow.part.CommandPart;
 import team.unnamed.commandflow.stack.ArgumentStack;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.kyori.adventure.text.Component;
 
 import java.util.Collections;

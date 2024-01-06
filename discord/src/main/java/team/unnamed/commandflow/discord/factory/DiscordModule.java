@@ -5,8 +5,8 @@ import team.unnamed.commandflow.annotated.part.Key;
 import team.unnamed.commandflow.annotated.annotation.Sender;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 public class DiscordModule extends AbstractModule {
 
