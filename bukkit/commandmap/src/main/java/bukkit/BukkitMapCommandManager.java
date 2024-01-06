@@ -1,5 +1,7 @@
 package bukkit;
 
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 import team.unnamed.commandflow.CommandManager;
 import team.unnamed.commandflow.SimpleCommandManager;
 import team.unnamed.commandflow.bukkit.BukkitAuthorizer;
@@ -18,11 +20,23 @@ import java.util.logging.Level;
 public class BukkitMapCommandManager extends BukkitCommandManager {
 
     protected CommandMap bukkitCommandMap;
+    @NotNull
     protected final String fallbackPrefix;
+
+    protected Plugin plugin;
+
+    protected boolean usePluginCommands = false;
 
     protected final Map<String, BukkitCommandWrapper> wrapperMap;
 
-    public BukkitMapCommandManager(CommandManager delegate, String fallbackPrefix) {
+    public BukkitMapCommandManager(CommandManager delegate, Plugin plugin) {
+        this(delegate, plugin.getName());
+
+        this.plugin = plugin;
+        usePluginCommands = true;
+    }
+
+    public BukkitMapCommandManager(CommandManager delegate, @NotNull String fallbackPrefix) {
         super(delegate);
         this.fallbackPrefix = fallbackPrefix;
         wrapperMap = new HashMap<>();
@@ -35,8 +49,14 @@ public class BukkitMapCommandManager extends BukkitCommandManager {
         } catch (NoSuchFieldException | IllegalAccessException ex) {
             Bukkit.getLogger().log(Level.SEVERE, "Failed to get command map: ", ex);
         }
-
     }
+
+    public BukkitMapCommandManager(Plugin plugin) {
+        this(plugin.getName());
+        this.plugin = plugin;
+        this.usePluginCommands = true;
+    }
+
 
     public BukkitMapCommandManager(String fallbackPrefix) {
         this(new SimpleCommandManager(), fallbackPrefix);
@@ -48,8 +68,9 @@ public class BukkitMapCommandManager extends BukkitCommandManager {
 
     @Override
     protected void _register(Command command) {
-        BukkitCommandWrapper bukkitCommand = new BukkitCommandWrapper(command,
-                this, getTranslator());
+        BukkitCommandWrapper bukkitCommand = usePluginCommands ?
+                new PluginBukkitCommandWrapper(command, this, getTranslator(), plugin) :
+                new BukkitCommandWrapper(command, this, getTranslator());
 
         for (String alias : command.getAliases()) {
             registerCommand(fallbackPrefix + ":" + alias, command);
