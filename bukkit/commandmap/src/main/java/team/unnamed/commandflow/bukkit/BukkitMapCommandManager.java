@@ -1,12 +1,9 @@
-package bukkit;
+package team.unnamed.commandflow.bukkit;
 
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import team.unnamed.commandflow.CommandManager;
 import team.unnamed.commandflow.SimpleCommandManager;
-import team.unnamed.commandflow.bukkit.BukkitAuthorizer;
-import team.unnamed.commandflow.bukkit.BukkitCommandManager;
-import team.unnamed.commandflow.bukkit.BukkitDefaultTranslationProvider;
 import team.unnamed.commandflow.command.Command;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;

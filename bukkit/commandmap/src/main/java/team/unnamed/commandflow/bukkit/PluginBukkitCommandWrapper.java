@@ -1,8 +1,7 @@
-package bukkit;
+package team.unnamed.commandflow.bukkit;
 
 import org.bukkit.command.PluginIdentifiableCommand;
 import org.bukkit.plugin.Plugin;
-import team.unnamed.commandflow.bukkit.BukkitCommandManager;
 import team.unnamed.commandflow.command.Command;
 import team.unnamed.commandflow.translator.Translator;
 
