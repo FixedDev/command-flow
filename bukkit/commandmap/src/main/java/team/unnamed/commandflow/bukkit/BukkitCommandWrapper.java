@@ -1,4 +1,4 @@
-package bukkit;
+package team.unnamed.commandflow.bukkit;
 
 
 import team.unnamed.commandflow.Authorizer;
