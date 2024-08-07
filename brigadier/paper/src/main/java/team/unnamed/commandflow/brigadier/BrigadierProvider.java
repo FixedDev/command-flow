@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 
-public abstract class BrigaderProvider {
+public abstract class BrigadierProvider {
 
     public static CommandBrigadierConverter<BukkitBrigadierCommandSource, CommandSender> obtain(Authorizer authorizer) {
         return new CommandBrigadierConverter<>(
