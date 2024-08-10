@@ -25,7 +25,13 @@ public class ComponentRendererTranslator implements Translator {
         renderer = new TranslatableComponentRenderer<Namespace>() {
             @Override
             protected @Nullable MessageFormat translate(@NotNull String key, @NotNull Namespace context) {
-                return new MessageFormat(provider.getTranslation(context, key));
+                String translationFound = provider.getTranslation(context, key);
+
+                if (translationFound == null) {
+                    return null;
+                }
+
+                return new MessageFormat(translationFound);
             }
         };
     }
