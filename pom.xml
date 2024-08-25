@@ -6,7 +6,7 @@
 
     <groupId>team.unnamed</groupId>
     <artifactId>commandflow</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.2</version>
     <modules>
         <module>api</module>
         <module>discord</module>
@@ -42,7 +42,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <revision>0.7.1</revision>
+        <revision>0.7.2</revision>
     </properties>
 
     <build>
